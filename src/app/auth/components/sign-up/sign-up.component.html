@@ -1,0 +1,100 @@
+<mat-card
+  appearance="outlined"
+  class="auth-card"
+>
+  <mat-card-content>
+    <h2 class="auth-card__title">Sign Up</h2>
+
+    <form
+      [formGroup]="signUpForm"
+      (ngSubmit)="onSubmit()"
+    >
+      <div class="auth-card__block">
+        <label for="email">Email:</label>
+        <input
+          class="auth-card__input"
+          type="text"
+          id="email"
+          name="email"
+          formControlName="email"
+          [ngClass]="{
+            invalid:
+              signUpForm.get('email')?.touched &&
+              signUpForm.get('email')?.invalid
+          }"
+          required
+        />
+        <p
+          class="error"
+          *ngIf="
+            signUpForm.get('email')?.touched &&
+            signUpForm.get('email')?.errors?.['email']
+          "
+        >
+          Incorrect email
+        </p>
+      </div>
+
+      <div class="auth-card__block">
+        <label for="password">Password:</label>
+        <input
+          class="auth-card__input"
+          type="password"
+          id="password"
+          name="password"
+          formControlName="password"
+          [ngClass]="{
+            invalid:
+              signUpForm.get('password')?.touched &&
+              signUpForm.get('password')?.invalid
+          }"
+          required
+        />
+        <p
+          class="error"
+          *ngIf="
+            signUpForm.get('password')?.touched &&
+            signUpForm.get('password')?.errors?.['minlength']
+          "
+        >
+          Password must be at least 8 characters long
+        </p>
+      </div>
+
+      <div class="auth-card__block">
+        <label for="password">Repeat Password:</label>
+        <input
+          class="auth-card__input"
+          type="password"
+          id="repeat-password"
+          name="repeat-password"
+          formControlName="repeatPassword"
+          [ngClass]="{
+            invalid:
+              signUpForm.get('repeatPassword')?.touched &&
+              signUpForm.get('repeatPassword')?.invalid
+          }"
+          required
+        />
+      </div>
+
+      <div class="auth-card__wrapper">
+        <button
+          class="button button-wide"
+          mat-flat-button
+          extended
+          type="submit"
+        >
+          Register
+        </button>
+        <button
+          class="button"
+          mat-button
+          type="button"
+        >
+          Sign In
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
