@@ -1,8 +1,7 @@
-import { bootstrapApplication } from '@angular/platform-browser';
-import { startServer } from '@planess/train-a-backend';
-import { appConfig } from './app/app.config';
-import { AppComponent } from './app/app.component';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { AppModule } from './app/app.module';
 
-startServer()
-  .then(() => bootstrapApplication(AppComponent, appConfig))
+platformBrowserDynamic()
+  .bootstrapModule(AppModule)
+  // eslint-disable-next-line no-console
   .catch((err) => console.error(err));
