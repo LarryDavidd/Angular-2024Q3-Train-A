@@ -28,10 +28,27 @@
           class="error"
           *ngIf="
             signUpForm.get('email')?.touched &&
-            signUpForm.get('email')?.errors?.['email']
+            signUpForm.get('email')?.errors?.['invalidEmail'] &&
+            signUpForm.get('email')?.value !== ''
           "
         >
           Incorrect email
+        </p>
+        <p
+          class="error"
+          *ngIf="signUpForm.get('email')?.hasError('emailExists')"
+        >
+          User already exists
+        </p>
+        <p
+          class="error"
+          *ngIf="
+            signUpForm.get('email')?.errors?.['required'] &&
+            isFirstClick &&
+            signUpForm.get('email')?.value === ''
+          "
+        >
+          Email is required
         </p>
       </div>
 
@@ -59,6 +76,16 @@
         >
           Password must be at least 8 characters long
         </p>
+        <p
+          class="error"
+          *ngIf="
+            signUpForm.get('password')?.errors?.['required'] &&
+            isFirstClick &&
+            signUpForm.get('password')?.value === ''
+          "
+        >
+          Password is required
+        </p>
       </div>
 
       <div class="auth-card__block">
@@ -76,6 +103,16 @@
           }"
           required
         />
+        <p
+          class="error"
+          *ngIf="
+            signUpForm.get('repeatPassword')?.touched &&
+            signUpForm.get('password')?.touched &&
+            signUpForm.hasError('passwordMismatch')
+          "
+        >
+          Passwords do not match
+        </p>
       </div>
 
       <div class="auth-card__wrapper">
@@ -84,6 +121,7 @@
           mat-flat-button
           extended
           type="submit"
+          [disabled]="(isFirstClick && signUpForm.invalid) || isLoading"
         >
           Register
         </button>
@@ -91,6 +129,7 @@
           class="button"
           mat-button
           type="button"
+          (click)="navigateTo('signin')"
         >
           Sign In
         </button>
