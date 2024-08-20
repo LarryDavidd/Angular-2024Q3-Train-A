@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from 'auth/auth.service';
 import { passwordValidator } from 'auth/helpers/password-validator';
 
 @Component({
@@ -10,7 +11,10 @@ import { passwordValidator } from 'auth/helpers/password-validator';
 export class SignUpComponent {
   public signUpForm: FormGroup;
 
-  constructor(private readonly fb: FormBuilder) {
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly authService: AuthService
+  ) {
     this.signUpForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, passwordValidator]],
@@ -23,7 +27,7 @@ export class SignUpComponent {
       const email = this.signUpForm.get('email')?.value;
       const password = this.signUpForm.get('password')?.value;
 
-      console.log(email, password);
+      this.authService.signUp(email, password);
     }
   }
 }

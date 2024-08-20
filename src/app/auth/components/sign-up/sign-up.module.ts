@@ -7,6 +7,7 @@ import { MatCardModule, MatCardImage } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [SignUpComponent],
@@ -19,7 +20,8 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     MatIconModule,
     MatCardModule,
-    MatCardImage
+    MatCardImage,
+    HttpClientModule
   ]
 })
 export class SignUpModule {}
