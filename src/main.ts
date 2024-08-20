@@ -1,8 +1,7 @@
-import { bootstrapApplication } from '@angular/platform-browser';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { startServer } from '@planess/train-a-backend';
-import { appConfig } from './app/app.config';
-import { AppComponent } from './app/app.component';
+import { AppModule } from './app/app.module';
 
 startServer()
-  .then(() => bootstrapApplication(AppComponent, appConfig))
+  .then(() => platformBrowserDynamic().bootstrapModule(AppModule))
   .catch((err) => console.error(err));
