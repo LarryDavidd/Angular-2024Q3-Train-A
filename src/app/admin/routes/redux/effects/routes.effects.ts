@@ -16,7 +16,7 @@ export class RoutesEffects {
       ofType(RoutesActions.fetchRoutes),
       switchMap(() =>
         this.routesService.getRoutes().pipe(
-          map((item) => RoutesActions.fetchRoutesSucces({ item })),
+          map((response) => RoutesActions.fetchRoutesSucces({ response })),
           catchError(() => of(RoutesActions.fetchRoutesFailes()))
         )
       )

@@ -1,16 +1,38 @@
-<ng-container *ngIf="isLoading$ | async; else dataTemplate">
-  <mat-spinner [diameter]="70"></mat-spinner>
-</ng-container>
-
-<ng-template #dataTemplate>
-  <ng-container *ngIf="cards$ | async as data; else notFound">
-    {{ data }}
-    <p>here</p>
-  </ng-container>
-</ng-template>
-
-<ng-template #notFound>
-  <div>nothing not found</div>
-</ng-template>
-
-<p>here</p>
+<mat-card class="w-[320px]">
+  <mat-card-header class="flex justify-between">
+    <mat-card-title>{{ 'Route' + ' ' + route.id }}</mat-card-title>
+    <div class="route__action-buttons">
+      <button mat-icon-button>
+        <mat-icon fontIcon="update"></mat-icon>
+        Update
+      </button>
+      <button mat-icon-button>
+        <mat-icon fontIcon="directions_bus"></mat-icon>
+        Assing ride
+      </button>
+      <button mat-icon-button>
+        <mat-icon fontIcon="delete"></mat-icon>
+      </button>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="flex flex-col gap-5">
+      <div class="flex flex-col gap-2">
+        <mat-card-subtitle> Cities </mat-card-subtitle>
+        {{ route.carriages.join(' - ') }}
+      </div>
+      <div class="flex flex-col gap-2">
+        <mat-card-subtitle> Carrage Type </mat-card-subtitle>
+        {{ route.path.join(' - ') }}
+      </div>
+    </div>
+  </mat-card-content>
+  <!-- <mat-card-actions align="start">
+    <button
+      mat-button
+      (click)="(onAction1)"
+    >
+      Action1
+    </button>
+  </mat-card-actions> -->
+</mat-card>

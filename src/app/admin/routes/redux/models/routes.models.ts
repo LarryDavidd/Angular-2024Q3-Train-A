@@ -1,4 +1,6 @@
+import { GetRoutesResponse } from 'admin/routes/model/routes.model';
+
 export interface RoutesState {
-  response: Response | null;
+  response: GetRoutesResponse | null;
   loadingStatus: boolean;
 }

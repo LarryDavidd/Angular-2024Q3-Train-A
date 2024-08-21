@@ -16,12 +16,12 @@ export const routesReducer = createReducer(
       loadingStatus
     })
   ),
-  on(RoutesActions.fetchRoutesSucces, (state, { item }) => ({
+  on(RoutesActions.fetchRoutesSucces, (state, { response }) => ({
     ...state,
-    item
+    response
   })),
   on(RoutesActions.fetchRoutesFailes, (state) => ({
     ...state,
-    item: null
+    response: null
   }))
 );

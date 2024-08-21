@@ -1,0 +1,17 @@
+<ng-container *ngIf="isLoading$ | async; else dataTemplate">
+  <mat-spinner [diameter]="70"></mat-spinner>
+</ng-container>
+
+<ng-template #dataTemplate>
+  <ng-container *ngIf="cards$ | async as data; else notFound">
+    <ul class="flex flex-col justify-center gap-3">
+      <li *ngFor="let route of data">
+        <app-route-card [route]="route"></app-route-card>
+      </li>
+    </ul>
+  </ng-container>
+</ng-template>
+
+<ng-template #notFound>
+  <div>nothing not found</div>
+</ng-template>
