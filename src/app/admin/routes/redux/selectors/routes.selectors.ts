@@ -5,4 +5,4 @@ export const selectRoutesState = createFeatureSelector<RoutesState>('routes');
 
 export const selectRoutes = createSelector(selectRoutesState, (state) => state.response);
 
-export const selectLoadingStatus = createSelector(selectRoutesState, (state) => state.loadingStatus);
+export const selectRoutesLoadingStatus = createSelector(selectRoutesState, (state) => state.loadingStatus);

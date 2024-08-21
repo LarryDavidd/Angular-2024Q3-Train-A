@@ -5,7 +5,7 @@ import * as StationsActions from '../actions/stations.actions';
 import { StationsService } from 'admin/stations/services/stations.service';
 
 @Injectable()
-export class RoutesEffects {
+export class StationsEffects {
   constructor(
     private actions$: Actions,
     private stationsService: StationsService

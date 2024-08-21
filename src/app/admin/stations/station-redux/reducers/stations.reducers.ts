@@ -7,7 +7,7 @@ export const initialState: StationsState = {
   loadingStatus: false
 };
 
-export const routesReducer = createReducer(
+export const StationsReducer = createReducer(
   initialState,
   on(
     StationsActions.changeLoadingStatus,

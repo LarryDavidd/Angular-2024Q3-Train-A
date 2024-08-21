@@ -4,8 +4,12 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideRouter } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
+import { CarriagesEffects } from 'admin/carriages/carriages-redux/effects/carriages.effects';
+import { CarriagesReducer } from 'admin/carriages/carriages-redux/reducers/carriages.reducers';
 import { RoutesEffects } from 'admin/routes/redux/effects/routes.effects';
 import { routesReducer } from 'admin/routes/redux/reducers/routes.redusers';
+import { StationsEffects } from 'admin/stations/station-redux/effects/stations.effects';
+import { StationsReducer } from 'admin/stations/station-redux/reducers/stations.reducers';
 import { routes } from 'app.routes';
 
 export const appConfig: ApplicationConfig = {
@@ -14,9 +18,11 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimationsAsync(),
     provideStore({
-      routes: routesReducer
+      routes: routesReducer,
+      stations: StationsReducer,
+      carriages: CarriagesReducer
     }),
-    provideEffects([RoutesEffects]),
+    provideEffects([RoutesEffects, StationsEffects, CarriagesEffects]),
     provideHttpClient(withInterceptorsFromDi())
   ]
 };
