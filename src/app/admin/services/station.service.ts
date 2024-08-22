@@ -1,7 +1,12 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Station } from 'admin/models/stations.model';
+import { CreatedStation, Station } from 'admin/models/stations.model';
 import { catchError, Observable, throwError } from 'rxjs';
+
+// TODO: remove
+interface AuthResponse {
+  token: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +14,14 @@ import { catchError, Observable, throwError } from 'rxjs';
 export class StationService {
   private apiUrl = '/api/station';
 
+  token = '';
+
   constructor(private http: HttpClient) {}
+
+  // TODO: move to auth service
+  signupAdmin(): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>('/api/signin', { email: 'admin@admin.com', password: 'my-password' });
+  }
 
   getStations(): Observable<Station[]> {
     return this.http.get<Station[]>(this.apiUrl);
@@ -17,6 +29,19 @@ export class StationService {
 
   deleteStation(id: number): Observable<Station[]> {
     return this.http.delete<Station[]>(this.apiUrl + '/' + id).pipe(catchError(this.handleError));
+  }
+
+  addStation(newStation: CreatedStation) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${this.token}`
+      })
+    };
+    return this.http
+      .post<CreatedStation>(this.apiUrl, newStation, {
+        headers: httpOptions.headers
+      })
+      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
