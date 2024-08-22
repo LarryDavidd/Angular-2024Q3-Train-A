@@ -121,7 +121,11 @@
           mat-flat-button
           extended
           type="submit"
-          [disabled]="(isFirstClick && signUpForm.invalid) || isLoading"
+          [disabled]="
+            (isFirstClick && signUpForm.invalid) ||
+            isLoading ||
+            (signUpForm.touched && signUpForm.invalid)
+          "
         >
           Register
         </button>
