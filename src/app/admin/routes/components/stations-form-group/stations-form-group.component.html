@@ -1,0 +1,23 @@
+<form [formGroup]="form">
+  <div formArrayName="select">
+    <div *ngFor="let selectControl of form.controls.select.controls; let i = index">
+      <select
+        [formControlName]="i"
+        (change)="onChange(i)"
+      >
+        <option
+          value=""
+          disabled
+        >
+          Select an option
+        </option>
+        <option
+          *ngFor="let item of getStations"
+          [value]="item"
+        >
+          {{ item.city }}
+        </option>
+      </select>
+    </div>
+  </div>
+</form>

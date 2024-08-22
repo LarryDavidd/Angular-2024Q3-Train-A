@@ -4,11 +4,7 @@
 
 <ng-template #dataTemplate>
   <ng-container *ngIf="stations$ | async as data; else notFound">
-    <ul class="flex flex-wrap justify-center gap-3">
-      <li *ngFor="let station of data">
-        {{ station.city }}
-      </li>
-    </ul>
+    <app-stations-form-group [stations]="data" />
   </ng-container>
 </ng-template>
 

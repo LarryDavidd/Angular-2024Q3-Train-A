@@ -6,11 +6,13 @@ import * as CarriagesActions from 'admin/carriages/carriages-redux/actions/carri
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { selectCarriages, selectCarriagesLoadingStatus } from 'admin/carriages/carriages-redux/selectors/carriages.selectors';
+import { RouteCreateFormComponent } from '../route-create-form/route-create-form.component';
+import { StationsFormGroupComponent } from '../stations-form-group/stations-form-group.component';
 
 @Component({
   selector: 'app-create-section',
   standalone: true,
-  imports: [MatProgressSpinnerModule, CommonModule],
+  imports: [MatProgressSpinnerModule, CommonModule, RouteCreateFormComponent, StationsFormGroupComponent],
   templateUrl: './create-section.component.html',
   styleUrl: './create-section.component.scss'
 })
