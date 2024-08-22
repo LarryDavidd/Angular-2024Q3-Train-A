@@ -1,4 +1,4 @@
-export interface ResponseData {
+export interface SignUpResponseData {
   success: boolean;
   reason: string;
 }

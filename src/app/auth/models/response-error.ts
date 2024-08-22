@@ -1,9 +1,4 @@
-type Reason =
-  | 'invalidUniqueKey'
-  | 'invalidFields'
-  | 'invalidEmail'
-  | 'invalidPassword';
-
+import { Error } from './error';
 export interface ResponseError {
   headers: {
     normalizedNames: unknown;
@@ -15,8 +10,5 @@ export interface ResponseError {
   ok: boolean;
   name: string;
   message: string;
-  error: {
-    message: string;
-    reason: Reason;
-  };
+  error: Error;
 }
