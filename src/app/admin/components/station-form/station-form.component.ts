@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CreatedStation, Station } from 'admin/models/stations.model';
+import { MapFormSynchroService } from 'admin/services/map-form-synchro.service';
 import { StationService } from 'admin/services/station.service';
 
 @Component({
@@ -18,11 +19,19 @@ export class StationFormComponent implements OnInit {
 
   selectFields = [...this.station.relations, undefined];
 
-  constructor(private stationService: StationService) {}
+  constructor(
+    private stationService: StationService,
+    private synhroService: MapFormSynchroService
+  ) {}
 
   ngOnInit(): void {
     this.stationService.getStations().subscribe((stations) => {
       this.availableStations = stations;
+    });
+
+    this.synhroService.coordinates$.subscribe((coords) => {
+      this.station.latitude = coords.latitude;
+      this.station.longitude = coords.longitude;
     });
   }
 
@@ -36,6 +45,16 @@ export class StationFormComponent implements OnInit {
     if (this.station.relations.length === this.selectFields.length) {
       this.addConnectionField();
     }
+  }
+
+  onLatitudeChange(latitude: number) {
+    this.station.latitude = latitude;
+    this.synhroService.updateCoordinates(latitude, this.station.longitude);
+  }
+
+  onLongitudeChange(longitude: number) {
+    this.station.longitude = longitude;
+    this.synhroService.updateCoordinates(this.station.latitude, longitude);
   }
 
   addConnectionField() {

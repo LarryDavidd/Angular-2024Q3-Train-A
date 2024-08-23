@@ -21,6 +21,7 @@
       type="number"
       id="latitude"
       [(ngModel)]="station.latitude"
+      (ngModelChange)="onLatitudeChange($event)"
       min="-90"
       max="90"
       name="latitude"
@@ -36,6 +37,7 @@
       type="number"
       id="longitude"
       [(ngModel)]="station.longitude"
+      (ngModelChange)="onLongitudeChange($event)"
       min="-180"
       max="180"
       name="longitude"
@@ -67,6 +69,7 @@
     mat-stroked-button
     type="submit"
     class="block w-full"
+    disabled="{{ !station.city || !station.latitude || !station.longitude || !station.relations.length }}"
   >
     Save
   </button>
