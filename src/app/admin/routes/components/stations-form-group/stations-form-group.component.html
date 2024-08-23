@@ -1,9 +1,9 @@
 <form [formGroup]="form">
   <div formArrayName="select">
-    <div *ngFor="let selectControl of form.controls.select.controls; let i = index">
+    <div *ngFor="let stations of stationsForSelect; let i = index">
       <select
         [formControlName]="i"
-        (change)="onChange(i)"
+        (change)="onChange($event, i)"
       >
         <option
           value=""
@@ -12,10 +12,11 @@
           Select an option
         </option>
         <option
-          *ngFor="let item of getStations"
-          [value]="item"
+          *ngFor="let station of stations"
+          [value]="station.city"
+          [id]="station.id"
         >
-          {{ item.city }}
+          {{ station.city }}
         </option>
       </select>
     </div>

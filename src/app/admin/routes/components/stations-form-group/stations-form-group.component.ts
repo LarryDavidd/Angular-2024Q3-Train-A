@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { GetStationsResponse } from 'admin/stations/model/station.model';
@@ -11,21 +11,22 @@ import { GetStationsResponse } from 'admin/stations/model/station.model';
   templateUrl: './stations-form-group.component.html',
   styleUrl: './stations-form-group.component.scss'
 })
-export class StationsFormGroupComponent {
+export class StationsFormGroupComponent implements OnInit {
   @Input() stations!: GetStationsResponse;
 
-  private lastSelectedStationID: string | null = null;
+  private lastSelectedStationID: number | null = null;
+
+  stationsForSelect: GetStationsResponse[] = [];
 
   form = new FormGroup({
     select: new FormArray([new FormControl('', [Validators.required])])
   });
 
-  onChange(index: number) {
-    if (this.form.value.select) {
-      this.lastSelectedStationID = this.form.value.select[index];
-      console.log(this.lastSelectedStationID);
-      this.addSelectField();
-    }
+  onChange(event: Event, index: number): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+    const selectedId = selectedOption.id;
+    this.setStations = { id: selectedId, index };
   }
 
   addSelectField() {
@@ -43,7 +44,26 @@ export class StationsFormGroupComponent {
   }
 
   get getStationByLastSelectedStationID() {
-    return this.stations.find((station) => station.id === Number(this.lastSelectedStationID));
+    return this.stations.find((station) => station.id === this.lastSelectedStationID);
+  }
+
+  set setStations({ id, index }: { id: string; index: number }) {
+    // this.form.controls.select.controls = this.form.controls.select.controls.splice(index);
+    this.addSelectField();
+
+    console.log(this.stationsForSelect, id, index);
+    // this.stationsForSelect = this.stationsForSelect.splice(index + 1);
+    console.log(this.stationsForSelect, id, index);
+
+    this.stationsForSelect[index + 1] = [];
+
+    const item = this.getStationById(Number(id));
+
+    this.stations.forEach((defaultStation) => {
+      item?.connectedTo.forEach((connectedStation) => {
+        if (defaultStation.id === connectedStation.id) this.stationsForSelect[index + 1].push(defaultStation);
+      });
+    });
   }
 
   get getStations() {
@@ -63,5 +83,9 @@ export class StationsFormGroupComponent {
       return newStationsList;
     }
     return [];
+  }
+
+  ngOnInit() {
+    this.stationsForSelect.push(this.stations);
   }
 }
