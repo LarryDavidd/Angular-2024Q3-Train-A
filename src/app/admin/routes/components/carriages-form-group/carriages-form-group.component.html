@@ -1,0 +1,24 @@
+<form [formGroup]="form">
+  <div formArrayName="select">
+    <div *ngFor="let tag of form.controls.select.controls; let i = index">
+      <select
+        [formControlName]="i"
+        (change)="onChange()"
+      >
+        <option
+          value=""
+          disabled
+        >
+          Select an option
+        </option>
+        <option
+          *ngFor="let carriages of carriages"
+          [value]="carriages.name"
+          [id]="carriages.code"
+        >
+          {{ carriages.name }}
+        </option>
+      </select>
+    </div>
+  </div>
+</form>

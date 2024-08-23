@@ -1,20 +1,20 @@
-<ng-container *ngIf="isLoadingCarriages$ | async; else dataTemplate">
+<ng-container *ngIf="isLoadingStations$ | async; else stationsDataTemplate">
   <mat-spinner [diameter]="70"></mat-spinner>
 </ng-container>
 
-<ng-template #dataTemplate>
+<ng-container *ngIf="isLoadingCarriages$ | async; else carriagesDataTemplate">
+  <mat-spinner [diameter]="70"></mat-spinner>
+</ng-container>
+
+<ng-template #stationsDataTemplate>
   <ng-container *ngIf="stations$ | async as data; else notFound">
     <app-stations-form-group [stations]="data" />
   </ng-container>
 </ng-template>
 
-<ng-template #dataTemplate>
+<ng-template #carriagesDataTemplate>
   <ng-container *ngIf="carriages$ | async as data; else notFound">
-    <ul class="flex flex-wrap justify-center gap-3">
-      <li *ngFor="let carriage of data">
-        {{ carriage.code }}
-      </li>
-    </ul>
+    <app-carriages-form-group [carriages]="data" />
   </ng-container>
 </ng-template>
 
