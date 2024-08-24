@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CarriagesResponse } from 'admin/carriages/model/carriages.model';
@@ -14,13 +14,11 @@ import { CarriagesResponse } from 'admin/carriages/model/carriages.model';
 export class CarriagesFormGroupComponent {
   @Input() carriages!: CarriagesResponse;
 
+  @Output() setSelectedCarriagesCodes = new EventEmitter<string[]>();
+
   form = new FormGroup({
     select: new FormArray([new FormControl('', [Validators.required])])
   });
-
-  addSelectField() {
-    this.form.controls.select.push(new FormControl('', [Validators.required]));
-  }
 
   reset() {
     this.form.reset();
@@ -28,7 +26,12 @@ export class CarriagesFormGroupComponent {
     this.addSelectField();
   }
 
-  onChange(): void {
-    this.addSelectField();
+  addSelectField() {
+    this.form.controls.select.push(new FormControl('', [Validators.required]));
+  }
+
+  onChange(i: number): void {
+    this.setSelectedCarriagesCodes.emit(this.form.value.select?.filter((value): value is string => value !== null) ?? []);
+    if (this.form.controls.select.length === i + 1) this.addSelectField();
   }
 }

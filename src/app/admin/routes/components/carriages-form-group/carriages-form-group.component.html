@@ -3,7 +3,7 @@
     <div *ngFor="let tag of form.controls.select.controls; let i = index">
       <select
         [formControlName]="i"
-        (change)="onChange()"
+        (change)="onChange(i)"
       >
         <option
           value=""
