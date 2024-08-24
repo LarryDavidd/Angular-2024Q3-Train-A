@@ -9,6 +9,7 @@ import { selectCarriages, selectCarriagesLoadingStatus } from 'admin/carriages/c
 import { StationsFormGroupComponent } from '../stations-form-group/stations-form-group.component';
 import { CarriagesFormGroupComponent } from '../carriages-form-group/carriages-form-group.component';
 import { MatButton } from '@angular/material/button';
+import { RoutesService } from 'admin/routes/services/routes.service';
 
 @Component({
   selector: 'app-create-section',
@@ -19,6 +20,8 @@ import { MatButton } from '@angular/material/button';
 })
 export class CreateSectionComponent implements OnInit {
   private readonly store = inject(Store);
+
+  private routesService = inject(RoutesService);
 
   // Stations
   isLoadingStations$ = this.store.select(selectStationsLoadingStatus);
@@ -45,6 +48,7 @@ export class CreateSectionComponent implements OnInit {
   // Shared
   onSave() {
     console.log(this.selectedCarriagesCodes, this.selectedStationsIds);
+    this.routesService.createRoute({ carriages: this.selectedCarriagesCodes, path: this.selectedStationsIds.map((value) => Number(value)) });
   }
 
   ngOnInit(): void {
