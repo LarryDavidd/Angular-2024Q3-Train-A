@@ -1,0 +1,71 @@
+<div class="profile">
+  <div class="profile__left">
+    <div class="profile__icon-wrap">
+      <img
+        class="profile__icon"
+        src="/user.png"
+        alt="user"
+      />
+    </div>
+
+    <h2 class="profile__title">Profile</h2>
+    <button
+      class="button button-logout"
+      mat-flat-button
+      extended
+    >
+      Logout
+    </button>
+  </div>
+  <div class="profile__right">
+    <p class="profile__subtitle">Information</p>
+    <mat-divider></mat-divider>
+    <form
+      class="profile__form"
+      [formGroup]="profileForm"
+    >
+      <div class="profile__block">
+        <label for="name">Name:</label>
+        <div class="profile__input-wrap">
+          <input
+            class="profile__input"
+            type="text"
+            name="name"
+            formControlName="name"
+          />
+          <img
+            class="profile__input-icon"
+            src="/pen.png"
+            alt="pen"
+          />
+        </div>
+      </div>
+
+      <div class="profile__block">
+        <label for="email">Email:</label>
+        <div class="profile__input-wrap">
+          <input
+            class="profile__input"
+            type="text"
+            name="email"
+            formControlName="email"
+          />
+          <img
+            class="profile__input-icon"
+            src="/pen.png"
+            alt="pen"
+          />
+        </div>
+      </div>
+    </form>
+    <div class="profile__button-wrap">
+      <button
+        class="button"
+        mat-flat-button
+        extended
+      >
+        Change Password
+      </button>
+    </div>
+  </div>
+</div>
