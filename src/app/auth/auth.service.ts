@@ -11,7 +11,22 @@ import { SignInResponseData } from './models/signin-response';
 export class AuthService {
   private apiUrl = '/api';
 
-  constructor(private readonly http: HttpClient) {}
+  private isAuthenticated = false;
+
+  private authSecretKey = 'authToken';
+
+  constructor(private readonly http: HttpClient) {
+    this.isAuthenticated = !!localStorage.getItem(this.authSecretKey);
+  }
+
+  public isAuthenticatedUser(): boolean {
+    return this.isAuthenticated;
+  }
+
+  public logout(): void {
+    localStorage.removeItem(this.authSecretKey);
+    this.isAuthenticated = false;
+  }
 
   public signUp(email: string, password: string): Observable<SignUpResponseData> {
     const data = { email, password };
@@ -53,7 +68,8 @@ export class AuthService {
           const res = response as { token: string };
 
           signInData.success = true;
-          localStorage.setItem('authToken', res.token);
+          localStorage.setItem(this.authSecretKey, res.token);
+          this.isAuthenticated = true;
 
           observer.next(signInData);
           observer.complete();
