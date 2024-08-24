@@ -60,6 +60,9 @@ export class AuthService {
 
           signInData.success = true;
           localStorage.setItem('authToken', res.token);
+
+          observer.next(signInData);
+          observer.complete();
         },
         (error: ResponseError) => {
           signInData.message = error.error.message;
