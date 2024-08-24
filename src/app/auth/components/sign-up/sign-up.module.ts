@@ -11,17 +11,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [SignUpComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatCardModule,
-    MatCardImage,
-    HttpClientModule
-  ]
+  imports: [CommonModule, FormsModule, MatButtonModule, ReactiveFormsModule, MatInputModule, MatFormFieldModule, MatIconModule, MatCardModule, MatCardImage, HttpClientModule]
 })
 export class SignUpModule {}

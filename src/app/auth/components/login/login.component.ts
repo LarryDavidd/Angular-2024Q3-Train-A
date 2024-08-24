@@ -31,9 +31,7 @@ export class LoginComponent {
     });
 
     this.loginForm.valueChanges.subscribe(() => {
-      this.isSubmitDisabled = Object.values(this.loginForm.value).some(
-        (val) => val !== ''
-      );
+      this.isSubmitDisabled = Object.values(this.loginForm.value).some((val) => val !== '');
     });
   }
 

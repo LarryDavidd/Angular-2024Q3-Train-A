@@ -11,17 +11,6 @@ import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [LoginComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatCardModule,
-    MatCardImage,
-    HttpClientModule
-  ]
+  imports: [CommonModule, FormsModule, MatButtonModule, ReactiveFormsModule, MatInputModule, MatFormFieldModule, MatIconModule, MatCardModule, MatCardImage, HttpClientModule]
 })
 export class LoginModule {}

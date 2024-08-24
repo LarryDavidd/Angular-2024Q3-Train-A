@@ -18,19 +18,13 @@
           name="email"
           formControlName="email"
           [ngClass]="{
-            invalid:
-              signUpForm.get('email')?.touched &&
-              signUpForm.get('email')?.invalid
+            invalid: signUpForm.get('email')?.touched && signUpForm.get('email')?.invalid
           }"
           required
         />
         <p
           class="error"
-          *ngIf="
-            signUpForm.get('email')?.touched &&
-            signUpForm.get('email')?.errors?.['invalidEmail'] &&
-            signUpForm.get('email')?.value !== ''
-          "
+          *ngIf="signUpForm.get('email')?.touched && signUpForm.get('email')?.errors?.['invalidEmail'] && signUpForm.get('email')?.value !== ''"
         >
           Incorrect email
         </p>
@@ -42,11 +36,7 @@
         </p>
         <p
           class="error"
-          *ngIf="
-            signUpForm.get('email')?.errors?.['required'] &&
-            isFirstClick &&
-            signUpForm.get('email')?.value === ''
-          "
+          *ngIf="signUpForm.get('email')?.errors?.['required'] && isFirstClick && signUpForm.get('email')?.value === ''"
         >
           Email is required
         </p>
@@ -61,28 +51,19 @@
           name="password"
           formControlName="password"
           [ngClass]="{
-            invalid:
-              signUpForm.get('password')?.touched &&
-              signUpForm.get('password')?.invalid
+            invalid: signUpForm.get('password')?.touched && signUpForm.get('password')?.invalid
           }"
           required
         />
         <p
           class="error"
-          *ngIf="
-            signUpForm.get('password')?.touched &&
-            signUpForm.get('password')?.errors?.['minlength']
-          "
+          *ngIf="signUpForm.get('password')?.touched && signUpForm.get('password')?.errors?.['minlength']"
         >
           Password must be at least 8 characters long
         </p>
         <p
           class="error"
-          *ngIf="
-            signUpForm.get('password')?.errors?.['required'] &&
-            isFirstClick &&
-            signUpForm.get('password')?.value === ''
-          "
+          *ngIf="signUpForm.get('password')?.errors?.['required'] && isFirstClick && signUpForm.get('password')?.value === ''"
         >
           Password is required
         </p>
@@ -97,19 +78,13 @@
           name="repeat-password"
           formControlName="repeatPassword"
           [ngClass]="{
-            invalid:
-              signUpForm.get('repeatPassword')?.touched &&
-              signUpForm.get('repeatPassword')?.invalid
+            invalid: signUpForm.get('repeatPassword')?.touched && signUpForm.get('repeatPassword')?.invalid
           }"
           required
         />
         <p
           class="error"
-          *ngIf="
-            signUpForm.get('repeatPassword')?.touched &&
-            signUpForm.get('password')?.touched &&
-            signUpForm.hasError('passwordMismatch')
-          "
+          *ngIf="signUpForm.get('repeatPassword')?.touched && signUpForm.get('password')?.touched && signUpForm.hasError('passwordMismatch')"
         >
           Passwords do not match
         </p>
@@ -121,11 +96,7 @@
           mat-flat-button
           extended
           type="submit"
-          [disabled]="
-            (isFirstClick && signUpForm.invalid) ||
-            isLoading ||
-            (isSubmitDisabled && signUpForm.invalid)
-          "
+          [disabled]="(isFirstClick && signUpForm.invalid) || isLoading || (isSubmitDisabled && signUpForm.invalid)"
         >
           Register
         </button>

@@ -1,5 +1,1 @@
-export type Reason =
-  | 'invalidUniqueKey'
-  | 'invalidFields'
-  | 'invalidEmail'
-  | 'invalidPassword';
+export type Reason = 'invalidUniqueKey' | 'invalidFields' | 'invalidEmail' | 'invalidPassword';

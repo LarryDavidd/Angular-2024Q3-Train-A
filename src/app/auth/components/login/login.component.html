@@ -18,18 +18,13 @@
           name="email"
           formControlName="email"
           [ngClass]="{
-            invalid:
-              loginForm.get('email')?.touched && loginForm.get('email')?.invalid
+            invalid: loginForm.get('email')?.touched && loginForm.get('email')?.invalid
           }"
           required
         />
         <p
           class="error"
-          *ngIf="
-            loginForm.get('email')?.touched &&
-            loginForm.get('email')?.errors?.['invalidEmail'] &&
-            loginForm.get('email')?.value !== ''
-          "
+          *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['invalidEmail'] && loginForm.get('email')?.value !== ''"
         >
           Incorrect email
         </p>
@@ -41,11 +36,7 @@
         </p>
         <p
           class="error"
-          *ngIf="
-            loginForm.get('email')?.errors?.['required'] &&
-            isFirstClick &&
-            loginForm.get('email')?.value === ''
-          "
+          *ngIf="loginForm.get('email')?.errors?.['required'] && isFirstClick && loginForm.get('email')?.value === ''"
         >
           Email is required
         </p>
@@ -60,20 +51,14 @@
           name="password"
           formControlName="password"
           [ngClass]="{
-            invalid:
-              loginForm.get('password')?.touched &&
-              loginForm.get('password')?.invalid
+            invalid: loginForm.get('password')?.touched && loginForm.get('password')?.invalid
           }"
           required
         />
 
         <p
           class="error"
-          *ngIf="
-            loginForm.get('password')?.errors?.['required'] &&
-            isFirstClick &&
-            loginForm.get('password')?.value === ''
-          "
+          *ngIf="loginForm.get('password')?.errors?.['required'] && isFirstClick && loginForm.get('password')?.value === ''"
         >
           Password is required
         </p>
@@ -91,11 +76,7 @@
           mat-flat-button
           extended
           type="submit"
-          [disabled]="
-            (isFirstClick && loginForm.invalid) ||
-            isLoading ||
-            (isSubmitDisabled && loginForm.invalid)
-          "
+          [disabled]="(isFirstClick && loginForm.invalid) || isLoading || (isSubmitDisabled && loginForm.invalid)"
         >
           Sign In
         </button>

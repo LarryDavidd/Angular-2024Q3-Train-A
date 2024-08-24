@@ -35,9 +35,7 @@ export class SignUpComponent {
     );
 
     this.signUpForm.valueChanges.subscribe(() => {
-      this.isSubmitDisabled = Object.values(this.signUpForm.value).some(
-        (val) => val !== ''
-      );
+      this.isSubmitDisabled = Object.values(this.signUpForm.value).some((val) => val !== '');
     });
   }
 

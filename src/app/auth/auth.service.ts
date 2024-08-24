@@ -13,10 +13,7 @@ export class AuthService {
 
   constructor(private readonly http: HttpClient) {}
 
-  public signUp(
-    email: string,
-    password: string
-  ): Observable<SignUpResponseData> {
+  public signUp(email: string, password: string): Observable<SignUpResponseData> {
     const data = { email, password };
     const responseData: SignUpResponseData = {
       success: false,
@@ -42,10 +39,7 @@ export class AuthService {
     });
   }
 
-  public signIn(
-    email: string,
-    password: string
-  ): Observable<SignInResponseData> {
+  public signIn(email: string, password: string): Observable<SignInResponseData> {
     const data = { email, password };
     const signInData: SignInResponseData = {
       success: false,
