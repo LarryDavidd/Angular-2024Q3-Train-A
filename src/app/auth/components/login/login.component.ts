@@ -18,6 +18,8 @@ export class LoginComponent {
 
   public isLoading = false;
 
+  public isSubmitDisabled = false;
+
   constructor(
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
@@ -26,6 +28,12 @@ export class LoginComponent {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, emailValidator]],
       password: ['', [Validators.required, spaceValidator, passwordValidator]]
+    });
+
+    this.loginForm.valueChanges.subscribe(() => {
+      this.isSubmitDisabled = Object.values(this.loginForm.value).some(
+        (val) => val !== ''
+      );
     });
   }
 

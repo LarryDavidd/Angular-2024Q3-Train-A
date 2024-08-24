@@ -94,19 +94,19 @@
           [disabled]="
             (isFirstClick && loginForm.invalid) ||
             isLoading ||
-            (loginForm.touched && loginForm.invalid)
+            (isSubmitDisabled && loginForm.invalid)
           "
         >
           Sign In
         </button>
-        <button
+        <a
           class="button"
           mat-button
           type="button"
-          (click)="navigateTo('signup')"
+          href="/signup"
         >
           Sign Up
-        </button>
+        </a>
       </div>
     </form>
   </mat-card-content>
