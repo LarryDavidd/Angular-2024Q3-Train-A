@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { MatExpansionPanel } from '@angular/material/expansion';
 import { Carriage } from 'admin/models/carriages.model';
 import { CarriagesService } from 'admin/services/carriages.service';
 
@@ -7,9 +8,11 @@ import { CarriagesService } from 'admin/services/carriages.service';
   templateUrl: './carriages.component.html'
 })
 export class CarriagesComponent implements OnInit {
-  carriages: Carriage[] = [];
+  @ViewChild('expansionPanel') expansionPanel!: MatExpansionPanel;
 
-  isFormVisible = false;
+  @ViewChild('formContainer') formContainer!: ElementRef;
+
+  carriages: Carriage[] = [];
 
   isEditing = false;
 
@@ -37,25 +40,39 @@ export class CarriagesComponent implements OnInit {
     });
   }
 
-  showCreateForm(): void {
-    this.isFormVisible = true;
+  toggleCreateForm(panel: MatExpansionPanel): void {
+    if (panel.opened) {
+      panel.close();
+      return;
+    }
+
+    panel.open();
     this.isEditing = false;
     this.carriageForm = { name: '', rows: 0, leftSeats: 0, rightSeats: 0, code: '' };
   }
 
-  editCarriage(carriage: Carriage): void {
-    this.isFormVisible = true;
+  editCarriage(carriage: Carriage, panel: MatExpansionPanel): void {
+    panel.open();
     this.isEditing = true;
     this.carriageForm = { ...carriage };
+    this.scrollToForm();
   }
 
-  onSubmit(): void {
+  scrollToForm(): void {
+    this.formContainer.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  onSubmit(panel: MatExpansionPanel): void {
+    if (this.carriageForm.leftSeats < 1 || this.carriageForm.rightSeats < 1 || this.carriageForm.rows < 1 || this.carriageForm.name === '') {
+      this.handleError('Please fill in all required fields');
+      return;
+    }
     if (this.isEditing) {
       this.carriagesService.updateCarriage(this.carriageForm).subscribe({
         next: () => {
           this.loadCarriages();
-          this.isFormVisible = false;
           this.resetForm();
+          panel.close();
         },
         error: (error) => {
           this.handleError(error);
@@ -65,8 +82,8 @@ export class CarriagesComponent implements OnInit {
       this.carriagesService.createCarriage(this.carriageForm).subscribe({
         next: () => {
           this.loadCarriages();
-          this.isFormVisible = false;
           this.resetForm();
+          panel.close();
         },
         error: (error) => {
           this.handleError(error);

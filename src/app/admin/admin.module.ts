@@ -4,9 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { AdminRoutingModule } from './admin-routing.module';
 import { CarriagesComponent } from './pages/carriages/carriages.component';
 import { CarriageComponent } from './components/carriage/carriage.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [CarriagesComponent, CarriageComponent],
-  imports: [CommonModule, AdminRoutingModule, FormsModule]
+  imports: [CommonModule, AdminRoutingModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatExpansionModule]
 })
 export class AdminModule {}
