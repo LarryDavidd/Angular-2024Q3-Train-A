@@ -1,14 +1,14 @@
-<div class="p-5">
+<div class="bg-gray-100 p-5">
   <button
     (click)="showCreateForm()"
-    class="mb-5 mt-2 border border-solid"
+    class="mb-5 mt-2 rounded-sm border border-solid bg-slate-200 p-1 hover:bg-slate-400"
   >
     Create
   </button>
 
   <div
     *ngIf="errorMessage"
-    class="text-red-500"
+    class="font-bold text-red-500"
   >
     {{ errorMessage }}
   </div>
@@ -16,87 +16,102 @@
   <form
     *ngIf="isFormVisible"
     (ngSubmit)="onSubmit()"
-    class="mb-5"
+    class="mb-5 bg-white p-2.5"
   >
-    <label for="name">Name:</label>
+    <label
+      for="name"
+      class="mr-1"
+      >Name:</label
+    >
     <input
       [(ngModel)]="carriageForm.name"
       name="name"
       placeholder="Name"
       required
+      class="mr-2 rounded-sm bg-gray-100"
     />
 
-    <label for="rows">Rows:</label>
+    <label
+      for="rows"
+      class="mr-1"
+      >Rows:</label
+    >
     <input
       [(ngModel)]="carriageForm.rows"
       name="rows"
       placeholder="Rows"
       type="number"
+      min="0"
       required
+      class="mr-2 w-9 rounded-sm bg-gray-100"
     />
 
-    <label for="leftSeats">Left Seats:</label>
+    <label
+      for="leftSeats"
+      class="mr-1"
+      >Left Seats:</label
+    >
     <input
       [(ngModel)]="carriageForm.leftSeats"
       name="leftSeats"
       placeholder="Left Seats"
       type="number"
+      min="0"
       required
+      class="mr-2 w-9 rounded-sm bg-gray-100"
     />
 
-    <label for="rightSeats">Right Seats:</label>
+    <label
+      for="rightSeats"
+      class="mr-1"
+      >Right Seats:</label
+    >
     <input
       [(ngModel)]="carriageForm.rightSeats"
       name="rightSeats"
       placeholder="Right Seats"
       type="number"
+      min="0"
       required
+      class="mr-2 w-9 rounded-sm bg-gray-100"
     />
     <button
       type="submit"
-      class="mt-2 border"
+      class="my-5 block rounded-sm border border-solid bg-slate-200 p-1 hover:bg-slate-400"
     >
-      {{ isEditing ? 'Update' : 'Save' }}
+      {{ isEditing ? 'Save changes' : 'Save' }}
     </button>
 
-    <div class="flex">
-      <div
-        *ngFor="let row of [].constructor(carriageForm.rows); let rowIndex = index"
-        class="flex flex-col-reverse"
-      >
-        <span *ngFor="let seat of [].constructor(carriageForm.leftSeats)">[L]</span>
-        <span class="h-5"></span>
-        <span *ngFor="let seat of [].constructor(carriageForm.rightSeats)">[R]</span>
-      </div>
-    </div>
+    <app-carriage
+      *ngIf="carriageForm.leftSeats || carriageForm.rightSeats"
+      [rows]="carriageForm.rows"
+      [leftSeats]="carriageForm.leftSeats"
+      [rightSeats]="carriageForm.rightSeats"
+    ></app-carriage>
   </form>
 
   <div
     *ngFor="let carriage of carriages"
-    class="mb-5 border-2 border-solid border-gray-400 p-2.5"
+    class="mb-5 rounded-xl bg-white p-2.5"
   >
-    <h3>{{ carriage.name }}</h3>
+    <h3 style="font-weight: 700">{{ carriage.name }}</h3>
     <button
       (click)="editCarriage(carriage)"
-      class="mt-2 border"
+      class="my-5 block rounded-sm border border-solid bg-slate-200 p-1 hover:bg-slate-400"
     >
       Update
     </button>
-    <div class="carriage-info">
+    <div class="flex gap-2">
       <p>Code: {{ carriage.code }}</p>
       <p>Rows: {{ carriage.rows }}</p>
       <p>Left Seats: {{ carriage.leftSeats }}</p>
       <p>Right Seats: {{ carriage.rightSeats }}</p>
     </div>
-    <div class="flex">
-      <div
-        *ngFor="let row of [].constructor(carriage.rows); let rowIndex = index"
-        class="flex flex-col-reverse"
-      >
-        <span *ngFor="let seat of [].constructor(carriage.leftSeats)">[L]</span>
-        <span class="h-5"></span>
-        <span *ngFor="let seat of [].constructor(carriage.rightSeats)">[R]</span>
-      </div>
-    </div>
+
+    <app-carriage
+      [rows]="carriage.rows"
+      [leftSeats]="carriage.leftSeats"
+      [rightSeats]="carriage.rightSeats"
+    ></app-carriage>
   </div>
 </div>
