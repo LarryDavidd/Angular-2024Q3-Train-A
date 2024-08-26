@@ -5,3 +5,7 @@ export interface Carriage {
   leftSeats: number;
   rightSeats: number;
 }
+
+export interface AuthResponse {
+  token: string;
+}

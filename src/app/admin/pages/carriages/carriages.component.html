@@ -1,14 +1,22 @@
-<div class="carriages-container">
+<div class="p-5">
   <button
     (click)="showCreateForm()"
-    class="btn-create"
+    class="mb-5 mt-2 border border-solid"
   >
     Create
   </button>
 
+  <div
+    *ngIf="errorMessage"
+    class="text-red-500"
+  >
+    {{ errorMessage }}
+  </div>
+
   <form
     *ngIf="isFormVisible"
     (ngSubmit)="onSubmit()"
+    class="mb-5"
   >
     <label for="name">Name:</label>
     <input
@@ -44,27 +52,49 @@
       type="number"
       required
     />
-    <button type="submit">Save</button>
+    <button
+      type="submit"
+      class="mt-2 border"
+    >
+      {{ isEditing ? 'Update' : 'Save' }}
+    </button>
+
+    <div class="flex">
+      <div
+        *ngFor="let row of [].constructor(carriageForm.rows); let rowIndex = index"
+        class="flex flex-col-reverse"
+      >
+        <span *ngFor="let seat of [].constructor(carriageForm.leftSeats)">[L]</span>
+        <span class="h-5"></span>
+        <span *ngFor="let seat of [].constructor(carriageForm.rightSeats)">[R]</span>
+      </div>
+    </div>
   </form>
 
   <div
     *ngFor="let carriage of carriages"
-    class="carriage-item"
+    class="mb-5 border-2 border-solid border-gray-400 p-2.5"
   >
     <h3>{{ carriage.name }}</h3>
+    <button
+      (click)="editCarriage(carriage)"
+      class="mt-2 border"
+    >
+      Update
+    </button>
     <div class="carriage-info">
       <p>Code: {{ carriage.code }}</p>
       <p>Rows: {{ carriage.rows }}</p>
       <p>Left Seats: {{ carriage.leftSeats }}</p>
       <p>Right Seats: {{ carriage.rightSeats }}</p>
     </div>
-    <div class="carriage-image">
+    <div class="flex">
       <div
         *ngFor="let row of [].constructor(carriage.rows); let rowIndex = index"
-        class="carriage-row"
+        class="flex flex-col-reverse"
       >
         <span *ngFor="let seat of [].constructor(carriage.leftSeats)">[L]</span>
-        <span class="aisle"></span>
+        <span class="h-5"></span>
         <span *ngFor="let seat of [].constructor(carriage.rightSeats)">[R]</span>
       </div>
     </div>
