@@ -32,12 +32,21 @@
   }
 
   &__input {
+    max-width: 500px;
     width: 100%;
     padding: 8px;
     margin-bottom: 12px;
     border: var(--pwa-neutral-cold-200) 2px solid;
     border-radius: 4px;
     height: 50px;
+  }
+
+  &__text {
+    max-width: 500px;
+    width: 100%;
+    height: 50px;
+    padding: 8px;
+    margin-bottom: 12px;
   }
 
   &__input-wrap {

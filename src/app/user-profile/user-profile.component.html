@@ -1,3 +1,5 @@
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
 <div class="profile">
   <div class="profile__left">
     <div class="profile__icon-wrap">
@@ -13,6 +15,7 @@
       class="button button-logout"
       mat-flat-button
       extended
+      (click)="logout()"
     >
       Logout
     </button>
@@ -27,34 +30,58 @@
       <div class="profile__block">
         <label for="name">Name:</label>
         <div class="profile__input-wrap">
-          <input
-            class="profile__input"
-            type="text"
-            name="name"
-            formControlName="name"
-          />
-          <img
-            class="profile__input-icon"
-            src="/pen.png"
-            alt="pen"
-          />
+          <ng-container *ngIf="!isEditing['name']; else editName">
+            <p class="profile__text">{{ profileForm.get('name')?.value }}</p>
+            <img
+              class="profile__input-icon"
+              src="/pen.png"
+              alt="pen"
+              (click)="toggleEdit('name')"
+            />
+          </ng-container>
+          <ng-template #editName>
+            <input
+              class="profile__input"
+              type="text"
+              name="name"
+              formControlName="name"
+            />
+            <img
+              class="profile__input-icon"
+              src="/save.png"
+              alt="save"
+              (click)="toggleEdit('name')"
+            />
+          </ng-template>
         </div>
       </div>
 
       <div class="profile__block">
         <label for="email">Email:</label>
         <div class="profile__input-wrap">
-          <input
-            class="profile__input"
-            type="text"
-            name="email"
-            formControlName="email"
-          />
-          <img
-            class="profile__input-icon"
-            src="/pen.png"
-            alt="pen"
-          />
+          <ng-container *ngIf="!isEditing['email']; else editEmail">
+            <p class="profile__text">{{ profileForm.get('email')?.value }}</p>
+            <img
+              class="profile__input-icon"
+              src="/pen.png"
+              alt="pen"
+              (click)="toggleEdit('email')"
+            />
+          </ng-container>
+          <ng-template #editEmail>
+            <input
+              class="profile__input"
+              type="text"
+              name="email"
+              formControlName="email"
+            />
+            <img
+              class="profile__input-icon"
+              src="/save.png"
+              alt="save"
+              (click)="toggleEdit('email')"
+            />
+          </ng-template>
         </div>
       </div>
     </form>
