@@ -1,0 +1,39 @@
+.carriages-container {
+  padding: 20px;
+}
+
+.btn-create {
+  margin-bottom: 20px;
+}
+
+.carriage-item {
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.carriage-image {
+  display: flex;
+  flex-direction: column;
+}
+
+.carriage-row {
+  display: flex;
+}
+
+.aisle {
+  width: 20px;
+}
+
+form {
+  margin-bottom: 20px;
+}
+
+input {
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+button {
+  margin-top: 10px;
+}

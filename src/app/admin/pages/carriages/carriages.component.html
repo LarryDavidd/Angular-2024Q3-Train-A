@@ -1,1 +1,72 @@
-<p>carriages works!</p>
+<div class="carriages-container">
+  <button
+    (click)="showCreateForm()"
+    class="btn-create"
+  >
+    Create
+  </button>
+
+  <form
+    *ngIf="isFormVisible"
+    (ngSubmit)="onSubmit()"
+  >
+    <label for="name">Name:</label>
+    <input
+      [(ngModel)]="carriageForm.name"
+      name="name"
+      placeholder="Name"
+      required
+    />
+
+    <label for="rows">Rows:</label>
+    <input
+      [(ngModel)]="carriageForm.rows"
+      name="rows"
+      placeholder="Rows"
+      type="number"
+      required
+    />
+
+    <label for="leftSeats">Left Seats:</label>
+    <input
+      [(ngModel)]="carriageForm.leftSeats"
+      name="leftSeats"
+      placeholder="Left Seats"
+      type="number"
+      required
+    />
+
+    <label for="rightSeats">Right Seats:</label>
+    <input
+      [(ngModel)]="carriageForm.rightSeats"
+      name="rightSeats"
+      placeholder="Right Seats"
+      type="number"
+      required
+    />
+    <button type="submit">Save</button>
+  </form>
+
+  <div
+    *ngFor="let carriage of carriages"
+    class="carriage-item"
+  >
+    <h3>{{ carriage.name }}</h3>
+    <div class="carriage-info">
+      <p>Code: {{ carriage.code }}</p>
+      <p>Rows: {{ carriage.rows }}</p>
+      <p>Left Seats: {{ carriage.leftSeats }}</p>
+      <p>Right Seats: {{ carriage.rightSeats }}</p>
+    </div>
+    <div class="carriage-image">
+      <div
+        *ngFor="let row of [].constructor(carriage.rows); let rowIndex = index"
+        class="carriage-row"
+      >
+        <span *ngFor="let seat of [].constructor(carriage.leftSeats)">[L]</span>
+        <span class="aisle"></span>
+        <span *ngFor="let seat of [].constructor(carriage.rightSeats)">[R]</span>
+      </div>
+    </div>
+  </div>
+</div>
