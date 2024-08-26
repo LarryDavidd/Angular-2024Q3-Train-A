@@ -47,8 +47,10 @@ export class CreateSectionComponent implements OnInit {
 
   // Shared
   onSave() {
-    console.log(this.selectedCarriagesCodes, this.selectedStationsIds);
-    this.routesService.createRoute({ carriages: this.selectedCarriagesCodes, path: this.selectedStationsIds.map((value) => Number(value)) });
+    this.routesService.createRoute({ carriages: this.selectedCarriagesCodes, path: this.selectedStationsIds.map((value) => Number(value)) }).subscribe({
+      next: (response) => console.log('Route updated successfully', response),
+      error: (error) => console.error('Error updating route:', error)
+    });
   }
 
   ngOnInit(): void {

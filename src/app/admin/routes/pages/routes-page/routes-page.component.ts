@@ -14,4 +14,8 @@ export class RoutesPageComponent {
   openCreateSection() {
     console.log('open create section');
   }
+
+  onUpdate() {
+    console.log('onUpdate');
+  }
 }

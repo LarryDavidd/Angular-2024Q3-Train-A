@@ -1,7 +1,7 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { CreateRouteErrorResponse, CreateRouteRequest, CreateRouteSuccessResponse, GetRoutesResponse } from '../model/routes.model';
+import { CreateRouteErrorResponse, CreateRouteRequest, CreateRouteSuccessResponse, GetRoutesResponse, UpdateRouteRequest, UpdateRouteSuccessResponse } from '../model/routes.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,19 @@ export class RoutesService {
   }
 
   createRoute(request: CreateRouteRequest): Observable<CreateRouteSuccessResponse> {
-    return this.http.post<CreateRouteSuccessResponse>('/api/route', request).pipe(catchError(this.handleError));
+    return this.http
+      .post<CreateRouteSuccessResponse>('/api/route', request, {
+        headers: this.getHttpOptions.headers
+      })
+      .pipe(catchError(this.handleError));
+  }
+
+  updateRoute(id: number, request: UpdateRouteRequest): Observable<UpdateRouteSuccessResponse> {
+    return this.http
+      .put<UpdateRouteSuccessResponse>(`/api/route/${id}`, request, {
+        headers: this.getHttpOptions.headers
+      })
+      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
@@ -29,5 +41,13 @@ export class RoutesService {
     }
     console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
+  }
+
+  get getHttpOptions() {
+    return {
+      headers: new HttpHeaders({
+        Authorization: `Bearer `
+      })
+    };
   }
 }
