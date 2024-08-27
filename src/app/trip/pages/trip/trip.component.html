@@ -1,6 +1,37 @@
-<div>
-  <h1>Trip Details</h1>
-  <p>Ride ID: {{ rideId }}</p>
-  <p>From Station ID: {{ fromStationId }}</p>
-  <p>To Station ID: {{ toStationId }}</p>
+<div class="w-full border-y border-gray-400 bg-white">
+  <div class="mx-auto max-w-6xl">
+    <div class="flex items-center gap-3 py-2">
+      <button
+        mat-icon-button
+        class="icon-btn"
+      >
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Back icon"
+          fontIcon="arrow_back_ios"
+          class="icon"
+        ></mat-icon>
+      </button>
+      <div class="trip-info">
+        <p class="mb-1 font-bold">{{ fromStationId }} &rarr; {{ toStationId }}</p>
+        <div class="flex items-baseline gap-2">
+          <p class="font-bold">Ride {{ rideId }}</p>
+          <div>
+            <button
+              mat-button
+              [matMenuTriggerFor]="menu"
+              class="route-btn"
+            >
+              <span>Route</span>
+              <mat-icon>expand_more</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item>Item 1</button>
+              <button mat-menu-item>Item 2</button>
+            </mat-menu>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

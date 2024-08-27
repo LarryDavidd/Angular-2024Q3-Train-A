@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { TripService } from 'trip/services/trip.service';
 
 @Component({
   selector: 'app-trip',
@@ -13,7 +14,10 @@ export class TripComponent implements OnInit {
 
   toStationId: string | null = null;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private tripService: TripService
+  ) {}
 
   ngOnInit(): void {
     console.log('start trip');
@@ -23,5 +27,11 @@ export class TripComponent implements OnInit {
       this.fromStationId = params['from'];
       this.toStationId = params['to'];
     });
+
+    if (this.rideId) {
+      this.tripService.getRide(+this.rideId).subscribe((ride) => {
+        console.log(ride);
+      });
+    }
   }
 }

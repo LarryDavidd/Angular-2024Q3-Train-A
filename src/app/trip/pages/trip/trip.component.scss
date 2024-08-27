@@ -1,0 +1,21 @@
+button.icon-btn {
+  border: 1px solid gray;
+  border-radius: 5px;
+  margin-right: 10px;
+  .icon {
+    width: 14px;
+  }
+  &:hover {
+    border-radius: 5px;
+    background-color: rgba(68, 71, 78, 0.3);
+  }
+}
+
+.trip-info {
+  p {
+    margin-bottom: 0;
+  }
+  .route-btn {
+    font-size: 16px;
+  }
+}
