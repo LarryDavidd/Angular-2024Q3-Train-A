@@ -22,6 +22,11 @@
   </div>
   <div class="profile__right">
     <p class="profile__subtitle">Information</p>
+    <span
+      *ngIf="role === 'manager'"
+      class="profile__role"
+      >Manager</span
+    >
     <mat-divider></mat-divider>
     <form
       class="profile__form"
@@ -50,7 +55,7 @@
               class="profile__input-icon"
               src="/save.png"
               alt="save"
-              (click)="toggleEdit('name')"
+              (click)="saveUserData('name')"
             />
           </ng-template>
         </div>
@@ -79,20 +84,42 @@
               class="profile__input-icon"
               src="/save.png"
               alt="save"
-              (click)="toggleEdit('email')"
+              (click)="saveUserData('email')"
             />
           </ng-template>
         </div>
+        <span
+          class="profile__error"
+          *ngIf="profileForm.get('email')?.errors?.['invalidEmail'] && isEditing['email']"
+        >
+          Incorrect email
+        </span>
+        <span
+          class="profile__error"
+          *ngIf="profileForm.get('email')?.hasError('emailExists')"
+        >
+          Email already exists
+        </span>
       </div>
     </form>
     <div class="profile__button-wrap">
       <button
-        class="button"
+        class="button profile__password-button"
         mat-flat-button
         extended
+        (click)="openChangePasswordDialog()"
       >
         Change Password
       </button>
     </div>
   </div>
 </div>
+
+<mat-form-field>
+  <mat-label>Message</mat-label>
+  <input
+    matInput
+    value="Password successfully updated!"
+    #message
+  />
+</mat-form-field>

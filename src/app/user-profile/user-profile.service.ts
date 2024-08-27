@@ -4,12 +4,13 @@ import { UserResponse } from './models/user-response';
 import { Observable } from 'rxjs';
 import { Error } from './models/error';
 import { AuthService } from 'auth/auth.service';
+import { UpdateUser } from './models/update-user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserProfileService {
-  private apiUrl = '/api';
+  private apiUrl = '/api/profile';
 
   public userData: UserResponse = {
     name: '',
@@ -19,23 +20,27 @@ export class UserProfileService {
     reason: ''
   };
 
+  public token: string | null = null;
+
+  public httpOptions: { headers: HttpHeaders };
+
   constructor(
     private readonly http: HttpClient,
     private readonly authService: AuthService
-  ) {}
+  ) {
+    this.token = this.authService.getAuthToken();
 
-  public getProfile(): Observable<UserResponse> {
-    const token = this.authService.getAuthToken();
-
-    const httpOptions = {
+    this.httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${this.token}`
       })
     };
+  }
 
+  public getProfile(): Observable<UserResponse> {
     return new Observable((observer) => {
-      this.http.get<UserResponse>(`${this.apiUrl}/profile`, httpOptions).subscribe(
+      this.http.get<UserResponse>(`${this.apiUrl}`, this.httpOptions).subscribe(
         (response: UserResponse) => {
           this.userData = response;
 
@@ -51,5 +56,17 @@ export class UserProfileService {
         }
       );
     });
+  }
+
+  public updateUser(data: UpdateUser): Observable<UserResponse> {
+    return this.http.put<UserResponse>(`${this.apiUrl}`, data, this.httpOptions);
+  }
+
+  public updatePassword(password: string): Observable<Error> {
+    return this.http.put<Error>(`${this.apiUrl}/password`, { password }, this.httpOptions);
+  }
+
+  public terminateSession() {
+    return this.http.delete(`api/logout`, this.httpOptions);
   }
 }
