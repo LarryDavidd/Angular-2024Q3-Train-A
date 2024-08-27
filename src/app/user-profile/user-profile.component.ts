@@ -92,7 +92,7 @@ export class UserProfileComponent implements OnInit {
       if (newPassword) {
         this.userProfileService.updatePassword(newPassword).subscribe({
           next: (_response) => {
-            this.snackBar.open('Password successfully updated!');
+            this.snackBar.open('Password successfully updated!', 'close');
           },
           error: (_error) => {}
         });
