@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TripService } from 'trip/services/trip.service';
+import { Trip } from 'trip/models/trip.model';
+import { Station, TripService } from 'trip/services/trip.service';
 
 @Component({
   selector: 'app-trip',
@@ -8,11 +9,17 @@ import { TripService } from 'trip/services/trip.service';
   styleUrl: './trip.component.scss'
 })
 export class TripComponent implements OnInit {
-  rideId: string | null = null;
+  rideId: number | null = null;
 
-  fromStationId: string | null = null;
+  rideData: Trip | null = null;
 
-  toStationId: string | null = null;
+  fromStationId: number | null = null;
+
+  toStationId: number | null = null;
+
+  listOfStations: Station[] = [];
+
+  listOfCarriageTypes: string[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -20,18 +27,51 @@ export class TripComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('start trip');
-    this.rideId = this.route.snapshot.params['rideId'];
+    this.rideId = +this.route.snapshot.params['rideId'];
 
     this.route.queryParams.subscribe((params) => {
-      this.fromStationId = params['from'];
-      this.toStationId = params['to'];
+      this.fromStationId = +params['from'];
+      this.toStationId = +params['to'];
     });
 
     if (this.rideId) {
-      this.tripService.getRide(+this.rideId).subscribe((ride) => {
-        console.log(ride);
+      this.tripService.getRide(+this.rideId).subscribe({
+        next: (ride) => {
+          this.rideData = ride;
+          console.log(ride);
+        },
+        error: (err) => console.log(err)
       });
     }
+
+    this.getStations();
+  }
+
+  transformDate(dateStr: string): string {
+    const date = new Date(dateStr);
+    const options: Intl.DateTimeFormatOptions = {
+      month: 'long',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    };
+    return date.toLocaleDateString('en-US', options);
+  }
+
+  openRouteModal() {
+    console.log('open modal');
+  }
+
+  getStations() {
+    this.tripService.getStations().subscribe({
+      next: (stations) => {
+        this.listOfStations = stations;
+      }
+    });
+  }
+
+  getStationName(id: number) {
+    return this.listOfStations.find((station) => station.id === id)?.city;
   }
 }

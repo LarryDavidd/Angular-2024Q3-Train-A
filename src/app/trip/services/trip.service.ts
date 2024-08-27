@@ -3,6 +3,19 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Trip } from 'trip/models/trip.model';
 
+// TODO: to be removed
+export interface Station {
+  id: number;
+  city: string;
+  latitude: number;
+  longitude: number;
+  connectedTo: Connection[];
+}
+type Connection = {
+  id: number;
+  distance: number;
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -21,5 +34,10 @@ export class TripService {
       errorMessage = `Error: ${error.error.message || 'unknown'}, reason: ${error.error.reason || 'unknown'}`;
     }
     return throwError(() => errorMessage);
+  }
+
+  // TODO: get from redux or station service
+  getStations(): Observable<Station[]> {
+    return this.http.get<Station[]>('/api/station');
   }
 }
