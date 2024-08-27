@@ -1,17 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { GetStationsResponse } from 'admin/stations/model/station.model';
 
 @Component({
   selector: 'app-stations-form-group',
   standalone: true,
-  imports: [MatFormFieldModule, CommonModule, ReactiveFormsModule],
+  imports: [MatFormFieldModule, CommonModule, ReactiveFormsModule, MatOption, MatInputModule, MatButton, MatSelect],
   templateUrl: './stations-form-group.component.html',
   styleUrl: './stations-form-group.component.scss'
 })
-export class StationsFormGroupComponent implements OnInit {
+export class StationsFormGroupComponent implements OnInit, OnDestroy {
   @Input() stations!: GetStationsResponse;
 
   @Input() selectedStationsIds!: string[];
@@ -38,13 +42,9 @@ export class StationsFormGroupComponent implements OnInit {
     return this.stations.find((station) => station.id === id);
   }
 
-  onChange(event: Event, index: number): void {
-    const selectElement = event.target as HTMLSelectElement;
-    const selectedOption = selectElement.options[selectElement.selectedIndex];
-    const selectedId = selectedOption.id;
-
-    this.setStations = { id: selectedId, index };
-    this.setIdsToParent = { id: selectedId, index };
+  onChange(event: MatSelectChange, index: number): void {
+    this.setStations = { id: event.value, index };
+    this.setIdsToParent = { id: event.value, index };
   }
 
   set setStations({ id, index }: { id: string; index: number }) {
@@ -75,5 +75,15 @@ export class StationsFormGroupComponent implements OnInit {
 
   ngOnInit() {
     this.stationsForSelect.push(this.stations);
+    if (this.selectedStationsIds) {
+      this.selectedStationsIds.forEach((id, index) => {
+        this.setStations = { id, index };
+        this.setIdsToParent = { id, index };
+      });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.reset();
   }
 }

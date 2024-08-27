@@ -4,16 +4,16 @@ import { CarriagesState } from '../model/carriages.model';
 
 export const initialState: CarriagesState = {
   response: null,
-  loadingStatus: false
+  carriagesLoadingStatus: false
 };
 
 export const CarriagesReducer = createReducer(
   initialState,
   on(
     CarriagesActions.changeLoadingStatus,
-    (state, { loadingStatus }): CarriagesState => ({
+    (state, { carriagesLoadingStatus }): CarriagesState => ({
       ...state,
-      loadingStatus
+      carriagesLoadingStatus
     })
   ),
   on(CarriagesActions.fetchCarriagesSucces, (state, { response }) => ({

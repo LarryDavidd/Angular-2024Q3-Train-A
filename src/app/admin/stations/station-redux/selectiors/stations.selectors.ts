@@ -5,4 +5,4 @@ export const selectStationsState = createFeatureSelector<StationsState>('station
 
 export const selectStations = createSelector(selectStationsState, (state) => state.response);
 
-export const selectStationsLoadingStatus = createSelector(selectStationsState, (state) => state.loadingStatus);
+export const selectStationsLoadingStatus = createSelector(selectStationsState, (state) => state.stationsLoadingStatus);

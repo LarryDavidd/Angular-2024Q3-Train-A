@@ -1,39 +1,48 @@
-<ng-container *ngIf="isLoadingStations$ | async; else stationsDataTemplate">
-  <mat-spinner [diameter]="70"></mat-spinner>
-</ng-container>
+<div class="m-auto flex w-max flex-col gap-7 bg-slate-200 p-8">
+  <div class="m-auto flex gap-10">
+    <div>
+      <ng-container *ngIf="isLoadingStations$ | async; else stationsDataTemplate">
+        <mat-spinner [diameter]="70"></mat-spinner>
+      </ng-container>
 
-<ng-container *ngIf="isLoadingCarriages$ | async; else carriagesDataTemplate">
-  <mat-spinner [diameter]="70"></mat-spinner>
-</ng-container>
+      <ng-template #stationsDataTemplate>
+        <ng-container *ngIf="stations$ | async as data; else notFound">
+          <app-stations-form-group
+            [stations]="data"
+            [selectedStationsIds]="selectedStationsIds"
+            (setSelectedStationsIds)="setSelectedStationsIds($event)"
+          />
+        </ng-container>
+      </ng-template>
+    </div>
 
-<ng-template #stationsDataTemplate>
-  <ng-container *ngIf="stations$ | async as data; else notFound">
-    <app-stations-form-group
-      [stations]="data"
-      [selectedStationsIds]="selectedStationsIds"
-      (setSelectedStationsIds)="setSelectedStationsIds($event)"
-    />
-  </ng-container>
-</ng-template>
+    <div>
+      <ng-container *ngIf="isLoadingCarriages$ | async; else carriagesDataTemplate">
+        <mat-spinner [diameter]="70"></mat-spinner>
+      </ng-container>
 
-<ng-template #carriagesDataTemplate>
-  <ng-container *ngIf="carriages$ | async as data; else notFound">
-    <app-carriages-form-group
-      [carriages]="data"
-      (setSelectedCarriagesCodes)="setSelectedCarriagesCodes($event)"
-    />
-  </ng-container>
-</ng-template>
+      <ng-template #carriagesDataTemplate>
+        <ng-container *ngIf="carriages$ | async as data; else notFound">
+          <app-carriages-form-group
+            [carriages]="data"
+            (setSelectedCarriagesCodes)="setSelectedCarriagesCodes($event)"
+          />
+        </ng-container>
+      </ng-template>
+    </div>
+  </div>
 
-<ng-template #notFound>
-  <div>nothing not found</div>
-</ng-template>
+  <ng-template #notFound>
+    <div>nothing not found</div>
+  </ng-template>
 
-<button
-  mat-flat-button
-  color="primary"
-  type="button"
-  (click)="onSave()"
->
-  Save
-</button>
+  <button
+    mat-flat-button
+    effect="raised"
+    color="primary"
+    type="button"
+    (click)="onSave()"
+  >
+    Save
+  </button>
+</div>

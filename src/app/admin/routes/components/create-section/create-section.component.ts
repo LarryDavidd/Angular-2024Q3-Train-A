@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectStations, selectStationsLoadingStatus } from 'admin/stations/station-redux/selectiors/stations.selectors';
 import * as StationsActions from 'admin/stations/station-redux/actions/stations.actions';
@@ -20,6 +20,8 @@ import { RoutesService } from 'admin/routes/services/routes.service';
 })
 export class CreateSectionComponent implements OnInit {
   private readonly store = inject(Store);
+
+  @Output() closeSection = new EventEmitter();
 
   private routesService = inject(RoutesService);
 
@@ -47,10 +49,15 @@ export class CreateSectionComponent implements OnInit {
 
   // Shared
   onSave() {
-    this.routesService.createRoute({ carriages: this.selectedCarriagesCodes, path: this.selectedStationsIds.map((value) => Number(value)) }).subscribe({
-      next: (response) => console.log('Route updated successfully', response),
-      error: (error) => console.error('Error updating route:', error)
-    });
+    if (this.selectedCarriagesCodes.length >= 3 && this.selectedStationsIds.length >= 3) {
+      this.routesService.createRoute({ carriages: this.selectedCarriagesCodes, path: this.selectedStationsIds.map((value) => Number(value)) }).subscribe({
+        next: (response) => {
+          console.log('Route save successfully', response);
+          this.closeSection.emit();
+        },
+        error: (error) => console.error('Error save route:', error)
+      });
+    }
   }
 
   ngOnInit(): void {

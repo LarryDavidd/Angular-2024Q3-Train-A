@@ -5,4 +5,4 @@ export const selectCarriagesState = createFeatureSelector<CarriagesState>('carri
 
 export const selectCarriages = createSelector(selectCarriagesState, (state) => state.response);
 
-export const selectCarriagesLoadingStatus = createSelector(selectCarriagesState, (state) => state.loadingStatus);
+export const selectCarriagesLoadingStatus = createSelector(selectCarriagesState, (state) => state.carriagesLoadingStatus);

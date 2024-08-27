@@ -46,7 +46,7 @@ export class RoutesService {
   get getHttpOptions() {
     return {
       headers: new HttpHeaders({
-        Authorization: `Bearer `
+        Authorization: `Bearer ${localStorage.getItem('authToken')}`
       })
     };
   }

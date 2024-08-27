@@ -1,10 +1,16 @@
-<app-create-section></app-create-section>
-<button
-  mat-flat-button
-  color="primary"
-  type="button"
-  (click)="openCreateSection()"
->
-  Create
-</button>
+<ng-container *ngIf="!isCreateSectionOpen; else createSection">
+  <button
+    mat-flat-button
+    color="primary"
+    type="button"
+    (click)="openCloseCreateSection()"
+  >
+    Create
+  </button>
+</ng-container>
+
+<ng-template #createSection>
+  <app-create-section (closeSection)="openCloseCreateSection()"></app-create-section>
+</ng-template>
+
 <app-routes-list></app-routes-list>

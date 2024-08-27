@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
-import { RoutesRoutingModule } from './routes-routing.module';
 
 @NgModule({
   declarations: [],
-  imports: [RoutesRoutingModule]
+  imports: []
 })
 export class RoutesModule {}

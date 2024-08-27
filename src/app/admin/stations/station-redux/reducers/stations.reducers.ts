@@ -4,16 +4,16 @@ import { StationsState } from '../models/stations.models';
 
 export const initialState: StationsState = {
   response: null,
-  loadingStatus: false
+  stationsLoadingStatus: false
 };
 
 export const StationsReducer = createReducer(
   initialState,
   on(
     StationsActions.changeLoadingStatus,
-    (state, { loadingStatus }): StationsState => ({
+    (state, { stationsLoadingStatus }): StationsState => ({
       ...state,
-      loadingStatus
+      stationsLoadingStatus
     })
   ),
   on(StationsActions.fetchStationsSucces, (state, { response }) => ({

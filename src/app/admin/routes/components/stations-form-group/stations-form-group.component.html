@@ -1,24 +1,17 @@
-<form [formGroup]="form">
-  <div formArrayName="select">
-    <div *ngFor="let stations of stationsForSelect; let i = index">
-      <select
-        [formControlName]="i"
-        (change)="onChange($event, i)"
+<form
+  [formGroup]="form"
+  class="flex flex-col gap-3"
+>
+  <mat-form-field *ngFor="let stations of stationsForSelect; let i = index">
+    <mat-label>Select an option</mat-label>
+    <mat-select (selectionChange)="onChange($event, i)">
+      <mat-option
+        *ngFor="let station of stations"
+        [value]="station.id"
       >
-        <option
-          value=""
-          disabled
-        >
-          Select an option
-        </option>
-        <option
-          *ngFor="let station of stations"
-          [value]="station.city"
-          [id]="station.id"
-        >
-          {{ station.city }}
-        </option>
-      </select>
-    </div>
-  </div>
+        {{ station.city }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-error>{{ stationsForSelect.length < 4 ? 'minimum 3 stations' : null }}</mat-error>
 </form>

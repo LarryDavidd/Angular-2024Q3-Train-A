@@ -4,16 +4,16 @@ import { RoutesState } from '../models/routes.models';
 
 export const initialState: RoutesState = {
   response: null,
-  loadingStatus: false
+  routesLoadingStatus: false
 };
 
 export const routesReducer = createReducer(
   initialState,
   on(
     RoutesActions.changeLoadingStatus,
-    (state, { loadingStatus }): RoutesState => ({
+    (state, { routesLoadingStatus }): RoutesState => ({
       ...state,
-      loadingStatus
+      routesLoadingStatus
     })
   ),
   on(RoutesActions.fetchRoutesSucces, (state, { response }) => ({

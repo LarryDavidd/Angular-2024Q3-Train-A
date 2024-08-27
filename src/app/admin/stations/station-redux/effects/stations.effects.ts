@@ -11,6 +11,20 @@ export class StationsEffects {
     private stationsService: StationsService
   ) {}
 
+  setLoadingStatusTrue$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(StationsActions.fetchStations),
+      map(() => StationsActions.changeLoadingStatus({ stationsLoadingStatus: true }))
+    );
+  });
+
+  setLoadingStatusFalse$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(StationsActions.fetchStationsSucces, StationsActions.fetchStationsFailes),
+      map(() => StationsActions.changeLoadingStatus({ stationsLoadingStatus: false }))
+    );
+  });
+
   fetchVideo$ = createEffect(() =>
     this.actions$.pipe(
       ofType(StationsActions.fetchStations),

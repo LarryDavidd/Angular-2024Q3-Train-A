@@ -11,6 +11,20 @@ export class RoutesEffects {
     private routesService: RoutesService
   ) {}
 
+  setLoadingStatusTrue$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(RoutesActions.fetchRoutes),
+      map(() => RoutesActions.changeLoadingStatus({ routesLoadingStatus: true }))
+    );
+  });
+
+  setLoadingStatusFalse$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(RoutesActions.fetchRoutesSucces, RoutesActions.fetchRoutesFailes),
+      map(() => RoutesActions.changeLoadingStatus({ routesLoadingStatus: false }))
+    );
+  });
+
   fetchVideo$ = createEffect(() =>
     this.actions$.pipe(
       ofType(RoutesActions.fetchRoutes),
