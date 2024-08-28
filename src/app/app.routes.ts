@@ -12,6 +12,5 @@ export const routes: Routes = [
   },
   { path: 'signup', component: SignUpComponent },
   { path: 'signin', component: LoginComponent, canActivate: [AuthGuard] },
-  { path: 'admin', loadChildren: () => import('./admin/admin.module').then((m) => m.AdminModule) },
   { path: 'profile', component: UserProfileComponent, canActivate: [AuthGuard] }
 ];
