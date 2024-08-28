@@ -8,6 +8,7 @@ import { UserProfileComponent } from 'user-profile/user-profile.component';
 export const routes: Routes = [
   { path: 'signup', component: SignUpComponent },
   { path: 'signin', component: LoginComponent, canActivate: [AuthGuard] },
-  // { path: '', component: HomeComponent },
+  { path: 'admin', loadChildren: () => import('./admin/admin.module').then((m) => m.AdminModule) },
+  // { path: '', component: HomeComponent }
   { path: 'profile', component: UserProfileComponent, canActivate: [AuthGuard] }
 ];
