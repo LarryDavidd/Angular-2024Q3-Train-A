@@ -1,0 +1,6 @@
+.route__action-buttons {
+  @apply my-4 mt-0 flex justify-between gap-1;
+  & > * {
+    @apply flex items-center justify-center text-xs;
+  }
+}

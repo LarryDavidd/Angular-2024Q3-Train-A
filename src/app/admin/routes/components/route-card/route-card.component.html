@@ -1,0 +1,36 @@
+<mat-card class="m-auto max-w-full">
+  <mat-card-header class="flex justify-between">
+    <mat-card-title>{{ 'Route' + ' ' + route.id }}</mat-card-title>
+    <div class="route__action-buttons">
+      <button
+        mat-icon-button
+        (click)="onUpdate()"
+      >
+        <mat-icon fontIcon="update"></mat-icon>
+        Update
+      </button>
+      <button mat-icon-button>
+        <mat-icon fontIcon="directions_bus"></mat-icon>
+        Assing ride
+      </button>
+      <button
+        mat-icon-button
+        (click)="onDelete()"
+      >
+        <mat-icon fontIcon="delete"></mat-icon>
+      </button>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="flex flex-col gap-5">
+      <div class="flex flex-col gap-2">
+        <mat-card-subtitle> Cities </mat-card-subtitle>
+        {{ route.path.join(' - ') }}
+      </div>
+      <div class="flex flex-col gap-2">
+        <mat-card-subtitle> Carrage Type </mat-card-subtitle>
+        {{ route.carriages.join(' - ') }}
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

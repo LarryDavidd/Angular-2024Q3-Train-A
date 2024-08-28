@@ -1,9 +1,28 @@
-import { provideHttpClient } from '@angular/common/http';
-import { ApplicationConfig } from '@angular/core';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
-import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideEffects } from '@ngrx/effects';
+import { provideStore } from '@ngrx/store';
+import { CarriagesEffects } from 'admin/carriages/carriages-redux/effects/carriages.effects';
+import { CarriagesReducer } from 'admin/carriages/carriages-redux/reducers/carriages.reducers';
+import { RoutesEffects } from 'admin/routes/redux/effects/routes.effects';
+import { routesReducer } from 'admin/routes/redux/reducers/routes.redusers';
+import { StationsEffects } from 'admin/stations/station-redux/effects/stations.effects';
+import { StationsReducer } from 'admin/stations/station-redux/reducers/stations.reducers';
 import { routes } from 'app.routes';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideHttpClient(), provideRouter(routes), provideAnimations()]
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
+    provideAnimationsAsync(),
+    provideStore({
+      routes: routesReducer,
+      stations: StationsReducer,
+      carriages: CarriagesReducer
+    }),
+    provideEffects([RoutesEffects, StationsEffects, CarriagesEffects]),
+    provideHttpClient(withInterceptorsFromDi())
+  ]
 };
