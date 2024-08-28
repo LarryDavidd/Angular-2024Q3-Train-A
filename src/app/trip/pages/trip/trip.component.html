@@ -42,7 +42,9 @@
   <mat-tab-group>
     <div *ngFor="let carriage of listOfCarriages">
       <mat-tab label="{{ carriage.name }}">
-        <app-carriage [carriage]="carriage"></app-carriage>
+        <div class="m-3">
+          <app-carriage [carriage]="carriage"></app-carriage>
+        </div>
       </mat-tab>
     </div>
   </mat-tab-group>

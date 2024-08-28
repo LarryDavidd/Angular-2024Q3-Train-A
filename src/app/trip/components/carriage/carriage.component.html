@@ -5,15 +5,15 @@
     class="flex flex-col-reverse"
   >
     <span
-      *ngFor="let seat of [].constructor(carriage.leftSeats)"
+      *ngFor="let seat of [].constructor(carriage.leftSeats); let leftSeatInd = index"
       class="m-1 size-4 rounded-sm bg-gray-300 text-center text-xs"
-      >L</span
+      >{{ rowIndex * (carriage.leftSeats! + carriage.rightSeats!) + leftSeatInd + 1 }}</span
     >
     <span class="h-5"></span>
     <span
-      *ngFor="let seat of [].constructor(carriage.rightSeats)"
+      *ngFor="let seat of [].constructor(carriage.rightSeats); let rightSeatInd = index"
       class="m-1 size-4 rounded-sm bg-gray-300 text-center text-xs"
-      >R</span
+      >{{ rowIndex * (carriage.rightSeats! + carriage.leftSeats!) + carriage.leftSeats! + rightSeatInd + 1 }}</span
     >
   </div>
 </div>
