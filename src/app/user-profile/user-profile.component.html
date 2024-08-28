@@ -1,0 +1,116 @@
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+<div class="profile">
+  <div class="profile__left">
+    <div class="profile__icon-wrap">
+      <img
+        class="profile__icon"
+        src="/user.png"
+        alt="user"
+      />
+    </div>
+
+    <h2 class="profile__title">Profile</h2>
+    <button
+      class="button button-logout"
+      mat-flat-button
+      extended
+      (click)="logout()"
+    >
+      Logout
+    </button>
+  </div>
+  <div class="profile__right">
+    <p class="profile__subtitle">Information</p>
+    <span
+      *ngIf="role === 'manager'"
+      class="profile__role"
+      >Manager</span
+    >
+    <mat-divider></mat-divider>
+    <form
+      class="profile__form"
+      [formGroup]="profileForm"
+    >
+      <div class="profile__block">
+        <label for="name">Name:</label>
+        <div class="profile__input-wrap">
+          <ng-container *ngIf="!isEditing['name']; else editName">
+            <p class="profile__text">{{ profileForm.get('name')?.value }}</p>
+            <img
+              class="profile__input-icon"
+              src="/pen.png"
+              alt="pen"
+              (click)="toggleEdit('name')"
+            />
+          </ng-container>
+          <ng-template #editName>
+            <input
+              class="profile__input"
+              type="text"
+              name="name"
+              formControlName="name"
+            />
+            <img
+              class="profile__input-icon"
+              src="/save.png"
+              alt="save"
+              (click)="saveUserData('name')"
+            />
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="profile__block">
+        <label for="email">Email:</label>
+        <div class="profile__input-wrap">
+          <ng-container *ngIf="!isEditing['email']; else editEmail">
+            <p class="profile__text">{{ profileForm.get('email')?.value }}</p>
+            <img
+              class="profile__input-icon"
+              src="/pen.png"
+              alt="pen"
+              (click)="toggleEdit('email')"
+            />
+          </ng-container>
+          <ng-template #editEmail>
+            <input
+              class="profile__input"
+              type="text"
+              name="email"
+              formControlName="email"
+            />
+            <img
+              class="profile__input-icon"
+              src="/save.png"
+              alt="save"
+              (click)="saveUserData('email')"
+            />
+          </ng-template>
+        </div>
+        <span
+          class="profile__error"
+          *ngIf="profileForm.get('email')?.errors?.['invalidEmail'] && isEditing['email']"
+        >
+          Incorrect email
+        </span>
+        <span
+          class="profile__error"
+          *ngIf="profileForm.get('email')?.hasError('emailExists')"
+        >
+          Email already exists
+        </span>
+      </div>
+    </form>
+    <div class="profile__button-wrap">
+      <button
+        class="button profile__password-button"
+        mat-flat-button
+        extended
+        (click)="openChangePasswordDialog()"
+      >
+        Change Password
+      </button>
+    </div>
+  </div>
+</div>
