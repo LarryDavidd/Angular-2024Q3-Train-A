@@ -1,0 +1,76 @@
+<form
+  (ngSubmit)="onSubmit()"
+  class="flex max-w-80 flex-col gap-2"
+>
+  <mat-form-field>
+    <mat-label for="stationName">City name</mat-label>
+    <input
+      matInput
+      type="text"
+      id="stationName"
+      [(ngModel)]="station.city"
+      name="name"
+      required
+    />
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label for="latitude">Latitude</mat-label>
+    <input
+      matInput
+      type="number"
+      id="latitude"
+      [(ngModel)]="station.latitude"
+      (ngModelChange)="onLatitudeChange($event)"
+      min="-90"
+      max="90"
+      name="latitude"
+      step="0.000001"
+      required
+    />
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label for="longitude">Longitude</mat-label>
+    <input
+      matInput
+      type="number"
+      id="longitude"
+      [(ngModel)]="station.longitude"
+      (ngModelChange)="onLongitudeChange($event)"
+      min="-180"
+      max="180"
+      name="longitude"
+      step="0.000001"
+      required
+    />
+  </mat-form-field>
+
+  <div *ngFor="let connection of selectFields; let i = index">
+    <mat-form-field>
+      <mat-label htmlFor="`connections${i}`">Select connection {{ i + 1 }}</mat-label>
+      <mat-select
+        [(ngModel)]="station.relations[i]"
+        name="connections{{ i }}"
+        (selectionChange)="onConnectionSelected(i, $event.value)"
+      >
+        <mat-option
+          *ngFor="let station of availableStations"
+          [value]="station.id"
+          [disabled]="isStationSelected(station.id)"
+        >
+          {{ station.city }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <button
+    mat-stroked-button
+    type="submit"
+    class="block w-full"
+    disabled="{{ !station.city || !station.latitude || !station.longitude || !station.relations.length }}"
+  >
+    Save
+  </button>
+</form>
