@@ -6,11 +6,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CarriageComponent } from './components/carriage/carriage.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const routes: Routes = [{ path: '', component: TripComponent }];
 
 @NgModule({
   declarations: [TripComponent, CarriageComponent],
-  imports: [CommonModule, RouterModule.forChild(routes), MatButtonModule, MatIconModule, MatTabsModule]
+  imports: [CommonModule, RouterModule.forChild(routes), MatButtonModule, MatIconModule, MatTabsModule, MatDialogModule]
 })
 export class TripModule {}

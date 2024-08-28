@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { RouteModalComponent } from 'trip/components/route-modal/route-modal.component';
 import { Trip } from 'trip/models/trip.model';
 import { Carriage, Station, TripService } from 'trip/services/trip.service';
 
@@ -22,6 +24,8 @@ export class TripComponent implements OnInit {
   listOfCarriagesTypes: Set<string> = new Set();
 
   listOfCarriages: Carriage[] = [];
+
+  modal = inject(MatDialog);
 
   constructor(
     private route: ActivatedRoute,
@@ -65,6 +69,7 @@ export class TripComponent implements OnInit {
 
   openRouteModal() {
     console.log('open modal');
+    this.modal.open(RouteModalComponent);
   }
 
   getStations() {
