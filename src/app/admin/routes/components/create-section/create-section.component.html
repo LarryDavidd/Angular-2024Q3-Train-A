@@ -25,6 +25,7 @@
         <ng-container *ngIf="carriages$ | async as data; else notFound">
           <app-carriages-form-group
             [carriages]="data"
+            [selectedCarriagesCodes]="selectedCarriagesCodes"
             (setSelectedCarriagesCodes)="setSelectedCarriagesCodes($event)"
           />
         </ng-container>

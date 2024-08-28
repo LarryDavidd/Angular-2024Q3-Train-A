@@ -25,13 +25,25 @@ export class RoutesEffects {
     );
   });
 
-  fetchVideo$ = createEffect(() =>
+  fetchRoutes$ = createEffect(() =>
     this.actions$.pipe(
       ofType(RoutesActions.fetchRoutes),
       switchMap(() =>
         this.routesService.getRoutes().pipe(
           map((response) => RoutesActions.fetchRoutesSucces({ response })),
           catchError(() => of(RoutesActions.fetchRoutesFailes()))
+        )
+      )
+    )
+  );
+
+  deleteRoute$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RoutesActions.deleteRoute),
+      switchMap((payload) =>
+        this.routesService.deleteRoute(payload.id).pipe(
+          map(() => RoutesActions.deleteRouteSuccess()),
+          catchError(() => of(RoutesActions.deleteRouteFailure()))
         )
       )
     )

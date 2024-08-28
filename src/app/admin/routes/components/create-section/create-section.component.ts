@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectStations, selectStationsLoadingStatus } from 'admin/stations/station-redux/selectiors/stations.selectors';
 import * as StationsActions from 'admin/stations/station-redux/actions/stations.actions';
@@ -10,6 +10,7 @@ import { StationsFormGroupComponent } from '../stations-form-group/stations-form
 import { CarriagesFormGroupComponent } from '../carriages-form-group/carriages-form-group.component';
 import { MatButton } from '@angular/material/button';
 import { RoutesService } from 'admin/routes/services/routes.service';
+import { IRoute } from 'admin/routes/model/routes.model';
 
 @Component({
   selector: 'app-create-section',
@@ -23,7 +24,11 @@ export class CreateSectionComponent implements OnInit {
 
   @Output() closeSection = new EventEmitter();
 
+  @Output() deleteRouteForUpdate = new EventEmitter();
+
   private routesService = inject(RoutesService);
+
+  @Input() routeForUpdate!: IRoute | null;
 
   // Stations
   isLoadingStations$ = this.store.select(selectStationsLoadingStatus);
@@ -50,18 +55,35 @@ export class CreateSectionComponent implements OnInit {
   // Shared
   onSave() {
     if (this.selectedCarriagesCodes.length >= 3 && this.selectedStationsIds.length >= 3) {
-      this.routesService.createRoute({ carriages: this.selectedCarriagesCodes, path: this.selectedStationsIds.map((value) => Number(value)) }).subscribe({
-        next: (response) => {
-          console.log('Route save successfully', response);
-          this.closeSection.emit();
-        },
-        error: (error) => console.error('Error save route:', error)
-      });
+      if (this.routeForUpdate) {
+        this.routesService
+          .updateRoute(String(this.routeForUpdate.id), { carriages: this.selectedCarriagesCodes, path: this.selectedStationsIds.map((value) => Number(value)) })
+          .subscribe({
+            next: (response) => {
+              this.deleteRouteForUpdate.emit();
+              console.log('Route update successfully', response);
+            },
+            error: (error) => console.error('Error save route:', error)
+          });
+      } else {
+        this.routesService.createRoute({ carriages: this.selectedCarriagesCodes, path: this.selectedStationsIds.map((value) => Number(value)) }).subscribe({
+          next: (response) => {
+            console.log('Route save successfully', response);
+          },
+          error: (error) => console.error('Error save route:', error)
+        });
+      }
+      this.closeSection.emit();
     }
   }
 
   ngOnInit(): void {
     this.store.dispatch(StationsActions.fetchStations());
     this.store.dispatch(CarriagesActions.fetchCarriages());
+
+    if (this.routeForUpdate) {
+      this.selectedCarriagesCodes = this.routeForUpdate.carriages;
+      this.selectedStationsIds = this.routeForUpdate.path.map((id) => String(id));
+    }
   }
 }

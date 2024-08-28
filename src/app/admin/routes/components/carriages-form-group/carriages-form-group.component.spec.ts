@@ -9,8 +9,7 @@ describe('CarriagesFormGroupComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CarriagesFormGroupComponent]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CarriagesFormGroupComponent);
     component = fixture.componentInstance;

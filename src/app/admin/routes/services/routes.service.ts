@@ -1,7 +1,15 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { CreateRouteErrorResponse, CreateRouteRequest, CreateRouteSuccessResponse, GetRoutesResponse, UpdateRouteRequest, UpdateRouteSuccessResponse } from '../model/routes.model';
+import {
+  CreateRouteErrorResponse,
+  CreateRouteRequest,
+  CreateRouteSuccessResponse,
+  DeleteRouteSuccessResponse,
+  GetRoutesResponse,
+  UpdateRouteRequest,
+  UpdateRouteSuccessResponse
+} from '../model/routes.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,9 +33,17 @@ export class RoutesService {
       .pipe(catchError(this.handleError));
   }
 
-  updateRoute(id: number, request: UpdateRouteRequest): Observable<UpdateRouteSuccessResponse> {
+  updateRoute(id: string, request: UpdateRouteRequest): Observable<UpdateRouteSuccessResponse> {
     return this.http
       .put<UpdateRouteSuccessResponse>(`/api/route/${id}`, request, {
+        headers: this.getHttpOptions.headers
+      })
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteRoute(id: number): Observable<DeleteRouteSuccessResponse> {
+    return this.http
+      .delete<DeleteRouteSuccessResponse>(`/api/route/${id}`, {
         headers: this.getHttpOptions.headers
       })
       .pipe(catchError(this.handleError));

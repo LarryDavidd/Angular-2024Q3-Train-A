@@ -2,7 +2,10 @@
   <mat-card-header class="flex justify-between">
     <mat-card-title>{{ 'Route' + ' ' + route.id }}</mat-card-title>
     <div class="route__action-buttons">
-      <button mat-icon-button>
+      <button
+        mat-icon-button
+        (click)="onUpdate()"
+      >
         <mat-icon fontIcon="update"></mat-icon>
         Update
       </button>
@@ -10,7 +13,10 @@
         <mat-icon fontIcon="directions_bus"></mat-icon>
         Assing ride
       </button>
-      <button mat-icon-button>
+      <button
+        mat-icon-button
+        (click)="onDelete()"
+      >
         <mat-icon fontIcon="delete"></mat-icon>
       </button>
     </div>
@@ -27,12 +33,4 @@
       </div>
     </div>
   </mat-card-content>
-  <!-- <mat-card-actions align="start">
-    <button
-      mat-button
-      (click)="(onAction1)"
-    >
-      Action1
-    </button>
-  </mat-card-actions> -->
 </mat-card>

@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatOption } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelect, MatSelectChange } from '@angular/material/select';
+import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { GetStationsResponse } from 'admin/stations/model/station.model';
 
 @Component({
   selector: 'app-stations-form-group',
   standalone: true,
-  imports: [MatFormFieldModule, CommonModule, ReactiveFormsModule, MatOption, MatInputModule, MatButton, MatSelect],
+  imports: [MatFormFieldModule, CommonModule, ReactiveFormsModule, MatOption, MatInputModule, MatButton, MatSelect, MatSelectModule, FormsModule],
   templateUrl: './stations-form-group.component.html',
   styleUrl: './stations-form-group.component.scss'
 })
@@ -75,10 +75,10 @@ export class StationsFormGroupComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.stationsForSelect.push(this.stations);
-    if (this.selectedStationsIds) {
+
+    if (this.selectedStationsIds.length > 0) {
       this.selectedStationsIds.forEach((id, index) => {
         this.setStations = { id, index };
-        this.setIdsToParent = { id, index };
       });
     }
   }

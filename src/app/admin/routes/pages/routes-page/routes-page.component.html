@@ -10,7 +10,11 @@
 </ng-container>
 
 <ng-template #createSection>
-  <app-create-section (closeSection)="openCloseCreateSection()"></app-create-section>
+  <app-create-section
+    (closeSection)="openCloseCreateSection()"
+    (deleteRouteForUpdate)="deleteRouteForUpdate()"
+    [routeForUpdate]="routeForUpdate"
+  ></app-create-section>
 </ng-template>
 
-<app-routes-list></app-routes-list>
+<app-routes-list (handleUpdate)="onUpdate($event)"></app-routes-list>

@@ -3,10 +3,13 @@
 </ng-container>
 
 <ng-template #dataTemplate>
-  <ng-container *ngIf="cards$ | async as data; else notFound">
+  <ng-container *ngIf="routes$ | async as data; else notFound">
     <ul class="flex flex-col justify-center gap-3">
       <li *ngFor="let route of data">
-        <app-route-card [route]="route"></app-route-card>
+        <app-route-card
+          (handleUpdate)="handleUpdate.emit($event)"
+          [route]="route"
+        ></app-route-card>
       </li>
     </ul>
   </ng-container>

@@ -9,8 +9,7 @@ describe('StationsFormGroupComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [StationsFormGroupComponent]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(StationsFormGroupComponent);
     component = fixture.componentInstance;

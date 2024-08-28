@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as RoutesActions from 'admin/routes/redux/actions/routes.actions';
 import { selectRoutes, selectRoutesLoadingStatus } from 'admin/routes/redux/selectors/routes.selectors';
@@ -6,6 +6,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { RouteCardComponent } from '../route-card/route-card.component';
+import { IRoute } from 'admin/routes/model/routes.model';
 
 @Component({
   selector: 'app-routes-list',
@@ -17,9 +18,11 @@ import { RouteCardComponent } from '../route-card/route-card.component';
 export class RoutesListComponent implements OnInit {
   private readonly store = inject(Store);
 
+  @Output() handleUpdate = new EventEmitter<IRoute>();
+
   isLoading$ = this.store.select(selectRoutesLoadingStatus);
 
-  cards$ = this.store.select(selectRoutes);
+  routes$ = this.store.select(selectRoutes);
 
   ngOnInit(): void {
     this.store.dispatch(RoutesActions.fetchRoutes());

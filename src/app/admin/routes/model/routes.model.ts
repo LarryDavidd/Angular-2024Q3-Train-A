@@ -38,6 +38,15 @@ export interface UpdateRouteSuccessResponse {
   id: number;
 }
 
+// Delete
+export interface DeleteRouteRequest {
+  id: number;
+}
+
+export interface DeleteRouteSuccessResponse {
+  id: number;
+}
+
 export interface UpdateRouteErrorResponse {
   error: {
     message: string;

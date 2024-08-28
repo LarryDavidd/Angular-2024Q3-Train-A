@@ -4,11 +4,13 @@
 >
   <mat-form-field *ngFor="let tag of form.controls.select.controls; let i = index">
     <mat-label>Select carriage</mat-label>
-    <mat-select (selectionChange)="onChange(i)">
+    <mat-select
+      (selectionChange)="onChange(i)"
+      [(value)]="selectedCarriagesCodes[i]"
+    >
       <mat-option
         *ngFor="let carriages of carriages"
-        [value]="carriages.name"
-        [id]="carriages.code"
+        [value]="carriages.code"
       >
         {{ carriages.name }}
       </mat-option>
