@@ -20,12 +20,22 @@ export class OrdersComponent implements OnInit {
   public getOrders(): void {
     this.ordersService.getOrders().subscribe(
       (data) => {
-        this.orders.push(...data, ...MOCK_ORDERS);
+        const sortedData = this.sortOrders(data);
+
+        this.orders.push(...sortedData, ...this.sortOrders(MOCK_ORDERS));
       },
       (error) => {
         // eslint-disable-next-line no-console
         console.error(error);
       }
     );
+  }
+
+  private sortOrders(data: Order[]): Order[] {
+    return data.sort((a, b) => {
+      const startTimeA = new Date(a.schedule.segments[0].time[0]).getTime();
+      const startTimeB = new Date(b.schedule.segments[0].time[0]).getTime();
+      return startTimeA - startTimeB;
+    });
   }
 }
