@@ -4,6 +4,7 @@ import { ResponseError } from './models/response-error';
 import { SignUpResponseData } from './models/signup-response';
 import { Observable } from 'rxjs';
 import { SignInResponseData } from './models/signin-response';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,10 @@ export class AuthService {
 
   private authSecretKey = 'authToken';
 
-  constructor(private readonly http: HttpClient) {
+  constructor(
+    private readonly http: HttpClient,
+    private readonly router: Router
+  ) {
     this.isAuthenticated = !!localStorage.getItem(this.authSecretKey);
   }
 
@@ -23,9 +27,15 @@ export class AuthService {
     return this.isAuthenticated;
   }
 
+  public getAuthToken(): string | null {
+    return localStorage.getItem(this.authSecretKey);
+  }
+
   public logout(): void {
     localStorage.removeItem(this.authSecretKey);
     this.isAuthenticated = false;
+
+    this.router.navigate(['/']);
   }
 
   public signUp(email: string, password: string): Observable<SignUpResponseData> {
