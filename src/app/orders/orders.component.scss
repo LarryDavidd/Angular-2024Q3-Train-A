@@ -1,0 +1,12 @@
+.header {
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
+  margin-bottom: 50px;
+  padding: 20px;
+
+  & h1 {
+    font-size: 34px;
+    text-align: center;
+    color: var(--pwa-blue-600);
+    font-weight: 500;
+  }
+}
