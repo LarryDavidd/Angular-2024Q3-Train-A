@@ -1,8 +1,12 @@
 import { NgModule } from '@angular/core';
-import { Route, RouterModule } from '@angular/router';
 import { RoutesPageComponent } from './routes/pages/routes-page/routes-page.component';
+import { RouterModule, Routes } from '@angular/router';
+import { CarriagesComponent } from './pages/carriages/carriages.component';
+import { StationsComponent } from './pages/stations/stations.component';
 
-const routes: Route[] = [
+const routes: Routes = [
+  { path: 'carriages', component: CarriagesComponent },
+  { path: 'stations', component: StationsComponent },
   {
     path: 'routes',
     component: RoutesPageComponent

@@ -1,0 +1,19 @@
+<div class="flex rounded-xl border p-1">
+  <div class="mr-4 w-4 border-r"></div>
+  <div
+    *ngFor="let row of [].constructor(rows); let rowIndex = index"
+    class="flex flex-col-reverse"
+  >
+    <span
+      *ngFor="let seat of [].constructor(leftSeats)"
+      class="m-1 size-4 rounded-sm bg-gray-300 text-center text-xs"
+      >L</span
+    >
+    <span class="h-5"></span>
+    <span
+      *ngFor="let seat of [].constructor(rightSeats)"
+      class="m-1 size-4 rounded-sm bg-gray-300 text-center text-xs"
+      >R</span
+    >
+  </div>
+</div>
