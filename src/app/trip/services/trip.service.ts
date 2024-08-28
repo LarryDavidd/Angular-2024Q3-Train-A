@@ -15,6 +15,13 @@ type Connection = {
   id: number;
   distance: number;
 };
+export interface Carriage {
+  code: string;
+  name: string;
+  rows: number;
+  leftSeats: number;
+  rightSeats: number;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -39,5 +46,9 @@ export class TripService {
   // TODO: get from redux or station service
   getStations(): Observable<Station[]> {
     return this.http.get<Station[]>('/api/station');
+  }
+
+  getCarriages(): Observable<Carriage[]> {
+    return this.http.get<Carriage[]>('/api/carriage');
   }
 }

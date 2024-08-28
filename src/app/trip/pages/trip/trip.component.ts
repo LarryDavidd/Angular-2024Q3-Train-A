@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Trip } from 'trip/models/trip.model';
-import { Station, TripService } from 'trip/services/trip.service';
+import { Carriage, Station, TripService } from 'trip/services/trip.service';
 
 @Component({
   selector: 'app-trip',
@@ -19,7 +19,9 @@ export class TripComponent implements OnInit {
 
   listOfStations: Station[] = [];
 
-  listOfCarriageTypes: string[] = [];
+  listOfCarriagesTypes: Set<string> = new Set();
+
+  listOfCarriages: Carriage[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -38,7 +40,9 @@ export class TripComponent implements OnInit {
       this.tripService.getRide(+this.rideId).subscribe({
         next: (ride) => {
           this.rideData = ride;
-          console.log(ride);
+          this.listOfCarriagesTypes = new Set(ride.carriages);
+          console.log(ride, this.listOfCarriagesTypes);
+          this.getCarriages();
         },
         error: (err) => console.log(err)
       });
@@ -73,5 +77,15 @@ export class TripComponent implements OnInit {
 
   getStationName(id: number) {
     return this.listOfStations.find((station) => station.id === id)?.city;
+  }
+
+  getCarriages() {
+    this.tripService.getCarriages().subscribe({
+      next: (carriages) => {
+        this.listOfCarriages = carriages.filter((carriage) => this.listOfCarriagesTypes.has(carriage.code));
+        console.log(this.listOfCarriages);
+      },
+      error: (err) => console.log(err)
+    });
   }
 }

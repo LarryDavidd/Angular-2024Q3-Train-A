@@ -40,8 +40,10 @@
     </div>
   </div>
   <mat-tab-group>
-    <mat-tab label="First"> Content 1 </mat-tab>
-    <mat-tab label="Second"> Content 2 </mat-tab>
-    <mat-tab label="Third"> Content 3 </mat-tab>
+    <div *ngFor="let carriage of listOfCarriages">
+      <mat-tab label="{{ carriage.name }}">
+        <app-carriage [carriage]="carriage"></app-carriage>
+      </mat-tab>
+    </div>
   </mat-tab-group>
 </div>
