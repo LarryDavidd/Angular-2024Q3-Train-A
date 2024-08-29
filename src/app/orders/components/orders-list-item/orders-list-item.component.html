@@ -1,0 +1,84 @@
+<mat-card class="order">
+  <header>
+    <img
+      class="logo"
+      src="/assets/train.svg"
+      alt="train"
+    />
+
+    <div class="price-container"><span class="currency-sign">$</span>{{ priceLabel }}</div>
+  </header>
+
+  <div class="divider">
+    <mat-divider />
+    <span class="label">Route</span>
+    <mat-divider />
+  </div>
+
+  <div class="info-container">
+    <div class="info-item">
+      <span class="label">From</span>
+      <div class="info-item-value">{{ from }}</div>
+    </div>
+    <img
+      class="direction-icon"
+      src="/assets/direction.svg"
+      alt="direction"
+    />
+    <div class="info-item">
+      <span class="label">To</span>
+      <div class="info-item-value">{{ to }}</div>
+    </div>
+  </div>
+
+  <div class="divider">
+    <mat-divider />
+    <span class="label">Time</span>
+    <mat-divider />
+  </div>
+
+  <div class="info-container">
+    <div class="info-item">
+      <span class="label">Departs</span>
+      <div class="info-item-value">{{ tripTimeRangeLabels[0] }}</div>
+    </div>
+    <div class="info-item">
+      <span class="label">Arrive</span>
+      <div class="info-item-value">{{ tripTimeRangeLabels[1] }}</div>
+    </div>
+    <div class="info-item">
+      <span class="label">Duration</span>
+      <div class="info-item-value">{{ tripDurationLabel }}</div>
+    </div>
+  </div>
+
+  <div class="divider">
+    <mat-divider />
+    <span class="label">Details</span>
+    <mat-divider />
+  </div>
+
+  <div class="info-container">
+    <div class="info-item">
+      <span class="label">Car</span>
+      <div class="info-item-value">1</div>
+    </div>
+    <div class="info-item">
+      <span class="label">Carriage type</span>
+      <div class="info-item-value">{{ data.carriages[0] }}</div>
+    </div>
+    <div class="info-item">
+      <span class="label">Seat</span>
+      <div class="info-item-value">{{ data.seatId }}</div>
+    </div>
+  </div>
+
+  <button
+    *ngIf="isActive"
+    mat-flat-button
+    extended
+    (click)="onPromptCancel()"
+  >
+    Cancel
+  </button>
+</mat-card>

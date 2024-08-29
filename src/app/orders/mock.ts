@@ -2,23 +2,23 @@ import { Order, OrderStatus } from './models/order';
 
 export const MOCK_ORDERS: Order[] = [
   {
-    id: 1,
-    rideId: 101,
-    routeId: 201,
-    seatId: 301,
-    userId: 401,
+    id: 64,
+    rideId: 45,
+    routeId: 18,
+    seatId: 2,
+    userId: 3,
     status: OrderStatus.Active,
-    path: [1, 2, 3],
-    carriages: ['A', 'B'],
+    path: [33, 5, 62, 11, 48, 34],
+    carriages: ['carriage1', 'carriage2', 'carriage3', 'test'],
     schedule: {
       segments: [
         {
-          time: ['2024-08-08T08:00:00.000Z', '2024-08-08T09:00:00.000Z'],
-          price: { standard: 100, premium: 150 }
+          time: ['2024-09-08T10:00:00.000Z', '2024-08-08T11:00:00.000Z'],
+          price: { standard: 120, premium: 180 }
         },
         {
-          time: ['2024-08-08T09:15:00.000Z', '2024-08-08T10:15:00.000Z'],
-          price: { standard: 100, premium: 150 }
+          time: ['2024-09-08T11:15:00.000Z', '2024-08-08T12:15:00.000Z'],
+          price: { standard: 120, premium: 180 }
         }
       ]
     }
@@ -31,7 +31,7 @@ export const MOCK_ORDERS: Order[] = [
     userId: 402,
     status: OrderStatus.Canceled,
     path: [4, 5, 6],
-    carriages: ['C', 'D'],
+    carriages: ['carriage1', 'carriage2', 'carriage3', 'test'],
     schedule: {
       segments: [
         {
@@ -53,7 +53,7 @@ export const MOCK_ORDERS: Order[] = [
     userId: 403,
     status: OrderStatus.Completed,
     path: [7, 8, 9],
-    carriages: ['E', 'F'],
+    carriages: ['carriage1', 'carriage2', 'carriage3', 'test'],
     schedule: {
       segments: [
         {

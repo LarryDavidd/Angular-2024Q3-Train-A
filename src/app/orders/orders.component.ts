@@ -22,7 +22,7 @@ export class OrdersComponent implements OnInit {
       (data) => {
         const sortedData = this.sortOrders(data);
 
-        this.orders.push(...sortedData, ...this.sortOrders(MOCK_ORDERS));
+        this.orders.push(...sortedData, ...this.sortOrders(MOCK_ORDERS), ...this.sortOrders(MOCK_ORDERS));
       },
       (error) => {
         // eslint-disable-next-line no-console
