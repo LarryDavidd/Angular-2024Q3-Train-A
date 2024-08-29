@@ -4,6 +4,7 @@ import { AdminComponent } from './admin.component';
 import { CarriagesComponent } from './pages/carriages/carriages.component';
 import { StationsComponent } from './pages/stations/stations.component';
 import { RoutesPageComponent } from './routes/pages/routes-page/routes-page.component';
+import { RideListComponent } from './ride/components/ride-list/ride-list.component';
 
 const routes: Routes = [
   {
@@ -13,7 +14,8 @@ const routes: Routes = [
       { path: '', redirectTo: 'carriages', pathMatch: 'full' },
       { path: 'carriages', component: CarriagesComponent },
       { path: 'stations', component: StationsComponent },
-      { path: 'routes', component: RoutesPageComponent }
+      { path: 'routes', component: RoutesPageComponent },
+      { path: 'routes/:id', component: RideListComponent }
     ]
   }
 ];

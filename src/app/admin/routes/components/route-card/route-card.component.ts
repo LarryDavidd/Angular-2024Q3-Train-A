@@ -5,6 +5,7 @@ import { IRoute } from 'admin/routes/model/routes.model';
 import { MatIcon } from '@angular/material/icon';
 import * as RoutesActions from 'admin/routes/redux/actions/routes.actions';
 import { Store } from '@ngrx/store';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-route-card',
@@ -16,6 +17,10 @@ import { Store } from '@ngrx/store';
 export class RouteCardComponent {
   @Input() route!: IRoute;
 
+  private router = inject(Router);
+
+  private activatedRoute = inject(ActivatedRoute);
+
   @Output() handleUpdate = new EventEmitter<IRoute>();
 
   private store = inject(Store);
@@ -26,5 +31,9 @@ export class RouteCardComponent {
 
   onUpdate() {
     this.handleUpdate.emit(this.route);
+  }
+
+  onRedirect() {
+    this.router.navigate([this.route.id], { relativeTo: this.activatedRoute });
   }
 }
