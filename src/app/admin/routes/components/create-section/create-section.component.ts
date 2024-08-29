@@ -11,6 +11,8 @@ import { CarriagesFormGroupComponent } from '../carriages-form-group/carriages-f
 import { MatButton } from '@angular/material/button';
 import { RoutesService } from 'admin/routes/services/routes.service';
 import { IRoute } from 'admin/routes/model/routes.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import * as RoutesActions from 'admin/routes/redux/actions/routes.actions';
 
 @Component({
   selector: 'app-create-section',
@@ -21,6 +23,8 @@ import { IRoute } from 'admin/routes/model/routes.model';
 })
 export class CreateSectionComponent implements OnInit {
   private readonly store = inject(Store);
+
+  private snackBar = inject(MatSnackBar);
 
   @Output() closeSection = new EventEmitter();
 
@@ -59,18 +63,32 @@ export class CreateSectionComponent implements OnInit {
         this.routesService
           .updateRoute(String(this.routeForUpdate.id), { carriages: this.selectedCarriagesCodes, path: this.selectedStationsIds.map((value) => Number(value)) })
           .subscribe({
-            next: (response) => {
+            next: () => {
+              this.store.dispatch(RoutesActions.fetchRoutes());
               this.deleteRouteForUpdate.emit();
-              console.log('Route update successfully', response);
+              this.snackBar.open('Route update successfully', 'close', {
+                duration: 3000
+              });
             },
-            error: (error) => console.error('Error save route:', error)
+            error: (error) => {
+              this.snackBar.open('Error update route:' + error, 'close', {
+                duration: 3000
+              });
+            }
           });
       } else {
         this.routesService.createRoute({ carriages: this.selectedCarriagesCodes, path: this.selectedStationsIds.map((value) => Number(value)) }).subscribe({
-          next: (response) => {
-            console.log('Route save successfully', response);
+          next: () => {
+            this.store.dispatch(RoutesActions.fetchRoutes());
+            this.snackBar.open('Route save successfully', 'close', {
+              duration: 3000
+            });
           },
-          error: (error) => console.error('Error save route:', error)
+          error: (error) => {
+            this.snackBar.open('Error save route:' + error, 'close', {
+              duration: 3000
+            });
+          }
         });
       }
       this.closeSection.emit();
