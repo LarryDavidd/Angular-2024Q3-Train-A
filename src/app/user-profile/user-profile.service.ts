@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Error } from './models/error';
 import { AuthService } from 'auth/auth.service';
 import { UpdateUser } from './models/update-user';
+import { User } from './models/users';
 
 @Injectable({
   providedIn: 'root'
@@ -56,6 +57,10 @@ export class UserProfileService {
         }
       );
     });
+  }
+
+  public getUsers() {
+    return this.http.get<User[]>(`/api/users`, this.httpOptions);
   }
 
   public updateUser(data: UpdateUser): Observable<UserResponse> {

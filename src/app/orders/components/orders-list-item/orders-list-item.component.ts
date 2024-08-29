@@ -47,7 +47,6 @@ export class OrdersListItemComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.ordersService.createOrder();
     this.isActive = this.data.status === OrderStatus.Active;
     this.priceLabel = formatPrice(this.calculateTotalPrice());
 
@@ -78,7 +77,7 @@ export class OrdersListItemComponent implements OnInit {
     });
   }
 
-  // TODO: check seats
+  // TODO: check price
   public calculateTotalPrice(): number {
     let totalPrice = 0;
 
