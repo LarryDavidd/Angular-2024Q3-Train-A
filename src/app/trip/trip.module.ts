@@ -7,11 +7,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CarriageComponent } from './components/carriage/carriage.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { HighlightDirective } from './directives/highlight.directive';
 
 const routes: Routes = [{ path: '', component: TripComponent }];
 
 @NgModule({
-  declarations: [TripComponent, CarriageComponent],
+  declarations: [TripComponent, CarriageComponent, HighlightDirective, CarriageComponent],
   imports: [CommonModule, RouterModule.forChild(routes), MatButtonModule, MatIconModule, MatTabsModule, MatDialogModule]
 })
 export class TripModule {}

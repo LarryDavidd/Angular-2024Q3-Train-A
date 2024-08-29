@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { RouteModalComponent } from 'trip/components/route-modal/route-modal.component';
@@ -25,11 +25,12 @@ export class TripComponent implements OnInit {
 
   listOfCarriages: Carriage[] = [];
 
-  modal = inject(MatDialog);
+  seatStatuses: ('free' | 'occupied' | 'selected')[][] = [];
 
   constructor(
     private route: ActivatedRoute,
-    private tripService: TripService
+    private tripService: TripService,
+    private modal: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +54,49 @@ export class TripComponent implements OnInit {
     }
 
     this.getStations();
+  }
+
+  getSeatsStatuses() {
+    console.log('getSeatsStatuses');
+    const seatsNumberInCarriage = (carriage: Carriage) => (carriage.leftSeats + carriage.rightSeats) * carriage.rows;
+    const getCarriageByName = (carriageName: string) => this.listOfCarriages.find((c) => c.name === carriageName);
+    console.log(this.rideData?.carriages);
+    if (this.rideData) {
+      this.rideData.carriages.map((c) => new Array(seatsNumberInCarriage(getCarriageByName(c)!)));
+      this.seatStatuses.push(...this.rideData!.carriages.map((c) => new Array(seatsNumberInCarriage(getCarriageByName(c)!)).fill('free')));
+      console.log(this.seatStatuses);
+      const occupiedSeats = new Set<number>();
+      this.rideData.schedule.segments.forEach((s, ind) => {
+        if (ind >= this.rideData!.path.indexOf(this.fromStationId!) || ind < this.rideData!.path.indexOf(this.toStationId!)) {
+          s.occupiedSeats.forEach((seat) => (seat > 0 ? occupiedSeats.add(seat - 1) : null));
+        }
+      });
+      const addOccupiedSeats = (seatMatrix: ('free' | 'occupied' | 'selected')[][], occupied: Set<number>): ('free' | 'occupied' | 'selected')[][] => {
+        const flatSeats: ('free' | 'occupied' | 'selected')[] = seatMatrix.flat();
+
+        occupied.forEach((occupiedIndex) => {
+          if (occupiedIndex >= 0 && occupiedIndex < flatSeats.length) {
+            flatSeats[occupiedIndex] = 'occupied';
+          }
+        });
+
+        const updatedMatrix: ('free' | 'occupied' | 'selected')[][] = [];
+        let currentIndex = 0;
+
+        for (const row of seatMatrix) {
+          const rowLength = row.length;
+          updatedMatrix.push(flatSeats.slice(currentIndex, currentIndex + rowLength));
+          currentIndex += rowLength;
+        }
+
+        return updatedMatrix;
+      };
+      this.seatStatuses = addOccupiedSeats(this.seatStatuses, occupiedSeats);
+    }
+  }
+
+  getFreeSeats(carInd: number): number {
+    return this.seatStatuses[carInd].filter((s: string) => s === 'free').length;
   }
 
   transformDate(dateStr: string): string {
@@ -88,9 +132,33 @@ export class TripComponent implements OnInit {
     this.tripService.getCarriages().subscribe({
       next: (carriages) => {
         this.listOfCarriages = carriages.filter((carriage) => this.listOfCarriagesTypes.has(carriage.code));
-        console.log(this.listOfCarriages);
+        this.getSeatsStatuses();
       },
       error: (err) => console.log(err)
     });
+  }
+
+  getCarriageLabel(carriage: Carriage): string {
+    const price = this.rideData!.schedule.segments.reduce((acc, segment, ind) => {
+      if (ind >= this.rideData!.path.indexOf(this.fromStationId!) || ind < this.rideData!.path.indexOf(this.toStationId!)) {
+        return acc + segment.price[carriage.name];
+      } else {
+        return acc;
+      }
+    }, 0);
+
+    const freeSeats = this.seatStatuses.reduce((acc, c, i) => {
+      if (this.rideData?.carriages[i] === carriage.name) {
+        return acc + c.filter((s) => s === 'free').length;
+      } else {
+        return acc;
+      }
+    }, 0);
+
+    return `Carriage type ${carriage.name}: ${freeSeats} | $${price}`;
+  }
+
+  selectSeatInCarriage() {
+    console.log('select');
   }
 }

@@ -41,9 +41,23 @@
   </div>
   <mat-tab-group>
     <div *ngFor="let carriage of listOfCarriages">
-      <mat-tab label="{{ carriage.name }}">
-        <div class="m-3">
-          <app-carriage [carriage]="carriage"></app-carriage>
+      <mat-tab label="{{ getCarriageLabel(carriage) }}">
+        <div
+          class="m-3"
+          *ngFor="let car of rideData?.carriages; let carInd = index"
+        >
+          <div *ngIf="carriage.name === car">
+            <div class="mb-3 flex items-center gap-3">
+              <span class="mr-3">Car {{ carInd + 1 }}</span>
+              <span class="rounded-2xl border border-gray-400 px-2 py-1">{{ getFreeSeats(carInd) }} seats</span>
+            </div>
+            <app-carriage
+              [carriageIndex]="carInd"
+              [carriage]="carriage"
+              [carriages]="listOfCarriages"
+              [seatStatuses]="seatStatuses[carInd]"
+            ></app-carriage>
+          </div>
         </div>
       </mat-tab>
     </div>
