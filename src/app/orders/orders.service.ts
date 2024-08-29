@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from 'auth/auth.service';
 import { Observable } from 'rxjs';
 import { Order } from './models/order';
-import { User } from './models/users';
+import { User } from '../user-profile/models/users';
 
 @Injectable({
   providedIn: 'root'

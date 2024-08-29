@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { OrdersService } from './orders.service';
 import { Order } from './models/order';
 import { MOCK_ORDERS } from './mock';
+import { UserProfileService } from 'user-profile/user-profile.service';
+import { User } from 'user-profile/models/users';
 
 @Component({
   selector: 'app-orders',
@@ -9,16 +11,46 @@ import { MOCK_ORDERS } from './mock';
   styleUrl: './orders.component.scss'
 })
 export class OrdersComponent implements OnInit {
-  public readonly orders: Order[] = [];
+  public orders: Order[] = [];
 
-  constructor(private readonly ordersService: OrdersService) {}
+  public isManager: boolean = false;
+
+  public isChecked = false;
+
+  public users!: User[];
+
+  constructor(
+    private readonly ordersService: OrdersService,
+    private readonly userProfileService: UserProfileService
+  ) {}
 
   ngOnInit(): void {
+    this.userProfileService.getProfile().subscribe((data) => {
+      if (data.role === 'manager') {
+        this.isManager = true;
+
+        this.getUsers();
+      }
+      console.log('profile', data);
+    });
+
     this.getOrders();
   }
 
+  public getUsers() {
+    this.userProfileService.getUsers().subscribe((data) => {
+      this.users = data;
+
+      console.log('users', data);
+    });
+  }
+
   public getOrders(): void {
-    this.ordersService.getOrders().subscribe(
+    this.orders = [];
+
+    const all = this.isManager && this.isChecked ? true : false;
+
+    this.ordersService.getOrders(all).subscribe(
       (data) => {
         const sortedData = this.sortOrders(data);
 
