@@ -1,5 +1,9 @@
 <h2 mat-dialog-title>Cancel order</h2>
-<mat-dialog-content>Are you sure you want to cancel the order?</mat-dialog-content>
+<mat-dialog-content>
+  <p *ngIf="data.isAdmin"><span class="dialog-label">Order Id: </span> {{ data.orderId }}</p>
+  <p *ngIf="data.isAdmin"><span class="dialog-label"> Customer Name: </span> {{ data.customerName || 'Not filled' }}</p>
+  <p>Are you sure you want to cancel the order?</p>
+</mat-dialog-content>
 <mat-dialog-actions>
   <button
     mat-button

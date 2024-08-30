@@ -15,7 +15,7 @@ import { OrdersService } from 'orders/orders.service';
   styleUrl: './order-cancel-dialog.component.scss'
 })
 export class OrderCancelDialogComponent {
-  private readonly data = inject<{ orderId: Order['id'] }>(MAT_DIALOG_DATA);
+  public readonly data = inject<{ orderId: Order['id']; customerName: string; isAdmin: boolean }>(MAT_DIALOG_DATA);
 
   private readonly dialogRef = inject(MatDialogRef<OrderCancelDialogComponent>);
 

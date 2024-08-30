@@ -7,11 +7,12 @@ import { Station } from 'admin/models/stations.model';
 import { CarriageData } from 'orders/models/carriage-data';
 import { CarriagesService } from 'admin/services/carriages.service';
 import { Carriage } from 'admin/models/carriages.model';
-import { OrdersService } from 'orders/orders.service';
 import { findCarriageAndSeat } from 'orders/helpers/find-carriage-data';
 import { formatDate } from 'orders/helpers/format-date';
 import { calculateTimeDifference } from 'orders/helpers/calculate-time-difference';
 import { formatPrice } from 'orders/helpers/format-price';
+import { UserProfileService } from 'user-profile/user-profile.service';
+import { User } from 'user-profile/models/users';
 
 @Component({
   selector: 'app-orders-list-item',
@@ -20,6 +21,8 @@ import { formatPrice } from 'orders/helpers/format-price';
 })
 export class OrdersListItemComponent implements OnInit {
   @Input() public data!: Order;
+
+  @Input() public isAdmin!: boolean;
 
   public isActive!: boolean;
 
@@ -39,11 +42,13 @@ export class OrdersListItemComponent implements OnInit {
 
   public carriages!: Carriage[];
 
+  public users!: User[];
+
   constructor(
     public dialog: MatDialog,
     private readonly stationService: StationService,
     private readonly carriagesService: CarriagesService,
-    private readonly ordersService: OrdersService
+    private readonly userProfileService: UserProfileService
   ) {}
 
   public ngOnInit(): void {
@@ -53,6 +58,23 @@ export class OrdersListItemComponent implements OnInit {
     this.initTime();
     this.getStations();
     this.getCarriages();
+    this.getIsAdmin();
+  }
+
+  public getIsAdmin() {
+    this.userProfileService.getProfile().subscribe((data) => {
+      if (data.role === 'manager') {
+        this.isAdmin = true;
+
+        this.getUsers();
+      }
+    });
+  }
+
+  public getUsers() {
+    this.userProfileService.getUsers().subscribe((data) => {
+      this.users = data;
+    });
   }
 
   public getStations() {
@@ -97,9 +119,13 @@ export class OrdersListItemComponent implements OnInit {
   }
 
   public onPromptCancel(): void {
+    const customerName = this.isAdmin ? this.users.find((user) => user.id === this.data.userId)?.name : '';
+
     this.dialog.open(OrderCancelDialogComponent, {
       data: {
-        orderId: this.data.id
+        orderId: this.data.id,
+        isAdmin: this.isAdmin,
+        customerName
       }
     });
   }

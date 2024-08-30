@@ -5,6 +5,7 @@ import { AuthService } from 'auth/auth.service';
 import { Observable } from 'rxjs';
 import { Order } from './models/order';
 import { User } from '../user-profile/models/users';
+import { ResponseError } from 'auth/models/response-error';
 
 @Injectable({
   providedIn: 'root'
@@ -56,11 +57,11 @@ export class OrdersService {
           observer.next({ success: true });
           observer.complete();
         },
-        (error: Error) => {
+        (error: ResponseError) => {
           observer.next({
             success: false,
             error: {
-              message: error.message
+              message: error.error.message
             }
           });
           observer.complete();

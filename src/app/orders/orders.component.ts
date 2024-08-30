@@ -3,7 +3,6 @@ import { OrdersService } from './orders.service';
 import { Order } from './models/order';
 import { MOCK_ORDERS } from './mock';
 import { UserProfileService } from 'user-profile/user-profile.service';
-import { User } from 'user-profile/models/users';
 
 @Component({
   selector: 'app-orders',
@@ -17,8 +16,6 @@ export class OrdersComponent implements OnInit {
 
   public isChecked = false;
 
-  public users!: User[];
-
   constructor(
     private readonly ordersService: OrdersService,
     private readonly userProfileService: UserProfileService
@@ -28,21 +25,10 @@ export class OrdersComponent implements OnInit {
     this.userProfileService.getProfile().subscribe((data) => {
       if (data.role === 'manager') {
         this.isManager = true;
-
-        this.getUsers();
       }
-      console.log('profile', data);
     });
 
     this.getOrders();
-  }
-
-  public getUsers() {
-    this.userProfileService.getUsers().subscribe((data) => {
-      this.users = data;
-
-      console.log('users', data);
-    });
   }
 
   public getOrders(): void {
