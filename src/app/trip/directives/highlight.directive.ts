@@ -26,14 +26,15 @@ export class HighlightDirective implements OnChanges {
           color = 'rgb(30, 64, 175)'; // blue
           break;
         case 'occupied':
-          color = 'gray';
+          color = 'rgb(156, 163, 175)'; // gray
           break;
         case 'selected':
-          color = 'orange';
+          color = 'rgb(249, 115, 22)'; // orange
           break;
       }
 
       this.renderer.setStyle(this.el.nativeElement, 'background-color', color);
+      this.renderer.setStyle(this.el.nativeElement, 'border-color', color);
     }
   }
 }
