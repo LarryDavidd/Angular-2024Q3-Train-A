@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OrdersService } from './orders.service';
 import { Order } from './models/order';
-import { MOCK_ORDERS } from './mock';
 import { UserProfileService } from 'user-profile/user-profile.service';
 import { Subscription } from 'rxjs';
 
@@ -53,7 +52,8 @@ export class OrdersComponent implements OnInit, OnDestroy {
       (data) => {
         const sortedData = this.sortOrders(data);
 
-        this.orders.push(...sortedData, ...this.sortOrders(MOCK_ORDERS), ...this.sortOrders(MOCK_ORDERS));
+        // TODO: delete mock orders
+        this.orders.push(...sortedData /* ...this.sortOrders(MOCK_ORDERS), ...this.sortOrders(MOCK_ORDERS) */);
       },
       (error) => {
         // eslint-disable-next-line no-console
