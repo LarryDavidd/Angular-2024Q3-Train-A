@@ -7,6 +7,8 @@ import { SignInResponseData } from './models/signin-response';
 import { Router } from '@angular/router';
 import * as AuthActions from './store/auth.actions';
 import { Store } from '@ngrx/store';
+import { UserProfileService } from 'user-profile/user-profile.service';
+import { UserResponse } from 'user-profile/models/user-response';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +23,8 @@ export class AuthService {
   constructor(
     private readonly http: HttpClient,
     private readonly router: Router,
-    private readonly store: Store
+    private readonly store: Store,
+    private readonly userProfileService: UserProfileService
   ) {
     this.isAuthenticated = !!localStorage.getItem(this.authSecretKey);
   }
@@ -87,6 +90,7 @@ export class AuthService {
           this.isAuthenticated = true;
 
           this.store.dispatch(AuthActions.setAuthenticated(true));
+          this.checkIsAdmin();
 
           observer.next(signInData);
           observer.complete();
@@ -99,6 +103,14 @@ export class AuthService {
           observer.complete();
         }
       );
+    });
+  }
+
+  private checkIsAdmin() {
+    this.userProfileService.getProfile().subscribe((userResponse: UserResponse) => {
+      if (userResponse && userResponse.role === 'manager') {
+        this.store.dispatch(AuthActions.setIsAdmin(true));
+      }
     });
   }
 }
