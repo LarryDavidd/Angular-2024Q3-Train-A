@@ -1,0 +1,182 @@
+{
+  "id": 2,
+  "path": [58, 29, 45, 23, 41, 11, 34, 62, 43, 7],
+  "carriages": [
+    "carriage3",
+    "carriage3",
+    "carriage3",
+    "carriage1",
+    "carriage2",
+    "carriage3",
+    "carriage2",
+    "carriage2",
+    "carriage3",
+    "carriage3",
+    "carriage1",
+    "carriage1",
+    "carriage3",
+    "carriage3",
+    "carriage2",
+    "carriage1",
+    "carriage2",
+    "carriage1",
+    "carriage1",
+    "carriage1"
+  ],
+  "schedule": [
+    {
+      "rideId": 2,
+      "segments": [
+        {
+          "time": ["2024-08-27T19:30:47.144Z", "2024-08-28T16:52:47.144Z"],
+          "price": {
+            "carriage3": 1602,
+            "carriage1": 1790,
+            "carriage2": 2110
+          }
+        },
+        {
+          "time": ["2024-08-28T17:45:47.144Z", "2024-08-31T17:06:47.143Z"],
+          "price": {
+            "carriage3": 814,
+            "carriage1": 2463,
+            "carriage2": 976
+          }
+        },
+        {
+          "time": ["2024-08-31T17:49:47.143Z", "2024-09-02T22:13:47.143Z"],
+          "price": {
+            "carriage3": 235,
+            "carriage1": 1939,
+            "carriage2": 993
+          }
+        },
+        {
+          "time": ["2024-09-02T22:41:47.143Z", "2024-09-06T02:50:47.143Z"],
+          "price": {
+            "carriage3": 175,
+            "carriage1": 1995,
+            "carriage2": 2219
+          }
+        },
+        {
+          "time": ["2024-09-06T03:22:47.143Z", "2024-09-09T07:02:47.143Z"],
+          "price": {
+            "carriage3": 952,
+            "carriage1": 2069,
+            "carriage2": 1598
+          }
+        },
+        {
+          "time": ["2024-09-09T07:35:47.143Z", "2024-09-11T21:47:47.143Z"],
+          "price": {
+            "carriage3": 274,
+            "carriage1": 237,
+            "carriage2": 596
+          }
+        },
+        {
+          "time": ["2024-09-11T22:40:47.143Z", "2024-09-14T19:25:47.143Z"],
+          "price": {
+            "carriage3": 1803,
+            "carriage1": 464,
+            "carriage2": 637
+          }
+        },
+        {
+          "time": ["2024-09-14T20:19:47.143Z", "2024-09-16T11:00:47.143Z"],
+          "price": {
+            "carriage3": 1983,
+            "carriage1": 426,
+            "carriage2": 992
+          }
+        },
+        {
+          "time": ["2024-09-16T11:13:47.143Z", "2024-09-17T11:14:47.143Z"],
+          "price": {
+            "carriage3": 728,
+            "carriage1": 186,
+            "carriage2": 420
+          }
+        }
+      ]
+    },
+    {
+      "rideId": 3,
+      "segments": [
+        {
+          "time": ["2024-09-05T02:39:13.261Z", "2024-09-06T00:01:13.261Z"],
+          "price": {
+            "carriage3": 1595,
+            "carriage1": 899,
+            "carriage2": 613
+          }
+        },
+        {
+          "time": ["2024-09-06T00:21:13.261Z", "2024-09-08T23:42:13.260Z"],
+          "price": {
+            "carriage3": 2013,
+            "carriage1": 2301,
+            "carriage2": 2316
+          }
+        },
+        {
+          "time": ["2024-09-09T00:18:13.260Z", "2024-09-11T04:42:13.260Z"],
+          "price": {
+            "carriage3": 1813,
+            "carriage1": 2488,
+            "carriage2": 395
+          }
+        },
+        {
+          "time": ["2024-09-11T05:38:13.260Z", "2024-09-14T09:47:13.260Z"],
+          "price": {
+            "carriage3": 569,
+            "carriage1": 2081,
+            "carriage2": 895
+          }
+        },
+        {
+          "time": ["2024-09-14T10:33:13.260Z", "2024-09-17T14:13:13.260Z"],
+          "price": {
+            "carriage3": 1919,
+            "carriage1": 1167,
+            "carriage2": 1373
+          }
+        },
+        {
+          "time": ["2024-09-17T14:46:13.260Z", "2024-09-20T04:58:13.260Z"],
+          "price": {
+            "carriage3": 802,
+            "carriage1": 2122,
+            "carriage2": 553
+          }
+        },
+        {
+          "time": ["2024-09-20T05:53:13.260Z", "2024-09-23T02:38:13.260Z"],
+          "price": {
+            "carriage3": 1657,
+            "carriage1": 953,
+            "carriage2": 1414
+          }
+        },
+        {
+          "time": ["2024-09-23T03:07:13.260Z", "2024-09-24T17:48:13.260Z"],
+          "price": {
+            "carriage3": 1714,
+            "carriage1": 1441,
+            "carriage2": 1130
+          }
+        },
+        {
+          "time": ["2024-09-24T18:09:13.260Z", "2024-09-25T18:10:13.260Z"],
+          "price": {
+            "carriage3": 2035,
+            "carriage1": 1176,
+            "carriage2": 2219
+          }
+        }
+      ]
+    }
+  ]
+}

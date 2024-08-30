@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
-import { Ride } from '../models/ride.models';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Ride } from 'admin/ride/model/ride.model';
 
 export const changeLoadingStatus = createAction('[Youtube] Change Loading Status', props<{ ridesLoadingStatus: boolean }>());
 

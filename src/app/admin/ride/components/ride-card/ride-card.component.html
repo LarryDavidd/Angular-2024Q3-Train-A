@@ -1,1 +1,31 @@
-<p>ride-card works!</p>
+<mat-card class="m-auto">
+  <mat-card-header>
+    <mat-card-title>{{ 'Ride' + ' ' + schedule.rideId }}</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div *ngFor="let segment of schedule.segments; let i = index">
+      <div class="flex">
+        <div>{{ path[i] }}</div>
+        <div>
+          <div *ngFor="let time of segment.time">
+            {{ time }}
+          </div>
+        </div>
+        <div>
+          <p>Price</p>
+          <div *ngFor="let price of getPrices(segment.price)">
+            <input
+              matInput
+              (change)="onPriceChange()"
+              type="number"
+              required
+              placeholder=""
+            />
+            {{ price[0] + ' - ' + price[1] }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

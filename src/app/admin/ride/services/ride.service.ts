@@ -1,9 +1,9 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Ride } from '../redux/models/ride.models';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CreateRouteErrorResponse } from 'admin/routes/model/routes.model';
+import { Ride } from '../model/ride.model';
 
 @Injectable({
   providedIn: 'root'
