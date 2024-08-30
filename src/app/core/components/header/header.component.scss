@@ -1,0 +1,35 @@
+.header {
+  display: flex;
+  background-color: var(--pwa-neutral-cold-50);
+}
+
+.list {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px;
+  font-size: 24px;
+  color: var(--pwa-neutral-cold-800);
+  font-weight: 500;
+}
+
+.list a {
+  transition: color 0.3s;
+}
+
+.list a:hover {
+  color: var(--pwa-blue-600);
+}
+
+.list a.active {
+  color: var(--pwa-blue-600);
+}
+
+.item-block {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: space-between;
+}

@@ -1,0 +1,76 @@
+<nav class="header">
+  <ul
+    class="list"
+    *ngIf="(isAuthenticated$ | async) === false || (isAuthenticated$ | async) === null || (isAuthenticated$ | async) === undefined"
+  >
+    <li>
+      <a routerLink="/">Home</a>
+    </li>
+    <li class="item-block">
+      <a
+        routerLinkActive="active"
+        routerLink="/signin"
+        >Sign In</a
+      >
+      <a
+        routerLinkActive="active"
+        routerLink="/signup"
+        >Sign Up</a
+      >
+    </li>
+  </ul>
+
+  <ul
+    class="list"
+    *ngIf="(isAuthenticated$ | async) && (isAdmin$ | async) === false"
+  >
+    <li>
+      <a routerLink="/">Home</a>
+    </li>
+    <li>
+      <a
+        routerLinkActive="active"
+        routerLink="/profile"
+        *ngIf="isAuthenticated$ | async"
+        >Profile</a
+      >
+    </li>
+    <li>
+      <a
+        routerLink="/orders"
+        routerLinkActive="active"
+        >My Orders</a
+      >
+    </li>
+  </ul>
+
+  <ul
+    class="list"
+    *ngIf="(isAuthenticated$ | async) && (isAdmin$ | async)"
+  >
+    <li class="item-block">
+      <a routerLink="/">Home</a>
+      <a
+        routerLinkActive="active"
+        routerLink="/profile"
+        *ngIf="isAuthenticated$ | async"
+        >Profile</a
+      >
+      <a
+        routerLink="/orders"
+        routerLinkActive="active"
+        *ngIf="(isAuthenticated$ | async) && (isAdmin$ | async)"
+        >Orders</a
+      >
+    </li>
+
+    <li>
+      <a
+        routerLinkActive="active"
+        routerLink="/admin"
+        *ngIf="(isAuthenticated$ | async) && (isAdmin$ | async)"
+        >Admin</a
+      >
+    </li>
+  </ul>
+</nav>
