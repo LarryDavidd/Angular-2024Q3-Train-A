@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { AuthService } from 'auth/auth.service';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Order } from './models/order';
 import { User } from '../user-profile/models/users';
 import { ResponseError } from 'auth/models/response-error';
@@ -16,6 +16,10 @@ export class OrdersService {
   public token: string | null = null;
 
   public httpOptions: { headers: HttpHeaders };
+
+  private isUpdateOrdersSubject: Subject<boolean> = new Subject<boolean>();
+
+  public isUpdateOrders$: Observable<boolean> = this.isUpdateOrdersSubject.asObservable();
 
   constructor(
     private readonly http: HttpClient,
@@ -54,6 +58,8 @@ export class OrdersService {
     return new Observable((observer) => {
       this.http.delete(`${this.apiUrl}/${orderId}`).subscribe(
         () => {
+          this.isUpdateOrdersSubject.next(true);
+
           observer.next({ success: true });
           observer.complete();
         },

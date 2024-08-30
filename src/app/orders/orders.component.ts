@@ -1,20 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OrdersService } from './orders.service';
 import { Order } from './models/order';
 import { MOCK_ORDERS } from './mock';
 import { UserProfileService } from 'user-profile/user-profile.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss'
 })
-export class OrdersComponent implements OnInit {
+export class OrdersComponent implements OnInit, OnDestroy {
   public orders: Order[] = [];
 
   public isManager: boolean = false;
 
   public isChecked = false;
+
+  private isUpdateCancelledOrders!: Subscription;
 
   constructor(
     private readonly ordersService: OrdersService,
@@ -29,6 +32,16 @@ export class OrdersComponent implements OnInit {
     });
 
     this.getOrders();
+
+    this.isUpdateCancelledOrders = this.ordersService.isUpdateOrders$.subscribe((isUpdated: boolean) => {
+      if (isUpdated) {
+        this.getOrders();
+      }
+    });
+  }
+
+  public ngOnDestroy(): void {
+    this.isUpdateCancelledOrders.unsubscribe();
   }
 
   public getOrders(): void {
