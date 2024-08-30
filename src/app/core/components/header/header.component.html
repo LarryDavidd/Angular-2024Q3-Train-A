@@ -24,18 +24,14 @@
     class="list"
     *ngIf="(isAuthenticated$ | async) && (isAdmin$ | async) === false"
   >
-    <li>
+    <li class="item-block">
       <a routerLink="/">Home</a>
-    </li>
-    <li>
       <a
         routerLinkActive="active"
         routerLink="/profile"
         *ngIf="isAuthenticated$ | async"
         >Profile</a
       >
-    </li>
-    <li>
       <a
         routerLink="/orders"
         routerLinkActive="active"

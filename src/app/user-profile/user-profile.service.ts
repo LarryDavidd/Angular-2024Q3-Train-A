@@ -24,9 +24,13 @@ export class UserProfileService {
 
   public token: string | null = null;
 
-  public httpOptions: { headers: HttpHeaders };
+  public httpOptions!: { headers: HttpHeaders };
 
   constructor(private readonly http: HttpClient) {
+    this.updateHttpOptions();
+  }
+
+  public updateHttpOptions() {
     this.token = localStorage.getItem(this.authSecretKey);
 
     this.httpOptions = {
@@ -38,6 +42,8 @@ export class UserProfileService {
   }
 
   public getProfile(): Observable<UserResponse> {
+    this.updateHttpOptions();
+
     return new Observable((observer) => {
       this.http.get<UserResponse>(`${this.apiUrl}`, this.httpOptions).subscribe(
         (response: UserResponse) => {
