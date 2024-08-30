@@ -14,3 +14,14 @@ interface Segment {
   price: Record<string, number>;
   occupiedSeats: number[];
 }
+
+export interface Order {
+  rideId: number;
+  seat: number;
+  stationStart: number;
+  stationEnd: number;
+}
+
+export interface OrderResponse {
+  id: string;
+}

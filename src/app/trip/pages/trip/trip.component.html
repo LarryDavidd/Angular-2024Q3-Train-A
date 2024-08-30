@@ -1,4 +1,4 @@
-<div>
+<div class="h-full bg-slate-300">
   <div class="w-full border-y border-gray-400 bg-white">
     <div class="mx-auto max-w-6xl px-6">
       <div class="flex items-center gap-3 py-2">
@@ -39,27 +39,60 @@
       </div>
     </div>
   </div>
-  <mat-tab-group>
-    <div *ngFor="let carriage of listOfCarriages">
-      <mat-tab label="{{ getCarriageLabel(carriage) }}">
-        <div
-          class="m-3"
-          *ngFor="let car of rideData?.carriages; let carInd = index"
-        >
-          <div *ngIf="carriage.name === car">
-            <div class="mb-3 flex items-center gap-3">
-              <span class="mr-3">Car {{ carInd + 1 }}</span>
-              <span class="rounded-2xl border border-gray-400 px-2 py-1">{{ getFreeSeats(carInd) }} seats</span>
+  <div class="m-auto flex max-w-screen-lg gap-2 p-3">
+    <div class="max-w-[70%]">
+      <mat-tab-group>
+        <div *ngFor="let carriage of listOfCarriages">
+          <mat-tab
+            label="{{ getCarriageLabel(carriage) }}"
+            style="background-color: white"
+          >
+            <div
+              class="my-3"
+              *ngFor="let car of rideData?.carriages; let carInd = index"
+            >
+              <div
+                *ngIf="carriage.name === car"
+                class="rounded-xl bg-white p-3"
+              >
+                <div class="mb-3 flex items-center gap-3">
+                  <span class="mr-3">Car {{ carInd + 1 }}</span>
+                  <span class="rounded-2xl border border-gray-400 px-2 py-1">{{ getFreeSeats(carInd) }} seats</span>
+                </div>
+                <app-carriage
+                  [carriageIndex]="carInd"
+                  [carriage]="carriage"
+                  [carriages]="listOfCarriages"
+                  [seatStatuses]="seatStatuses[carInd]"
+                  (seatSelected)="onSeatSelected(carInd, $event)"
+                ></app-carriage>
+              </div>
             </div>
-            <app-carriage
-              [carriageIndex]="carInd"
-              [carriage]="carriage"
-              [carriages]="listOfCarriages"
-              [seatStatuses]="seatStatuses[carInd]"
-            ></app-carriage>
+          </mat-tab>
+        </div>
+      </mat-tab-group>
+      <div>
+        <h5 style="font-size: 16px; font-weight: 700">Legend</h5>
+        <div class="flex items-baseline gap-2">
+          <div class="flex items-center gap-2">
+            <span class="flex h-4 w-4 items-center justify-center rounded-sm border-2 border-gray-300 bg-blue-800 text-sm text-white">1</span>
+            <span>Reserved seat</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="flex h-4 w-4 items-center justify-center rounded-sm border-2 border-gray-300 bg-gray-400 text-sm text-white">1</span>
+            <span>Available seat</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="flex h-4 w-4 items-center justify-center rounded-sm border-2 border-gray-300 bg-orange-500 text-sm text-white">1</span>
+            <span>Selected seat</span>
           </div>
         </div>
-      </mat-tab>
+      </div>
     </div>
-  </mat-tab-group>
+    <div class="relative h-full w-72">
+      <div *ngIf="isBookModalVisible">
+        <app-book-modal (isModalVisible)="isBookModalVisible = $event"></app-book-modal>
+      </div>
+    </div>
+  </div>
 </div>

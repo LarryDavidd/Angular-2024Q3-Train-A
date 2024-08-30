@@ -1,0 +1,21 @@
+<div class="fixed bottom-0 right-0 z-10 mx-3 mb-4 max-w-sm rounded-xl bg-white p-4 shadow-lg">
+  <div class="flex items-center justify-between gap-3">
+    <span class="text-sm font-medium">Car {{ carNumber + 1 }}, Seat {{ seatNumber + 1 }}</span>
+    <span class="text-sm font-medium"> ${{ (price / 100).toFixed(2) }}</span>
+    <button
+      (click)="closeModal()"
+      class="text-gray-500 hover:text-black"
+    >
+      &times;
+    </button>
+  </div>
+  <hr class="my-2" />
+  <div class="flex justify-center">
+    <button
+      (click)="bookTrip()"
+      class="w-full cursor-pointer rounded-lg bg-blue-800 py-2 text-center text-white"
+    >
+      Book trip
+    </button>
+  </div>
+</div>

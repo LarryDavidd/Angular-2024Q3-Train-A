@@ -16,7 +16,10 @@
     <span class="h-5"></span>
     <span
       *ngFor="let seat of [].constructor(carriage.rightSeats); let rightSeatInd = index"
-      [appHighlight]="'free'"
+      [appHighlight]="seatStatuses[rowIndex * (carriage.rightSeats! + carriage.leftSeats!) + carriage.leftSeats! + rightSeatInd]"
+      (click)="selectSeat(rowIndex * (carriage.rightSeats! + carriage.leftSeats!) + carriage.leftSeats! + rightSeatInd)"
+      (keydown.enter)="selectSeat(rowIndex * (carriage.rightSeats! + carriage.leftSeats!) + carriage.leftSeats! + rightSeatInd)"
+      tabindex="0"
       class="m-1 size-4 cursor-pointer rounded-sm text-center text-xs text-white"
       >{{ rowIndex * (carriage.rightSeats! + carriage.leftSeats!) + carriage.leftSeats! + rightSeatInd + 1 }}</span
     >

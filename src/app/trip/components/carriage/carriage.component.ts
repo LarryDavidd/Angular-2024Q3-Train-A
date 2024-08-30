@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Carriage } from 'trip/services/trip.service';
 
 @Component({
@@ -15,14 +15,10 @@ export class CarriageComponent {
 
   @Input() carriages: Carriage[] = [];
 
+  @Output() seatSelected = new EventEmitter<number>();
+
   selectSeat(ind: number): void {
-    const seatIndexInTrain =
-      this.carriages.reduce((acc, carriage, i) => (i < this.carriageIndex ? acc + (carriage.leftSeats + carriage.rightSeats) * carriage.rows : acc), 0) + ind;
-    if (this.seatStatuses[seatIndexInTrain] === 'occupied') return;
-    const selectedSeatIndex = this.seatStatuses.indexOf('selected');
-    if (selectedSeatIndex !== -1) {
-      this.seatStatuses[selectedSeatIndex] = 'free';
-    }
-    this.seatStatuses[seatIndexInTrain] = 'selected';
+    console.log('click in carriage', ind);
+    this.seatSelected.emit(ind);
   }
 }

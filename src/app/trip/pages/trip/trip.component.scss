@@ -19,3 +19,7 @@ button.icon-btn {
     font-size: 16px;
   }
 }
+
+::ng-deep .mat-mdc-tab-header {
+  background-color: white; /* Set your desired background color */
+}
