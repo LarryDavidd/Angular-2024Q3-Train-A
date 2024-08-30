@@ -1,31 +1,117 @@
-<mat-card class="m-auto">
+<div [formGroup]="form">
+  <ng-container formArrayName="segment">
+    <ng-container
+      *ngFor="let segmentFC of getSegmentFormControls; let i = index"
+      [formGroupName]="i"
+    >
+      <div class="flex">
+        <div>{{ path[i] }}</div>
+        <label
+          for="arrivalTime"
+          class="capitalize"
+          >Arrival Time</label
+        >
+        <mat-form-field>
+          <input
+            type="text"
+            matInput
+            id="arrivalTime"
+            formControlName="arrivalTime"
+          />
+          <mat-error *ngIf="form.get(['segment', i, 'arrivalTime'])?.hasError('required')"> Arrival time is required </mat-error>
+        </mat-form-field>
+
+        <label
+          for="departureTime"
+          class="capitalize"
+          >Departure Time</label
+        >
+        <mat-form-field>
+          <input
+            type="text"
+            matInput
+            id="departureTime"
+            formControlName="departureTime"
+          />
+          <mat-error *ngIf="form.get(['segment', i, 'departureTime'])?.hasError('required')"> Departure time is required </mat-error>
+        </mat-form-field>
+
+        <div formGroupName="prices">
+          <ng-container *ngFor="let price of getPrices(segmentFC.get('prices')); let j = index">
+            <label [for]="'price-' + price.key">{{ price.key }}</label>
+            <mat-form-field>
+              <input
+                type="number"
+                matInput
+                [id]="'price-' + price.key"
+                [formControlName]="price.key"
+              />
+              <mat-error *ngIf="price.control.hasError('required')">Price is required</mat-error>
+            </mat-form-field>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>
+
+<!-- <mat-card class="m-auto">
   <mat-card-header>
     <mat-card-title>{{ 'Ride' + ' ' + schedule.rideId }}</mat-card-title>
   </mat-card-header>
 
   <mat-card-content>
-    <div *ngFor="let segment of schedule.segments; let i = index">
-      <div class="flex">
-        <div>{{ path[i] }}</div>
-        <div>
-          <div *ngFor="let time of segment.time">
-            {{ time }}
+    <form
+      [formGroup]="form"
+      (ngSubmit)="submit()"
+      class="m-auto flex w-1/3 flex-col bg-slate-200 p-8"
+    >
+      <ng-container *ngFor="let segmentFC of getSegmentFormControls; let i = index">
+        {{ segmentFC }}
+        <ng-container *ngIf="segmentFC === 'arrivalTime'">
+          <div class="flex">
+            <div>{{ path[i] }}</div>
+            <label
+              [for]="segmentFC"
+              class="capitalize"
+              >{{ segmentFC }}</label
+            >
+            <mat-form-field>
+              <input
+                [type]="segmentFC === 'arrivalTime' ? 'text' : 'text'"
+                matInput
+                [id]="'' + segmentFC"
+                [formControlName]="segmentFC"
+              />
+              <mat-error>{{ 'getError(formControl)' }}</mat-error>
+            </mat-form-field>
           </div>
-        </div>
-        <div>
-          <p>Price</p>
-          <div *ngFor="let price of getPrices(segment.price)">
-            <input
-              matInput
-              (change)="onPriceChange()"
-              type="number"
-              required
-              placeholder=""
-            />
-            {{ price[0] + ' - ' + price[1] }}
+        </ng-container>
+      </ng-container>
+
+      <div *ngFor="let segment of schedule.segments; let i = index">
+        <div class="flex">
+          <div>{{ path[i] }}</div>
+          <div>
+            <div *ngFor="let time of segment.time">
+              {{ time }}
+            </div>
+          </div>
+          <div>
+            <p>Price</p>
+            <div *ngFor="let price of getPrices(segment.price)">
+              <input
+                matInput
+                (change)="onPriceChange()"
+                type="number"
+                required
+                placeholder=""
+              />
+              {{ price[0] + ' - ' + price[1] }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </form>
   </mat-card-content>
-</mat-card>
+</mat-card> -->
