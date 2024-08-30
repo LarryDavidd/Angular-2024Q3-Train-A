@@ -1,8 +1,9 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, of, switchMap } from 'rxjs';
-import { Injectable } from '@angular/core';
+import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
 import * as RoutesActions from '../actions/routes.actions';
 import { RoutesService } from 'admin/routes/services/routes.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
 export class RoutesEffects {
@@ -47,5 +48,33 @@ export class RoutesEffects {
         )
       )
     )
+  );
+
+  private snackBar = inject(MatSnackBar);
+
+  deleteRouteSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(RoutesActions.deleteRouteSuccess),
+        tap(() => {
+          this.snackBar.open('Route delete successfully', 'close', {
+            duration: 3000
+          });
+        })
+      ),
+    { dispatch: false }
+  );
+
+  deleteRouteFailure$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(RoutesActions.deleteRouteFailure),
+        tap(() => {
+          this.snackBar.open('something went wrong, please try again', 'close', {
+            duration: 3000
+          });
+        })
+      ),
+    { dispatch: false }
   );
 }
