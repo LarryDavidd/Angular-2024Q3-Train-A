@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { UserResponse } from './models/user-response';
 import { Observable } from 'rxjs';
 import { Error } from './models/error';
-import { AuthService } from 'auth/auth.service';
 import { UpdateUser } from './models/update-user';
 import { User } from './models/users';
 
@@ -12,6 +11,8 @@ import { User } from './models/users';
 })
 export class UserProfileService {
   private apiUrl = '/api/profile';
+
+  private authSecretKey = 'authToken';
 
   public userData: UserResponse = {
     name: '',
@@ -23,13 +24,14 @@ export class UserProfileService {
 
   public token: string | null = null;
 
-  public httpOptions: { headers: HttpHeaders };
+  public httpOptions!: { headers: HttpHeaders };
 
-  constructor(
-    private readonly http: HttpClient,
-    private readonly authService: AuthService
-  ) {
-    this.token = this.authService.getAuthToken();
+  constructor(private readonly http: HttpClient) {
+    this.updateHttpOptions();
+  }
+
+  public updateHttpOptions() {
+    this.token = localStorage.getItem(this.authSecretKey);
 
     this.httpOptions = {
       headers: new HttpHeaders({
@@ -40,6 +42,8 @@ export class UserProfileService {
   }
 
   public getProfile(): Observable<UserResponse> {
+    this.updateHttpOptions();
+
     return new Observable((observer) => {
       this.http.get<UserResponse>(`${this.apiUrl}`, this.httpOptions).subscribe(
         (response: UserResponse) => {
