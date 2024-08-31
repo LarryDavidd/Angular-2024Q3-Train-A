@@ -5,8 +5,9 @@ import { MatButton } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
+import { MatInput, MatInputModule } from '@angular/material/input';
 import { Schedule } from 'admin/ride/model/ride.model';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 interface SegmentForm {
   arrivalTime: FormControl<string | null>;
@@ -21,7 +22,7 @@ interface FormGroupInterface {
 @Component({
   selector: 'app-ride-card',
   standalone: true,
-  imports: [CommonModule, MatCardModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButton, MatIcon],
+  imports: [CommonModule, MatCardModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButton, MatIcon, MatDatepickerModule, MatInput],
   templateUrl: './ride-card.component.html',
   styleUrl: './ride-card.component.scss'
 })

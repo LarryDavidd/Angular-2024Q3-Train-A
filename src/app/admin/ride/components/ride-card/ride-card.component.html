@@ -1,59 +1,72 @@
-<div [formGroup]="form">
-  <ng-container formArrayName="segment">
-    <ng-container
-      *ngFor="let segmentFC of getSegmentFormControls; let i = index"
-      [formGroupName]="i"
-    >
-      <div class="flex">
-        <div>{{ path[i] }}</div>
-        <label
-          for="arrivalTime"
-          class="capitalize"
-          >Arrival Time</label
-        >
-        <mat-form-field>
-          <input
-            type="text"
-            matInput
-            id="arrivalTime"
-            formControlName="arrivalTime"
-          />
-          <mat-error *ngIf="form.get(['segment', i, 'arrivalTime'])?.hasError('required')"> Arrival time is required </mat-error>
-        </mat-form-field>
+<mat-card class="m-auto">
+  <mat-card-header>
+    <mat-card-title>{{ 'Ride' + ' ' + schedule.rideId }}</mat-card-title>
+  </mat-card-header>
 
-        <label
-          for="departureTime"
-          class="capitalize"
-          >Departure Time</label
+  <mat-card-content>
+    <form [formGroup]="form">
+      <ng-container formArrayName="segment">
+        <ng-container
+          *ngFor="let segmentFC of getSegmentFormControls; let i = index"
+          [formGroupName]="i"
         >
-        <mat-form-field>
-          <input
-            type="text"
-            matInput
-            id="departureTime"
-            formControlName="departureTime"
-          />
-          <mat-error *ngIf="form.get(['segment', i, 'departureTime'])?.hasError('required')"> Departure time is required </mat-error>
-        </mat-form-field>
-
-        <div formGroupName="prices">
-          <ng-container *ngFor="let price of getPrices(segmentFC.get('prices')); let j = index">
-            <label [for]="'price-' + price.key">{{ price.key }}</label>
+          <div>{{ 'Station' + ' - ' + path[i] }}</div>
+          <div class="flex justify-between">
             <mat-form-field>
+              <mat-label matLabel>Arrival Time</mat-label>
               <input
-                type="number"
                 matInput
-                [id]="'price-' + price.key"
-                [formControlName]="price.key"
+                [matDatepicker]="picker"
+                placeholder="Arrival Time"
+                formControlName="arrivalTime"
               />
-              <mat-error *ngIf="price.control.hasError('required')">Price is required</mat-error>
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="form.get(['segment', i, 'arrivalTime'])?.hasError('required')"> Arrival time is required </mat-error>
             </mat-form-field>
-          </ng-container>
-        </div>
-      </div>
-    </ng-container>
-  </ng-container>
-</div>
+
+            <mat-form-field>
+              <mat-label matLabel>Departure Time</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker1"
+                placeholder="Departure Time"
+                formControlName="departureTime"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker1"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+              <mat-error *ngIf="form.get(['segment', i, 'departureTime'])?.hasError('required')"> Departure time is required </mat-error>
+            </mat-form-field>
+
+            <div
+              formGroupName="prices"
+              class="flex flex-col"
+            >
+              <ng-container *ngFor="let price of getPrices(segmentFC.get('prices')); let j = index">
+                <mat-form-field>
+                  <mat-label matLabel>{{ price.key }}</mat-label>
+                  <input
+                    type="number"
+                    matInput
+                    [placeholder]="price.key"
+                    [formControlName]="price.key"
+                  />
+                  <mat-error *ngIf="price.control.hasError('required')">Price is required</mat-error>
+                </mat-form-field>
+              </ng-container>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </form>
+  </mat-card-content>
+</mat-card>
 
 <!-- <mat-card class="m-auto">
   <mat-card-header>
