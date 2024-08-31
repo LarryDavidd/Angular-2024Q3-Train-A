@@ -81,8 +81,9 @@ export class UserProfileComponent implements OnInit {
   }
 
   public logout() {
-    this.authService.logout();
     this.userProfileService.terminateSession();
+
+    this.authService.logout();
   }
 
   public openChangePasswordDialog(): void {

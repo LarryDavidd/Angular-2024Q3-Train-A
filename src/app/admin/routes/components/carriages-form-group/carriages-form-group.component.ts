@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
-import { MatSelect, MatSelectModule } from '@angular/material/select';
+import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -32,26 +32,29 @@ export class CarriagesFormGroupComponent implements OnInit, OnDestroy {
     this.addSelectField();
   }
 
-  addSelectField(value = '') {
-    this.form.controls.select.push(new FormControl(value, [Validators.required]));
+  addSelectField() {
+    this.form.controls.select.push(new FormControl('', [Validators.required]));
   }
 
   getCarriageNameByCode(code: string) {
     return this.carriages.find((carriage) => carriage.code === code);
   }
 
-  onChange(i: number): void {
-    this.setSelectedCarriagesCodes.emit(this.form.value.select?.filter((value): value is string => value !== null) ?? []);
+  onChange(event: MatSelectChange, i: number): void {
+    if (this.selectedCarriagesCodes[i]) {
+      this.selectedCarriagesCodes[i] = event.value;
+      this.setSelectedCarriagesCodes.emit(this.selectedCarriagesCodes);
+    } else {
+      this.setSelectedCarriagesCodes.emit([...this.selectedCarriagesCodes, event.value]);
+    }
     if (this.form.controls.select.length === i + 1) this.addSelectField();
   }
 
   ngOnInit(): void {
     if (this.selectedCarriagesCodes) {
-      this.selectedCarriagesCodes.forEach((value) => {
-        const carriageName = this.getCarriageNameByCode(value);
-        this.addSelectField(carriageName?.name);
+      this.selectedCarriagesCodes.forEach(() => {
+        this.addSelectField();
       });
-      this.form.controls.select.controls.forEach((control) => control.setValue('kek'));
     }
   }
 

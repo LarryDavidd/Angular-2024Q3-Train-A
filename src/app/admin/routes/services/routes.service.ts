@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import {
   CreateRouteErrorResponse,
@@ -10,6 +10,7 @@ import {
   UpdateRouteRequest,
   UpdateRouteSuccessResponse
 } from '../model/routes.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +18,17 @@ import {
 export class RoutesService {
   constructor(private http: HttpClient) {}
 
+  private snackBar = inject(MatSnackBar);
+
   getRoutes(): Observable<GetRoutesResponse> {
-    return this.http.get<GetRoutesResponse>('/api/route').pipe(
-      map((response) => {
-        return response;
-      })
-    );
+    return this.http
+      .get<GetRoutesResponse>('/api/route')
+      .pipe(
+        map((response) => {
+          return response;
+        })
+      )
+      .pipe(catchError(this.handleError));
   }
 
   createRoute(request: CreateRouteRequest): Observable<CreateRouteSuccessResponse> {
@@ -55,7 +61,9 @@ export class RoutesService {
       const errResponse = error.error as CreateRouteErrorResponse;
       errorMessage = `${errResponse.error.message} (${errResponse.error.reason})`;
     }
-    console.error(errorMessage);
+    this.snackBar.open('error' + ' ' + error.message, 'close', {
+      duration: 3000
+    });
     return throwError(() => new Error(errorMessage));
   }
 

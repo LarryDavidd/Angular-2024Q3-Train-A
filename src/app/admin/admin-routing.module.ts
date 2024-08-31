@@ -1,15 +1,20 @@
 import { NgModule } from '@angular/core';
-import { RoutesPageComponent } from './routes/pages/routes-page/routes-page.component';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminComponent } from './admin.component';
 import { CarriagesComponent } from './pages/carriages/carriages.component';
 import { StationsComponent } from './pages/stations/stations.component';
+import { RoutesPageComponent } from './routes/pages/routes-page/routes-page.component';
 
 const routes: Routes = [
-  { path: 'carriages', component: CarriagesComponent },
-  { path: 'stations', component: StationsComponent },
   {
-    path: 'routes',
-    component: RoutesPageComponent
+    path: '',
+    component: AdminComponent,
+    children: [
+      { path: '', redirectTo: 'carriages', pathMatch: 'full' },
+      { path: 'carriages', component: CarriagesComponent },
+      { path: 'stations', component: StationsComponent },
+      { path: 'routes', component: RoutesPageComponent }
+    ]
   }
 ];
 
