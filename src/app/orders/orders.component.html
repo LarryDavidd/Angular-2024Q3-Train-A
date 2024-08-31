@@ -1,0 +1,12 @@
+<div class="header">
+  <h1>My orders</h1>
+</div>
+<div class="toggle">
+  <mat-slide-toggle
+    [(ngModel)]="isChecked"
+    *ngIf="isManager"
+    (change)="getOrders()"
+    >Show all orders</mat-slide-toggle
+  >
+</div>
+<app-orders-list [data]="orders" />
