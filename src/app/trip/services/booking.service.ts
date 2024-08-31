@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, BehaviorSubject, catchError, throwError } from 'rxjs';
 import { Order, OrderResponse } from 'trip/models/trip.model';
 
 @Injectable({
@@ -69,8 +69,22 @@ export class BookingService {
         Authorization: `Bearer ${localStorage.getItem('authToken')}`
       })
     };
-    return this.http.post<OrderResponse>('/api/order', body, {
-      headers: httpOptions.headers
-    });
+    return this.http
+      .post<OrderResponse>('/api/order', body, {
+        headers: httpOptions.headers
+      })
+      .pipe(catchError(this.handleError));
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    console.error(error);
+    let errorMessage = 'An unknown error occurred!';
+    if (error.error.reason === 'alreadyBooked') {
+      return throwError(() => error.error.reason);
+    }
+    if (error.error.message || error.error.reason) {
+      errorMessage = `Error: ${error.error.message || 'unknown'}, reason: ${error.error.reason || 'unknown'}`;
+    }
+    return throwError(() => errorMessage);
   }
 }

@@ -1,0 +1,16 @@
+<div class="modal-content p-3">
+  <h3 style="font-size: 20px; font-weight: 700; text-align: center">Booking Error</h3>
+  <p>{{ data.errorMessage }}</p>
+  <p *ngIf="data.suggestionMessage">
+    {{ data.suggestionMessage }}
+  </p>
+  <a
+    mat-flat-button
+    class="block w-full"
+    *ngIf="data.linkForRedirect"
+    (click)="goToOrders(data.linkForRedirect)"
+    (keydown.enter)="goToOrders(data.linkForRedirect)"
+    tabindex="1"
+    >{{ data.linkForRedirect }}</a
+  >
+</div>

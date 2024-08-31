@@ -1,10 +1,11 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { BookingService } from 'trip/services/booking.service';
+import { InfoModalComponent } from '../info-modal/info-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-book-modal',
   standalone: true,
-  imports: [],
   templateUrl: './book-modal.component.html',
   styleUrl: './book-modal.component.scss'
 })
@@ -17,7 +18,10 @@ export class BookModalComponent implements OnInit {
 
   @Output() isModalVisible = new EventEmitter();
 
-  constructor(private bookingService: BookingService) {}
+  constructor(
+    private bookingService: BookingService,
+    private modal: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.bookingService.carNumber$.subscribe((carNumber) => (this.carNumber = carNumber));
@@ -28,7 +32,21 @@ export class BookModalComponent implements OnInit {
   bookTrip() {
     console.log('book');
     this.bookingService.makeOrder().subscribe({
-      next: (res) => console.log(res)
+      next: (res) => console.log('orderId: ', res),
+      error: (err) => {
+        if (err === 'alreadyBooked') {
+          this.modal.open(InfoModalComponent, {
+            data: {
+              errorMessage: `You already booked a seat on this train`,
+              suggestionMessage: 'Please go to the Orders page to cancel the existing reservation and try again.',
+              linkForRedirect: 'orders'
+            }
+          });
+          return;
+        }
+        this.modal.open(InfoModalComponent, { data: `Error: ${err}` });
+        console.error(err);
+      }
     });
   }
 
