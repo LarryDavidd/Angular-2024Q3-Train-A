@@ -39,12 +39,13 @@ export class BookModalComponent implements OnInit {
             data: {
               errorMessage: `You already booked a seat on this train`,
               suggestionMessage: 'Please go to the Orders page to cancel the existing reservation and try again.',
-              linkForRedirect: 'orders'
+              linkForRedirect: 'orders',
+              errorSource: 'Booking'
             }
           });
           return;
         }
-        this.modal.open(InfoModalComponent, { data: `Error: ${err}` });
+        this.modal.open(InfoModalComponent, { data: { errorMessage: `Error: ${err}` } });
         console.error(err);
       }
     });

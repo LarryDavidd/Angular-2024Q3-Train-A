@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ModalData } from 'trip/models/trip.model';
 
 @Component({
   selector: 'app-info-modal',
@@ -9,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class InfoModalComponent {
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { errorMessage: string; suggestionMessage?: string; linkForRedirect?: string },
+    @Inject(MAT_DIALOG_DATA) public data: ModalData,
     private router: Router,
     private dialogRef: MatDialogRef<InfoModalComponent>
   ) {}

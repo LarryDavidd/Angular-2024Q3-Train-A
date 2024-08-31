@@ -2,8 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { InfoModalComponent } from 'trip/components/info-modal/info-modal.component';
 import { RouteModalComponent } from 'trip/components/route-modal/route-modal.component';
-import { Trip } from 'trip/models/trip.model';
+import { SeatStatusType, Trip } from 'trip/models/trip.model';
 import { BookingService } from 'trip/services/booking.service';
 import { Carriage, Station, TripService } from 'trip/services/trip.service';
 
@@ -57,11 +58,12 @@ export class TripComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (ride) => {
             this.rideData = ride;
+            this.checkStations();
             this.listOfCarriagesTypes = new Set(ride.carriages);
-            console.log(ride, this.listOfCarriagesTypes);
+            console.log(ride);
             this.getCarriages();
           },
-          error: (err) => console.log(err)
+          error: (err) => console.error(err)
         });
     }
 
@@ -73,19 +75,45 @@ export class TripComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  checkStations() {
+    let errorMessage: string = '';
+
+    const isFromStationExists = this.rideData!.path.find((s) => s === this.fromStationId);
+    if (isFromStationExists === undefined) {
+      errorMessage = `Error: station with id ${this.fromStationId} is not found`;
+    }
+
+    const isToStationExists = this.rideData!.path.find((s) => s === this.toStationId);
+    if (isToStationExists === undefined) {
+      errorMessage = `Error: station with id ${this.toStationId} is not found`;
+    }
+
+    if (isFromStationExists === undefined && isToStationExists === undefined) {
+      errorMessage = `Error: stations with ids ${this.fromStationId} and ${this.toStationId} are not found`;
+    }
+
+    if (errorMessage) {
+      this.fromStationId = this.rideData!.path[0];
+      this.toStationId = this.rideData!.path[this.rideData!.path.length - 1];
+      this.modal.open(InfoModalComponent, {
+        data: {
+          errorMessage,
+          suggestionMessage: 'Please go to the main page and try again.',
+          linkForRedirect: '/',
+          errorSource: 'Trip parameters'
+        }
+      });
+    }
+  }
+
   getSeatsStatuses() {
-    console.log('getSeatsStatuses');
-    // const seatsNumberInCarriage = (carriage: Carriage) => (carriage.leftSeats + carriage.rightSeats) * carriage.rows;
     const getCarriageByName = (carriageName: string) => this.listOfCarriages.find((c) => c.name === carriageName);
-    console.log(this.rideData?.carriages);
+
     if (this.rideData) {
-      // this.rideData.carriages.map((c) => new Array(seatsNumberInCarriage(getCarriageByName(c)!)));
-      // this.seatStatuses.push(...this.rideData!.carriages.map((c) => new Array(seatsNumberInCarriage(getCarriageByName(c)!)).fill('free')));
       this.seatStatuses = this.rideData.carriages.map((c) => {
         const carriage = getCarriageByName(c);
         return new Array((carriage!.leftSeats + carriage!.rightSeats) * carriage!.rows).fill('free');
       });
-      console.log(this.seatStatuses);
       const occupiedSeats = new Set<number>();
       this.rideData.schedule.segments.forEach((s, ind) => {
         if (ind >= this.rideData!.path.indexOf(this.fromStationId!) || ind < this.rideData!.path.indexOf(this.toStationId!)) {
@@ -94,42 +122,15 @@ export class TripComponent implements OnInit, OnDestroy {
           });
         }
       });
-      /*
-      const addOccupiedSeats = (seatMatrix: ('free' | 'occupied' | 'selected')[][], occupied: Set<number>): ('free' | 'occupied' | 'selected')[][] => {
-        const flatSeats: ('free' | 'occupied' | 'selected')[] = seatMatrix.flat();
-
-        occupied.forEach((occupiedIndex) => {
-          if (occupiedIndex >= 0 && occupiedIndex < flatSeats.length) {
-            flatSeats[occupiedIndex] = 'occupied';
-          }
-        });
-
-        const updatedMatrix: ('free' | 'occupied' | 'selected')[][] = [];
-        let currentIndex = 0;
-
-        for (const row of seatMatrix) {
-          const rowLength = row.length;
-          updatedMatrix.push(flatSeats.slice(currentIndex, currentIndex + rowLength));
-          currentIndex += rowLength;
-        }
-
-        return updatedMatrix;
-      };*/
-      // this.seatStatuses = addOccupiedSeats(this.seatStatuses, occupiedSeats);
-      occupiedSeats.add(2);
-      occupiedSeats.add(60);
-      console.log(occupiedSeats);
       this.seatStatuses = this.updateOccupiedSeats(this.seatStatuses, occupiedSeats);
-      console.log(this.seatStatuses);
     }
   }
 
-  updateOccupiedSeats(seatMatrix: ('free' | 'occupied' | 'selected')[][], occupied: Set<number>): ('free' | 'occupied' | 'selected')[][] {
+  updateOccupiedSeats(seatMatrix: SeatStatusType[][], occupied: Set<number>): SeatStatusType[][] {
     let lastSeatIndex: number = 0;
     return seatMatrix.map((car) =>
       car.map((seat) => {
         lastSeatIndex++;
-        console.log(occupied.has(lastSeatIndex));
         return occupied.has(lastSeatIndex) ? 'occupied' : seat;
       })
     );
@@ -152,7 +153,6 @@ export class TripComponent implements OnInit, OnDestroy {
   }
 
   openRouteModal() {
-    console.log('open modal');
     this.modal.open(RouteModalComponent);
   }
 
@@ -180,7 +180,7 @@ export class TripComponent implements OnInit, OnDestroy {
           this.listOfCarriages = carriages.filter((carriage) => this.listOfCarriagesTypes.has(carriage.code));
           this.getSeatsStatuses();
         },
-        error: (err) => console.log(err)
+        error: (err) => console.error(err)
       });
   }
 
@@ -203,18 +203,14 @@ export class TripComponent implements OnInit, OnDestroy {
   }
 
   onSeatSelected(carriageIndex: number, seatIndex: number): void {
-    console.log('click');
-    console.log(carriageIndex, seatIndex);
     this.seatStatuses = this.seatStatuses.map((car) => car.map((s) => (s === 'selected' ? 'free' : s)));
     this.seatStatuses[carriageIndex][seatIndex] = 'selected';
     this.bookingService.updateBooking(carriageIndex, seatIndex, this.getPriceForSegments(this.rideData!.carriages[carriageIndex]));
-    this.openBookModal(carriageIndex, seatIndex);
+    this.openBookModal();
   }
 
-  openBookModal(carriageIndex: number, seatIndex: number) {
-    console.log(carriageIndex, seatIndex);
+  openBookModal() {
     this.isBookModalVisible = true;
-    console.log(this.isBookModalVisible);
   }
 
   closeModal() {

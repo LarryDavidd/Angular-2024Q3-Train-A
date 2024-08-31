@@ -25,3 +25,12 @@ export interface Order {
 export interface OrderResponse {
   id: string;
 }
+
+export interface ModalData {
+  errorMessage: string;
+  suggestionMessage?: string;
+  linkForRedirect?: string;
+  errorSource?: string;
+}
+
+export type SeatStatusType = 'free' | 'occupied' | 'selected';
