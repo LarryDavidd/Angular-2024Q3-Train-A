@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { SeatStatusType } from 'trip/models/trip.model';
 import { Carriage } from 'trip/services/trip.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { Carriage } from 'trip/services/trip.service';
 export class CarriageComponent {
   @Input() carriageIndex: number = 0;
 
-  @Input() seatStatuses: ('free' | 'occupied' | 'selected')[] = [];
+  @Input() seatStatuses: SeatStatusType[] = [];
 
   @Input() carriage: Partial<Carriage> = { rows: 0, leftSeats: 0, rightSeats: 0 };
 
@@ -18,7 +19,6 @@ export class CarriageComponent {
   @Output() seatSelected = new EventEmitter<number>();
 
   selectSeat(ind: number): void {
-    console.log('click in carriage', ind);
     this.seatSelected.emit(ind);
   }
 }

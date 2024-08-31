@@ -10,11 +10,12 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { HighlightDirective } from './directives/highlight.directive';
 import { BookModalComponent } from './components/book-modal/book-modal.component';
 import { InfoModalComponent } from './components/info-modal/info-modal.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 const routes: Routes = [{ path: '', component: TripComponent }];
 
 @NgModule({
-  declarations: [TripComponent, CarriageComponent, HighlightDirective, CarriageComponent, InfoModalComponent],
-  imports: [CommonModule, RouterModule.forChild(routes), MatButtonModule, MatIconModule, MatTabsModule, MatDialogModule, BookModalComponent]
+  declarations: [TripComponent, CarriageComponent, HighlightDirective, CarriageComponent, InfoModalComponent, BookModalComponent],
+  imports: [CommonModule, RouterModule.forChild(routes), MatButtonModule, MatIconModule, MatTabsModule, MatDialogModule, MatProgressSpinnerModule]
 })
 export class TripModule {}

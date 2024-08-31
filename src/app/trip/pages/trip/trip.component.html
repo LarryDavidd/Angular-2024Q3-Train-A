@@ -16,10 +16,18 @@
         </button>
         <div class="trip-info">
           <div class="mb-1 flex gap-2 font-bold">
-            <span>{{ getStationName(fromStationId!) }}</span>
+            <span>{{ fromStationName }}</span>
+            <mat-spinner
+              *ngIf="!fromStationName"
+              diameter="20"
+            ></mat-spinner>
             <span *ngIf="rideData">{{ transformDate(rideData.schedule.segments[rideData.path.indexOf(fromStationId!)].time[0]) }}</span>
             <p>&rarr;</p>
-            <p>{{ getStationName(toStationId!) }}</p>
+            <span>{{ toStationName }}</span>
+            <mat-spinner
+              *ngIf="!fromStationName"
+              diameter="20"
+            ></mat-spinner>
             <span *ngIf="rideData">{{ transformDate(rideData.schedule.segments[rideData.path.indexOf(toStationId!) - 1].time[1]) }}</span>
           </div>
           <div class="flex items-baseline gap-2">
@@ -91,7 +99,10 @@
     </div>
     <div class="relative h-full w-72">
       <div *ngIf="isBookModalVisible">
-        <app-book-modal (isModalVisible)="isBookModalVisible = $event"></app-book-modal>
+        <app-book-modal
+          (isModalVisible)="isBookModalVisible = $event"
+          (bookingSuccess)="onBookingSuccess($event)"
+        ></app-book-modal>
       </div>
     </div>
   </div>

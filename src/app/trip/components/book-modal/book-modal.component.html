@@ -13,9 +13,16 @@
   <div class="flex justify-center">
     <button
       (click)="bookTrip()"
+      [disabled]="isBookingInProgress"
       class="w-full cursor-pointer rounded-lg bg-blue-800 py-2 text-center text-white"
     >
-      Book trip
+      <span *ngIf="!isBookingInProgress">Book trip</span>
+      <mat-spinner
+        *ngIf="isBookingInProgress"
+        color="accent"
+        diameter="20"
+        class="mx-auto block"
+      ></mat-spinner>
     </button>
   </div>
 </div>

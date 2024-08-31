@@ -1,11 +1,12 @@
 import { Directive, ElementRef, Input, OnChanges, Renderer2, SimpleChanges } from '@angular/core';
+import { SeatStatusType } from 'trip/models/trip.model';
 
 @Directive({
   selector: '[appHighlight]',
   exportAs: 'appHighlight'
 })
 export class HighlightDirective implements OnChanges {
-  @Input('appHighlight') seatStatus!: 'free' | 'occupied' | 'selected';
+  @Input('appHighlight') seatStatus!: SeatStatusType;
 
   constructor(
     private el: ElementRef,

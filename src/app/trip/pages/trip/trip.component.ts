@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { InfoModalComponent } from 'trip/components/info-modal/info-modal.component';
@@ -22,6 +23,10 @@ export class TripComponent implements OnInit, OnDestroy {
 
   toStationId: number | null = null;
 
+  fromStationName: string | undefined;
+
+  toStationName: string | undefined;
+
   listOfStations: Station[] = [];
 
   listOfCarriagesTypes: Set<string> = new Set();
@@ -38,7 +43,8 @@ export class TripComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private tripService: TripService,
     private bookingService: BookingService,
-    private modal: MatDialog
+    private modal: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -62,12 +68,11 @@ export class TripComponent implements OnInit, OnDestroy {
             this.listOfCarriagesTypes = new Set(ride.carriages);
             console.log(ride);
             this.getCarriages();
+            this.getStations();
           },
           error: (err) => console.error(err)
         });
     }
-
-    this.getStations();
   }
 
   ngOnDestroy(): void {
@@ -163,6 +168,8 @@ export class TripComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (stations) => {
           this.listOfStations = stations;
+          this.fromStationName = this.getStationName(this.fromStationId!);
+          this.toStationName = this.getStationName(this.toStationId!);
         }
       });
   }
@@ -215,5 +222,11 @@ export class TripComponent implements OnInit, OnDestroy {
 
   closeModal() {
     this.isBookModalVisible = false;
+  }
+
+  onBookingSuccess(bookedSeat: { carNumber: number; seatNumber: number }) {
+    this.seatStatuses[bookedSeat.carNumber][bookedSeat.seatNumber] = 'occupied';
+    this.closeModal();
+    this.snackBar.open('Trip booked successfully', 'Close', { duration: 3000 });
   }
 }

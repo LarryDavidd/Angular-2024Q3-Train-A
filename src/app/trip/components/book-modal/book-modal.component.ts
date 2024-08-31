@@ -5,7 +5,6 @@ import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-book-modal',
-  standalone: true,
   templateUrl: './book-modal.component.html',
   styleUrl: './book-modal.component.scss'
 })
@@ -16,7 +15,11 @@ export class BookModalComponent implements OnInit {
 
   price: number = 0;
 
-  @Output() isModalVisible = new EventEmitter();
+  isBookingInProgress: boolean = false;
+
+  @Output() isModalVisible = new EventEmitter<boolean>();
+
+  @Output() bookingSuccess = new EventEmitter<{ carNumber: number; seatNumber: number }>();
 
   constructor(
     private bookingService: BookingService,
@@ -30,10 +33,14 @@ export class BookModalComponent implements OnInit {
   }
 
   bookTrip() {
-    console.log('book');
+    this.isBookingInProgress = true;
     this.bookingService.makeOrder().subscribe({
-      next: (res) => console.log('orderId: ', res),
+      next: () => {
+        this.isBookingInProgress = false;
+        this.bookingSuccess.emit({ carNumber: this.carNumber, seatNumber: this.seatNumber });
+      },
       error: (err) => {
+        this.isBookingInProgress = false;
         if (err === 'alreadyBooked') {
           this.modal.open(InfoModalComponent, {
             data: {
