@@ -1,5 +1,5 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
@@ -12,6 +12,8 @@ import { StationsEffects } from 'admin/stations/station-redux/effects/stations.e
 import { StationsReducer } from 'admin/stations/station-redux/reducers/stations.reducers';
 import { routes } from 'app.routes';
 import { authReducer } from 'auth/store/auth.reducer';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,6 +27,9 @@ export const appConfig: ApplicationConfig = {
       auth: authReducer
     }),
     provideEffects([RoutesEffects, StationsEffects, CarriagesEffects]),
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptorsFromDi()),
+    importProvidersFrom(MatNativeDateModule),
+    importProvidersFrom(BrowserAnimationsModule),
+    { provide: MAT_DATE_LOCALE, useValue: 'ru-RU' }
   ]
 };
