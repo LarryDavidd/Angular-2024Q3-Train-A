@@ -11,38 +11,111 @@
           [formGroupName]="i"
         >
           <div>{{ 'Station' + ' - ' + path[i] }}</div>
-          <div class="flex justify-between">
-            <mat-form-field>
-              <mat-label matLabel>Arrival Time</mat-label>
-              <input
-                matInput
-                [matDatepicker]="picker"
-                placeholder="Arrival Time"
-                formControlName="arrivalTime"
-              />
-              <mat-datepicker-toggle
-                matSuffix
-                [for]="picker"
-              ></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-              <mat-error *ngIf="form.get(['segment', i, 'arrivalTime'])?.hasError('required')"> Arrival time is required </mat-error>
-            </mat-form-field>
+          <div class="block justify-between md:flex">
+            <div class="flex flex-col">
+              <mat-form-field>
+                <mat-label matLabel>Arrival Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  placeholder="Arrival Date"
+                  formControlName="arrivalDate"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="form.get(['segment', i, 'arrivalTime'])?.hasError('required')"> Arrival time is required </mat-error>
+              </mat-form-field>
 
-            <mat-form-field>
-              <mat-label matLabel>Departure Time</mat-label>
-              <input
-                matInput
-                [matDatepicker]="picker1"
-                placeholder="Departure Time"
-                formControlName="departureTime"
-              />
-              <mat-datepicker-toggle
-                matSuffix
-                [for]="picker1"
-              ></mat-datepicker-toggle>
-              <mat-datepicker #picker1></mat-datepicker>
-              <mat-error *ngIf="form.get(['segment', i, 'departureTime'])?.hasError('required')"> Departure time is required </mat-error>
-            </mat-form-field>
+              <mat-form-field>
+                <mat-label matLabel>Arrival Time</mat-label>
+
+                <input
+                  matInput
+                  [format]="24"
+                  [ngxTimepicker]="dataTimePicker"
+                  formControlName="arrivalTime"
+                />
+                <ngx-material-timepicker
+                  matSuffix
+                  #dataTimePicker
+                ></ngx-material-timepicker>
+              </mat-form-field>
+
+              <ng-container *ngIf="form.controls.segment.controls[i].controls.arrivalDate.disabled; else ArrivalDateUpdateButton">
+                <button
+                  mat-button
+                  (click)="onArrivalDateChange(i)"
+                >
+                  <mat-icon fontIcon="update"></mat-icon>
+                  Update Arrival Date
+                </button>
+              </ng-container>
+              <ng-template #ArrivalDateUpdateButton>
+                <button
+                  mat-button
+                  (click)="onArrivalDateUpdate(i)"
+                >
+                  <mat-icon fontIcon="save"></mat-icon>
+                  Save Arrival Date
+                </button>
+              </ng-template>
+            </div>
+
+            <div class="flex flex-col">
+              <mat-form-field>
+                <mat-label matLabel>Departure Date</mat-label>
+                <input
+                  type="datetime"
+                  matInput
+                  [matDatepicker]="picker1"
+                  placeholder="Departure Date"
+                  formControlName="departureDate"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker1"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <mat-error *ngIf="form.get(['segment', i, 'departureTime'])?.hasError('required')"> Departure time is required </mat-error>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label matLabel>Departure Time</mat-label>
+
+                <input
+                  matInput
+                  [format]="24"
+                  [ngxTimepicker]="dataTimePicker2"
+                  formControlName="departureTime"
+                />
+                <ngx-material-timepicker
+                  matSuffix
+                  #dataTimePicker2
+                ></ngx-material-timepicker>
+              </mat-form-field>
+
+              <ng-container *ngIf="form.controls.segment.controls[i].controls.departureDate.disabled; else DepartureDateUpdateButton">
+                <button
+                  mat-button
+                  (click)="onDepartureDateChange(i)"
+                >
+                  <mat-icon fontIcon="update"></mat-icon>
+                  Update Departure Date
+                </button>
+              </ng-container>
+              <ng-template #DepartureDateUpdateButton>
+                <button
+                  mat-button
+                  (click)="onDepartureDateUpdate(i)"
+                >
+                  <mat-icon fontIcon="save"></mat-icon>
+                  Save Departure Date
+                </button>
+              </ng-template>
+            </div>
 
             <div
               formGroupName="prices"
@@ -52,7 +125,6 @@
                 <mat-form-field>
                   <mat-label matLabel>{{ price.key }}</mat-label>
                   <input
-                    type="number"
                     matInput
                     [placeholder]="price.key"
                     [formControlName]="price.key"
@@ -60,6 +132,24 @@
                   <mat-error *ngIf="price.control.hasError('required')">Price is required</mat-error>
                 </mat-form-field>
               </ng-container>
+              <ng-container *ngIf="form.controls.segment.controls[i].controls.prices.disabled; else PriceUpdateButton">
+                <button
+                  mat-button
+                  (click)="onPriceChange(i)"
+                >
+                  <mat-icon fontIcon="update"></mat-icon>
+                  Update Price
+                </button>
+              </ng-container>
+              <ng-template #PriceUpdateButton>
+                <button
+                  mat-button
+                  (click)="onPriceUpdate(i)"
+                >
+                  <mat-icon fontIcon="save"></mat-icon>
+                  Save Price
+                </button>
+              </ng-template>
             </div>
           </div>
         </ng-container>

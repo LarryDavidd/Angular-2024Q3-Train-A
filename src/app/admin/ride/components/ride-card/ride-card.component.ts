@@ -1,16 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
-import { MatInput, MatInputModule } from '@angular/material/input';
+import { MatInputModule } from '@angular/material/input';
 import { Schedule } from 'admin/ride/model/ride.model';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 interface SegmentForm {
+  arrivalDate: FormControl<string | null>;
   arrivalTime: FormControl<string | null>;
+  departureDate: FormControl<string | null>;
   departureTime: FormControl<string | null>;
   prices: FormGroup<{ [key: string]: FormControl<number | null> }>;
 }
@@ -22,7 +25,18 @@ interface FormGroupInterface {
 @Component({
   selector: 'app-ride-card',
   standalone: true,
-  imports: [CommonModule, MatCardModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButton, MatIcon, MatDatepickerModule, MatInput],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButton,
+    MatIcon,
+    MatDatepickerModule,
+    NgxMaterialTimepickerModule,
+    MatIconButton
+  ],
   templateUrl: './ride-card.component.html',
   styleUrl: './ride-card.component.scss'
 })
@@ -32,6 +46,8 @@ export class RideCardComponent implements OnInit {
   @Input() path!: number[];
 
   form!: FormGroup<FormGroupInterface>;
+
+  isButtonDisable = false;
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -43,8 +59,10 @@ export class RideCardComponent implements OnInit {
     return this.schedule.segments.map(
       (segment) =>
         new FormGroup({
-          arrivalTime: new FormControl(segment.time[0], [Validators.required]),
-          departureTime: new FormControl(segment.time[1], [Validators.required]),
+          arrivalDate: new FormControl({ value: segment.time[0], disabled: true }, [Validators.required]),
+          arrivalTime: new FormControl({ value: this.getTime(segment.time[0]), disabled: true }, [Validators.required]),
+          departureDate: new FormControl({ value: segment.time[1], disabled: true }, [Validators.required]),
+          departureTime: new FormControl({ value: this.getTime(segment.time[1]), disabled: true }, [Validators.required]),
           prices: new FormGroup(this.getPricesFormArray(segment.price))
         })
     );
@@ -53,7 +71,7 @@ export class RideCardComponent implements OnInit {
   getPricesFormArray(prices: { [key: string]: number }) {
     return Object.entries(prices).reduce(
       (controls, [key, value]) => {
-        controls[key] = new FormControl(value, [Validators.required]);
+        controls[key] = new FormControl({ value, disabled: true }, [Validators.required]);
         return controls;
       },
       {} as { [key: string]: FormControl<number | null> }
@@ -76,8 +94,45 @@ export class RideCardComponent implements OnInit {
     return [];
   }
 
-  onPriceChange() {
-    console.log(this.schedule.segments);
+  onPriceChange(index: number) {
+    this.form.controls.segment.controls[index].controls.prices.enable();
+    console.log(this.form.controls.segment.controls[index].controls.prices.value);
+  }
+
+  onPriceUpdate(index: number) {
+    this.form.controls.segment.controls[index].controls.prices.disable();
+  }
+
+  onArrivalDateChange(index: number) {
+    this.form.controls.segment.controls[index].controls.arrivalDate.enable();
+    this.form.controls.segment.controls[index].controls.arrivalTime.enable();
+  }
+
+  onArrivalDateUpdate(index: number) {
+    this.form.controls.segment.controls[index].controls.arrivalDate.disable();
+    this.form.controls.segment.controls[index].controls.arrivalTime.disable();
+    console.log('update arrival date' + index);
+  }
+
+  onDepartureDateChange(index: number) {
+    this.form.controls.segment.controls[index].controls.departureDate.enable();
+    this.form.controls.segment.controls[index].controls.departureTime.enable();
+  }
+
+  onDepartureDateUpdate(index: number) {
+    this.form.controls.segment.controls[index].controls.departureDate.disable();
+    this.form.controls.segment.controls[index].controls.departureTime.disable();
+    console.log('update departure date' + index);
+  }
+
+  getTime(dateTime: string | null) {
+    if (dateTime) {
+      const timePart = dateTime.split('T')[1];
+      const [hours, minutes] = timePart.split(':');
+      return hours + ':' + minutes;
+    } else {
+      return '0';
+    }
   }
 
   submit() {
