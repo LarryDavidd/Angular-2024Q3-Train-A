@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CreateRouteErrorResponse } from 'admin/routes/model/routes.model';
-import { Ride } from '../model/ride.model';
+import { Ride, RideUpdateRequest, Segment } from '../model/ride.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,16 @@ export class RideService {
         headers: this.getHttpOptions.headers
       })
       .pipe(catchError(this.handleError));
+  }
+
+  updateRide(routeId: number, rideId: number, segments: Segment[]): Observable<void> {
+    const url = `${this.apiUrl}/${routeId}/ride/${rideId}`;
+
+    const body: RideUpdateRequest = {
+      segments: segments
+    };
+
+    return this.http.put<void>(url, body, { headers: this.getHttpOptions.headers }).pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

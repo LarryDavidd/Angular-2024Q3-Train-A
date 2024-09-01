@@ -1,3 +1,8 @@
+export interface ResponceBody {
+  segment: Segment[];
+  rideId: number;
+}
+
 export interface Segment {
   time: [string, string];
   price: {
@@ -15,4 +20,15 @@ export interface Ride {
   path: number[];
   carriages: string[];
   schedule: Schedule[];
+}
+
+export interface RideUpdateRequest {
+  segments: Segment[];
+}
+
+export interface ErrorResponse {
+  error: {
+    message: string;
+    reason: string;
+  };
 }

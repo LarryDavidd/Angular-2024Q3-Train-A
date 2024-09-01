@@ -3,6 +3,7 @@
     <app-ride-card
       [schedule]="schedule"
       [path]="path"
+      (updateRide)="updateRide.emit($event)"
     ></app-ride-card>
   </li>
 </ul>

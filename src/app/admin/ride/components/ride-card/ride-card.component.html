@@ -26,7 +26,7 @@
                   [for]="picker"
                 ></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
-                <mat-error *ngIf="form.get(['segment', i, 'arrivalTime'])?.hasError('required')"> Arrival time is required </mat-error>
+                <mat-error>{{ getArrivalDateError(i) }}</mat-error>
               </mat-form-field>
 
               <mat-form-field>
@@ -42,6 +42,7 @@
                   matSuffix
                   #dataTimePicker
                 ></ngx-material-timepicker>
+                <mat-error>{{ getArrivalTimeError(i) }}</mat-error>
               </mat-form-field>
 
               <ng-container *ngIf="form.controls.segment.controls[i].controls.arrivalDate.disabled; else ArrivalDateUpdateButton">
@@ -79,7 +80,7 @@
                   [for]="picker1"
                 ></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
-                <mat-error *ngIf="form.get(['segment', i, 'departureTime'])?.hasError('required')"> Departure time is required </mat-error>
+                <mat-error>{{ getArrivalDateError(i) }}</mat-error>
               </mat-form-field>
 
               <mat-form-field>
@@ -95,6 +96,7 @@
                   matSuffix
                   #dataTimePicker2
                 ></ngx-material-timepicker>
+                <mat-error>{{ getDepartureTimeError(i) }}</mat-error>
               </mat-form-field>
 
               <ng-container *ngIf="form.controls.segment.controls[i].controls.departureDate.disabled; else DepartureDateUpdateButton">
@@ -126,10 +128,11 @@
                   <mat-label matLabel>{{ price.key }}</mat-label>
                   <input
                     matInput
+                    type="number"
+                    min="0"
                     [placeholder]="price.key"
                     [formControlName]="price.key"
                   />
-                  <mat-error *ngIf="price.control.hasError('required')">Price is required</mat-error>
                 </mat-form-field>
               </ng-container>
               <ng-container *ngIf="form.controls.segment.controls[i].controls.prices.disabled; else PriceUpdateButton">
@@ -157,64 +160,3 @@
     </form>
   </mat-card-content>
 </mat-card>
-
-<!-- <mat-card class="m-auto">
-  <mat-card-header>
-    <mat-card-title>{{ 'Ride' + ' ' + schedule.rideId }}</mat-card-title>
-  </mat-card-header>
-
-  <mat-card-content>
-    <form
-      [formGroup]="form"
-      (ngSubmit)="submit()"
-      class="m-auto flex w-1/3 flex-col bg-slate-200 p-8"
-    >
-      <ng-container *ngFor="let segmentFC of getSegmentFormControls; let i = index">
-        {{ segmentFC }}
-        <ng-container *ngIf="segmentFC === 'arrivalTime'">
-          <div class="flex">
-            <div>{{ path[i] }}</div>
-            <label
-              [for]="segmentFC"
-              class="capitalize"
-              >{{ segmentFC }}</label
-            >
-            <mat-form-field>
-              <input
-                [type]="segmentFC === 'arrivalTime' ? 'text' : 'text'"
-                matInput
-                [id]="'' + segmentFC"
-                [formControlName]="segmentFC"
-              />
-              <mat-error>{{ 'getError(formControl)' }}</mat-error>
-            </mat-form-field>
-          </div>
-        </ng-container>
-      </ng-container>
-
-      <div *ngFor="let segment of schedule.segments; let i = index">
-        <div class="flex">
-          <div>{{ path[i] }}</div>
-          <div>
-            <div *ngFor="let time of segment.time">
-              {{ time }}
-            </div>
-          </div>
-          <div>
-            <p>Price</p>
-            <div *ngFor="let price of getPrices(segment.price)">
-              <input
-                matInput
-                (change)="onPriceChange()"
-                type="number"
-                required
-                placeholder=""
-              />
-              {{ price[0] + ' - ' + price[1] }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
-  </mat-card-content>
-</mat-card> -->

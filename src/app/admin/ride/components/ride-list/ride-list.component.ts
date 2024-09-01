@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RideCardComponent } from '../ride-card/ride-card.component';
-import { Schedule } from 'admin/ride/model/ride.model';
+import { ResponceBody, Schedule } from 'admin/ride/model/ride.model';
 import { MatListModule } from '@angular/material/list';
 
 @Component({
@@ -13,6 +13,8 @@ import { MatListModule } from '@angular/material/list';
   styleUrl: './ride-list.component.scss'
 })
 export class RideListComponent {
+  @Output() updateRide = new EventEmitter<ResponceBody>();
+
   @Input() schedule!: Schedule[];
 
   @Input() path!: number[];

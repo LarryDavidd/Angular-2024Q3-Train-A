@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { AbstractControl, FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { Schedule } from 'admin/ride/model/ride.model';
+import { ResponceBody, Schedule, Segment } from 'admin/ride/model/ride.model';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { DateValidator } from 'admin/ride/validators/date.validator';
+import { DateTimeService } from 'admin/ride/services/date-time.service';
 
 interface SegmentForm {
   arrivalDate: FormControl<string | null>;
@@ -31,11 +33,11 @@ interface FormGroupInterface {
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButton,
-    MatIcon,
     MatDatepickerModule,
     NgxMaterialTimepickerModule,
-    MatIconButton
+    FormsModule,
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './ride-card.component.html',
   styleUrl: './ride-card.component.scss'
@@ -45,9 +47,13 @@ export class RideCardComponent implements OnInit {
 
   @Input() path!: number[];
 
+  @Output() updateRide = new EventEmitter<ResponceBody>();
+
   form!: FormGroup<FormGroupInterface>;
 
   isButtonDisable = false;
+
+  dateService = inject(DateTimeService);
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -59,9 +65,9 @@ export class RideCardComponent implements OnInit {
     return this.schedule.segments.map(
       (segment) =>
         new FormGroup({
-          arrivalDate: new FormControl({ value: segment.time[0], disabled: true }, [Validators.required]),
+          arrivalDate: new FormControl({ value: segment.time[0], disabled: true }, [Validators.required, DateValidator]),
           arrivalTime: new FormControl({ value: this.getTime(segment.time[0]), disabled: true }, [Validators.required]),
-          departureDate: new FormControl({ value: segment.time[1], disabled: true }, [Validators.required]),
+          departureDate: new FormControl({ value: segment.time[1], disabled: true }, [Validators.required, DateValidator]),
           departureTime: new FormControl({ value: this.getTime(segment.time[1]), disabled: true }, [Validators.required]),
           prices: new FormGroup(this.getPricesFormArray(segment.price))
         })
@@ -69,13 +75,54 @@ export class RideCardComponent implements OnInit {
   }
 
   getPricesFormArray(prices: { [key: string]: number }) {
-    return Object.entries(prices).reduce(
+    const res = Object.entries(prices).reduce(
       (controls, [key, value]) => {
         controls[key] = new FormControl({ value, disabled: true }, [Validators.required]);
         return controls;
       },
       {} as { [key: string]: FormControl<number | null> }
     );
+    return res;
+  }
+
+  getArrivalTimeError(i: number) {
+    const field = this.form.controls.segment.controls[i].controls.arrivalDate;
+    return this.getTimeError(field);
+  }
+
+  getDepartureTimeError(i: number) {
+    const field = this.form.controls.segment.controls[i].controls.arrivalDate;
+    return this.getTimeError(field);
+  }
+
+  getTimeError(field: FormControl<string | null>) {
+    switch (true) {
+      case field.hasError('required'):
+        return 'field is required';
+      default:
+        return null;
+    }
+  }
+
+  getArrivalDateError(i: number) {
+    const field = this.form.controls.segment.controls[i].controls.arrivalDate;
+    return this.getDateError(field);
+  }
+
+  getDepartureDateError(i: number) {
+    const field = this.form.controls.segment.controls[i].controls.departureDate;
+    return this.getDateError(field);
+  }
+
+  getDateError(field: FormControl<string | null>) {
+    switch (true) {
+      case field.hasError('required'):
+        return 'field is required';
+      case field.hasError('date'):
+        return 'The date is is invalid';
+      default:
+        return null;
+    }
   }
 
   get getSegmentFormControls() {
@@ -96,11 +143,11 @@ export class RideCardComponent implements OnInit {
 
   onPriceChange(index: number) {
     this.form.controls.segment.controls[index].controls.prices.enable();
-    console.log(this.form.controls.segment.controls[index].controls.prices.value);
   }
 
   onPriceUpdate(index: number) {
     this.form.controls.segment.controls[index].controls.prices.disable();
+    this.submit(index);
   }
 
   onArrivalDateChange(index: number) {
@@ -111,7 +158,7 @@ export class RideCardComponent implements OnInit {
   onArrivalDateUpdate(index: number) {
     this.form.controls.segment.controls[index].controls.arrivalDate.disable();
     this.form.controls.segment.controls[index].controls.arrivalTime.disable();
-    console.log('update arrival date' + index);
+    this.submit(index);
   }
 
   onDepartureDateChange(index: number) {
@@ -122,7 +169,7 @@ export class RideCardComponent implements OnInit {
   onDepartureDateUpdate(index: number) {
     this.form.controls.segment.controls[index].controls.departureDate.disable();
     this.form.controls.segment.controls[index].controls.departureTime.disable();
-    console.log('update departure date' + index);
+    this.submit(index);
   }
 
   getTime(dateTime: string | null) {
@@ -135,7 +182,29 @@ export class RideCardComponent implements OnInit {
     }
   }
 
-  submit() {
-    console.log('submit');
+  submit(i: number) {
+    const rideId = this.schedule.rideId;
+    console.log(rideId);
+
+    const arrivalDate = this.dateService.updateDateTimeWithTimeString(
+      this.form.controls.segment.controls[i].controls.arrivalDate.value!,
+      this.form.controls.segment.controls[i].controls.arrivalTime.value!
+    );
+    const departureDate = this.dateService.updateDateTimeWithTimeString(
+      this.form.controls.segment.controls[i].controls.departureDate.value!,
+      this.form.controls.segment.controls[i].controls.departureTime.value!
+    );
+
+    const price = this.form.controls.segment.controls[i].controls.prices.value;
+
+    const transformedPrice: { [key: string]: number } = Object.fromEntries(
+      Object.entries(price)
+        .filter(([, value]) => value !== null)
+        .map(([key, value]) => [key, value as number])
+    );
+
+    const segment: Segment[] = [{ time: [arrivalDate, departureDate], price: transformedPrice }];
+
+    this.updateRide.emit({ rideId, segment });
   }
 }

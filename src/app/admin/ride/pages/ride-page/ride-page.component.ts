@@ -6,8 +6,9 @@ import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Ride } from 'admin/ride/model/ride.model';
+import { ResponceBody, Ride } from 'admin/ride/model/ride.model';
 import { RideListComponent } from '../../components/ride-list/ride-list.component';
+import { RideService } from 'admin/ride/services/ride.service';
 
 @Component({
   selector: 'app-ride-page',
@@ -21,14 +22,32 @@ export class RidePageComponent implements OnInit {
 
   private route = inject(ActivatedRoute);
 
+  private rideService = inject(RideService);
+
+  routeId: string | null = null;
+
   rides$: Observable<Ride | null> = this.store.select(selectRide);
 
   isLoading$: Observable<boolean> = this.store.select(selectRidesLoadingStatus);
+
+  updateRide({ rideId, segment }: ResponceBody) {
+    console.log(rideId);
+    if (this.routeId)
+      this.rideService.updateRide(Number(this.routeId), rideId, segment).subscribe({
+        next: () => {
+          console.log('Ride updated successfully');
+        },
+        error: (error) => {
+          console.error('Error updating ride', error);
+        }
+      });
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
+        this.routeId = id;
         this.store.dispatch(RideActions.retrieveRide({ id }));
       }
     });
