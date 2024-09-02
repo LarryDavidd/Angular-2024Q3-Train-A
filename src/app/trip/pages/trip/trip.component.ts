@@ -112,11 +112,11 @@ export class TripComponent implements OnInit, OnDestroy {
   }
 
   getSeatsStatuses() {
-    const getCarriageByName = (carriageName: string) => this.listOfCarriages.find((c) => c.name === carriageName);
+    const getCarriageByCode = (carriageCode: string) => this.listOfCarriages.find((c) => c.code === carriageCode);
 
     if (this.rideData) {
       this.seatStatuses = this.rideData.carriages.map((c) => {
-        const carriage = getCarriageByName(c);
+        const carriage = getCarriageByCode(c);
         return new Array((carriage!.leftSeats + carriage!.rightSeats) * carriage!.rows).fill('free');
       });
       const occupiedSeats = new Set<number>();
@@ -158,7 +158,11 @@ export class TripComponent implements OnInit, OnDestroy {
   }
 
   openRouteModal() {
-    this.modal.open(RouteModalComponent);
+    this.modal.open(RouteModalComponent, {
+      data: {
+        routeId: this.rideData!.routeId
+      }
+    });
   }
 
   getStations() {
@@ -192,11 +196,10 @@ export class TripComponent implements OnInit, OnDestroy {
   }
 
   getCarriageLabel(carriage: Carriage): string {
-    const price = this.getPriceForSegments(carriage.name);
+    const price = this.getPriceForSegments(carriage.code);
+    const freeSeats = this.rideData!.carriages.reduce((acc, c, i) => (c === carriage.code ? acc + this.getFreeSeats(i) : acc), 0);
 
-    const freeSeats = this.getFreeSeats(this.listOfCarriages.indexOf(carriage));
-
-    return `Carriage type ${carriage.name}: ${freeSeats} | $${(price / 100).toFixed(2)}`;
+    return `Carriage type ${carriage.code}: ${freeSeats} | $${(price / 100).toFixed(2)}`;
   }
 
   getPriceForSegments(carriageName: string) {
