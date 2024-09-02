@@ -1,4 +1,4 @@
-export interface ICarriage {
+export interface Carriage {
   code: string;
   name: string;
   rows: number;
@@ -6,4 +6,4 @@ export interface ICarriage {
   rightSeats: number;
 }
 
-export type CarriagesResponse = ICarriage[];
+export type CarriagesResponse = Carriage[];

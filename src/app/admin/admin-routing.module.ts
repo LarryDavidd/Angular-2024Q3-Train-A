@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin.component';
-import { CarriagesComponent } from './pages/carriages/carriages.component';
+import { CarriagesComponent } from './carriages/pages/carriages.component';
 import { StationsComponent } from './pages/stations/stations.component';
 import { RoutesPageComponent } from './routes/pages/routes-page/routes-page.component';
 import { RidePageComponent } from './ride/pages/ride-page/ride-page.component';

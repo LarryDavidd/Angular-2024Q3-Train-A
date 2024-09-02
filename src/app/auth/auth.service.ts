@@ -5,6 +5,8 @@ import { SignUpResponseData } from './models/signup-response';
 import { Observable } from 'rxjs';
 import { SignInResponseData } from './models/signin-response';
 import { Router } from '@angular/router';
+import * as AuthActions from './store/auth.actions';
+import { Store } from '@ngrx/store';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,8 @@ export class AuthService {
 
   constructor(
     private readonly http: HttpClient,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly store: Store
   ) {
     this.isAuthenticated = !!localStorage.getItem(this.authSecretKey);
   }
@@ -34,6 +37,10 @@ export class AuthService {
   public logout(): void {
     localStorage.removeItem(this.authSecretKey);
     this.isAuthenticated = false;
+
+    this.store.dispatch(AuthActions.setIsAdminUpdated(false));
+    this.store.dispatch(AuthActions.setAuthenticated(false));
+    this.store.dispatch(AuthActions.setIsAdmin(false));
 
     this.router.navigate(['/']);
   }
@@ -72,6 +79,8 @@ export class AuthService {
       reason: ''
     };
 
+    console.log('data', data);
+
     return new Observable((observer) => {
       this.http.post(`${this.apiUrl}/signin`, data).subscribe(
         (response) => {
@@ -81,7 +90,10 @@ export class AuthService {
           localStorage.setItem(this.authSecretKey, res.token);
           this.isAuthenticated = true;
 
+          this.store.dispatch(AuthActions.setAuthenticated(true));
+
           observer.next(signInData);
+
           observer.complete();
         },
         (error: ResponseError) => {

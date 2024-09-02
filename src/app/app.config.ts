@@ -14,6 +14,7 @@ import { routesReducer } from 'admin/routes/redux/reducers/routes.redusers';
 import { StationsEffects } from 'admin/stations/station-redux/effects/stations.effects';
 import { StationsReducer } from 'admin/stations/station-redux/reducers/stations.reducers';
 import { routes } from 'app.routes';
+import { authReducer } from 'auth/store/auth.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,7 +26,8 @@ export const appConfig: ApplicationConfig = {
       ride: rideReducer,
       routes: routesReducer,
       stations: StationsReducer,
-      carriages: CarriagesReducer
+      carriages: CarriagesReducer,
+      auth: authReducer
     }),
     provideEffects([RoutesEffects, StationsEffects, CarriagesEffects, RideEffects]),
     provideHttpClient(withInterceptorsFromDi())
