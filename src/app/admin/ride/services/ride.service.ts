@@ -4,6 +4,7 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CreateRouteErrorResponse } from 'admin/routes/model/routes.model';
 import { Ride, RideUpdateRequest, Segment } from '../model/ride.model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,8 @@ export class RideService {
   private snackBar = inject(MatSnackBar);
 
   private http = inject(HttpClient);
+
+  private router = inject(Router);
 
   getRideById(id: string): Observable<Ride> {
     return this.http
@@ -33,11 +36,22 @@ export class RideService {
     return this.http.put<void>(url, body, { headers: this.getHttpOptions.headers }).pipe(catchError(this.handleError));
   }
 
+  saveRide(routeId: number, segments: Segment[]): Observable<void> {
+    const url = `${this.apiUrl}/${routeId}/ride`;
+
+    const body: RideUpdateRequest = {
+      segments: segments
+    };
+
+    return this.http.post<void>(url, body, { headers: this.getHttpOptions.headers }).pipe(catchError(this.handleError));
+  }
+
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'error';
     if (error.status === 401) {
       const errResponse = error.error as CreateRouteErrorResponse;
       errorMessage = `${errResponse.error.message} (${errResponse.error.reason})`;
+      this.router.navigate(['login']);
     }
     this.snackBar.open('error' + ' ' + error.message, 'close', {
       duration: 3000

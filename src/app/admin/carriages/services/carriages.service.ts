@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 export class CarriagesService {
   constructor(private http: HttpClient) {}
 
-  getStations(): Observable<CarriagesResponse> {
+  getCarriages(): Observable<CarriagesResponse> {
     return this.http.get<CarriagesResponse>('/api/carriage').pipe(
       map((response) => {
         return response;

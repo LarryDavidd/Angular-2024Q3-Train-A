@@ -3,6 +3,10 @@ export interface ResponceBody {
   rideId: number;
 }
 
+export interface ResponceBodySave {
+  segment: Segment[];
+}
+
 export interface Segment {
   time: [string, string];
   price: {

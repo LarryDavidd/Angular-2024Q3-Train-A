@@ -51,8 +51,6 @@ export class RideCardComponent implements OnInit {
 
   form!: FormGroup<FormGroupInterface>;
 
-  isButtonDisable = false;
-
   dateService = inject(DateTimeService);
 
   ngOnInit() {
@@ -184,7 +182,6 @@ export class RideCardComponent implements OnInit {
 
   submit(i: number) {
     const rideId = this.schedule.rideId;
-    console.log(rideId);
 
     const arrivalDate = this.dateService.updateDateTimeWithTimeString(
       this.form.controls.segment.controls[i].controls.arrivalDate.value!,
