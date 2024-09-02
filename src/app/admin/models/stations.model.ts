@@ -13,7 +13,11 @@ export interface CreatedStation {
   relations: number[];
 }
 
-type Connection = {
+export type Connection = {
   id: number;
   distance: number;
 };
+
+export interface StationCreateResponse {
+  id: number;
+}

@@ -35,6 +35,13 @@ export class StationFormComponent implements OnInit {
       this.station.latitude = coords.latitude;
       this.station.longitude = coords.longitude;
     });
+
+    this.synhroService.connections$.subscribe((connections) => {
+      if (this.station.relations.length < connections.length) {
+        this.addConnectionField();
+      }
+      this.station.relations = connections;
+    });
   }
 
   onCoordinateSelected(coordinates: { latitude: number; longitude: number }) {
@@ -44,6 +51,7 @@ export class StationFormComponent implements OnInit {
 
   onConnectionSelected(ind: number, stationId: number) {
     this.station.relations[ind] = stationId;
+    this.synhroService.updateConnections(this.station.relations);
     if (this.station.relations.length === this.selectFields.length) {
       this.addConnectionField();
     }
@@ -70,7 +78,7 @@ export class StationFormComponent implements OnInit {
   onSubmit() {
     this.stationService.addStation(this.station).subscribe({
       next: (res) => {
-        console.log(res);
+        this.snackBar.open(`Station with id ${res.id} created successfully`, 'close', { duration: 3000 });
       },
       error: (err: string) => {
         this.handleError(err);

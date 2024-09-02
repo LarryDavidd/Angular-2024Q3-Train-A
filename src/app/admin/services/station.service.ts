@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CreatedStation, Station } from 'admin/models/stations.model';
+import { CreatedStation, Station, StationCreateResponse } from 'admin/models/stations.model';
 import { catchError, Observable, throwError } from 'rxjs';
 
 @Injectable({
@@ -19,14 +19,14 @@ export class StationService {
     return this.http.delete<Station[]>(this.apiUrl + '/' + id).pipe(catchError(this.handleError));
   }
 
-  addStation(newStation: CreatedStation) {
+  addStation(newStation: CreatedStation): Observable<StationCreateResponse> {
     const httpOptions = {
       headers: new HttpHeaders({
         Authorization: `Bearer ${localStorage.getItem('authToken')}`
       })
     };
     return this.http
-      .post<CreatedStation>(this.apiUrl, newStation, {
+      .post<StationCreateResponse>(this.apiUrl, newStation, {
         headers: httpOptions.headers
       })
       .pipe(catchError(this.handleError));

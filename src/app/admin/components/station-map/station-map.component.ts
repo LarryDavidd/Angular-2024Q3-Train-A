@@ -1,4 +1,5 @@
 import { AfterViewInit, Component } from '@angular/core';
+import { Station } from 'admin/models/stations.model';
 import { MapFormSynchroService } from 'admin/services/map-form-synchro.service';
 import { StationService } from 'admin/services/station.service';
 import * as L from 'leaflet';
@@ -39,6 +40,10 @@ export class StationMapComponent implements AfterViewInit {
 
   private isFirstLoad = true;
 
+  private stations: Station[] | undefined;
+
+  private newStationConnections: number[] = [];
+
   constructor(
     private stationService: StationService,
     private synhroService: MapFormSynchroService
@@ -78,14 +83,56 @@ export class StationMapComponent implements AfterViewInit {
         this.changeExistingMarker(L.latLng(coords.latitude, coords.longitude));
       }
     });
+
+    this.synhroService.connections$.subscribe((connections) => {
+      if (!this.marker) return;
+      this.newStationConnections = connections;
+      const newStation: Station = {
+        id: 0,
+        city: '',
+        latitude: this.marker.getLatLng().lat,
+        longitude: this.marker.getLatLng().lng,
+        connectedTo: connections.map((connection) => ({
+          id: connection,
+          distance: 0
+        }))
+      };
+      this.drawConnectionsOnMap(newStation);
+    });
   }
 
   addStationsMarkers() {
     this.stationService.getStations().subscribe((stations) => {
+      this.stations = stations;
       stations.forEach((station) => {
-        L.marker([station.latitude, station.longitude]).addTo(this.map!);
+        const existingMarker = L.marker([station.latitude, station.longitude]).addTo(this.map!).bindTooltip(station.city, {
+          permanent: false,
+          direction: 'top',
+          opacity: 0.9
+        });
+        existingMarker.on('click', () => {
+          if (!this.marker) return;
+          this.synhroService.updateConnections([...this.newStationConnections, station.id]);
+        });
+        this.drawConnectionsOnMap(station);
       });
     });
+  }
+
+  drawConnectionsOnMap(station: Station) {
+    station.connectedTo.forEach((connection) => {
+      L.polyline(
+        [
+          [station.latitude, station.longitude],
+          [this.getStationById(connection.id)!.latitude, this.getStationById(connection.id)!.longitude]
+        ],
+        { color: 'blue', opacity: 0.5, weight: 1 }
+      ).addTo(this.map!);
+    });
+  }
+
+  getStationById(id: number): Station | undefined {
+    return this.stations!.find((station) => station.id === id);
   }
 
   addNewMarker(latlng: L.LatLng) {
