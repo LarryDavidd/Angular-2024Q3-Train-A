@@ -24,19 +24,14 @@ export class CarriagesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCarriages();
-    this.carriagesService.signupAdmin().subscribe({
-      next: (res) => {
-        if (res.token) this.carriagesService.token = res.token;
-      },
-      error: (error) => {
-        console.error(error);
-      }
-    });
   }
 
   loadCarriages(): void {
-    this.carriagesService.getCarriages().subscribe((carriages) => {
-      this.carriages = carriages;
+    this.carriagesService.getCarriages().subscribe({
+      next: (carriages) => {
+        this.carriages = carriages;
+      },
+      error: (err) => this.handleError(err)
     });
   }
 

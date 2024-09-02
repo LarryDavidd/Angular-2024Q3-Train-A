@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthResponse, Carriage } from 'admin/models/carriages.model';
+import { Carriage } from 'admin/models/carriages.model';
 import { catchError, Observable, throwError } from 'rxjs';
 
 @Injectable({
@@ -9,14 +9,7 @@ import { catchError, Observable, throwError } from 'rxjs';
 export class CarriagesService {
   private apiUrl = '/api/carriage';
 
-  token = '';
-
   constructor(private http: HttpClient) {}
-
-  // TODO: move to auth service
-  signupAdmin(): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>('/api/signin', { email: 'admin@admin.com', password: 'my-password' });
-  }
 
   getCarriages(): Observable<Carriage[]> {
     return this.http.get<Carriage[]>(this.apiUrl).pipe(catchError(this.handleError));
@@ -25,7 +18,7 @@ export class CarriagesService {
   createCarriage(carriage: Carriage): Observable<Carriage> {
     const httpOptions = {
       headers: new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
+        Authorization: `Bearer ${localStorage.getItem('authToken')}`
       })
     };
     return this.http
@@ -39,7 +32,7 @@ export class CarriagesService {
     const url = `${this.apiUrl}/${carriage.code}`;
     const httpOptions = {
       headers: new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
+        Authorization: `Bearer ${localStorage.getItem('authToken')}`
       })
     };
     return this.http
