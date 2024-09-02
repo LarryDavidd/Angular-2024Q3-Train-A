@@ -3,25 +3,13 @@ import { Injectable } from '@angular/core';
 import { CreatedStation, Station } from 'admin/models/stations.model';
 import { catchError, Observable, throwError } from 'rxjs';
 
-// TODO: remove
-interface AuthResponse {
-  token: string;
-}
-
 @Injectable({
   providedIn: 'root'
 })
 export class StationService {
   private apiUrl = '/api/station';
 
-  token = '';
-
   constructor(private http: HttpClient) {}
-
-  // TODO: move to auth service
-  signupAdmin(): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>('/api/signin', { email: 'admin@admin.com', password: 'my-password' });
-  }
 
   getStations(): Observable<Station[]> {
     return this.http.get<Station[]>(this.apiUrl);
@@ -34,7 +22,7 @@ export class StationService {
   addStation(newStation: CreatedStation) {
     const httpOptions = {
       headers: new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
+        Authorization: `Bearer ${localStorage.getItem('authToken')}`
       })
     };
     return this.http

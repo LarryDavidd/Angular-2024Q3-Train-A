@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CreatedStation, Station } from 'admin/models/stations.model';
 import { MapFormSynchroService } from 'admin/services/map-form-synchro.service';
 import { StationService } from 'admin/services/station.service';
@@ -21,7 +22,8 @@ export class StationFormComponent implements OnInit {
 
   constructor(
     private stationService: StationService,
-    private synhroService: MapFormSynchroService
+    private synhroService: MapFormSynchroService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -70,9 +72,14 @@ export class StationFormComponent implements OnInit {
       next: (res) => {
         console.log(res);
       },
-      error: (err) => {
+      error: (err: string) => {
+        this.handleError(err);
         console.error(err);
       }
     });
+  }
+
+  handleError(err: string) {
+    this.snackBar.open(err, 'close', { duration: 3000 });
   }
 }
