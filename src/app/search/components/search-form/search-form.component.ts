@@ -13,6 +13,7 @@ import { NgxMaterialTimepickerComponent, NgxMaterialTimepickerModule } from 'ngx
 import { HttpService } from '../../services/http.service';
 import { SearchResponse } from '../../models/search-response.model';
 import { Station } from '../../models/get-stations-response.model';
+import { SearchDataService } from '../../services/search-data.service';
 
 @Component({
   selector: 'app-search-form',
@@ -37,7 +38,7 @@ export class SearchFormComponent implements OnInit, OnDestroy {
   searchForm: FormGroup = this.fb.group({
     cityFrom: new FormControl<CityItem | string>('', [Validators.required, this.cityItemValidator()]),
     cityTo: new FormControl<CityItem | string>('', [Validators.required, this.cityItemValidator()]),
-    startDate: new FormControl<Date | null>(null)
+    startDate: new FormControl<Date | null>(null, Validators.required)
   });
 
   cityItemValidator(): ValidatorFn {
@@ -75,7 +76,8 @@ export class SearchFormComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private httpService: HttpService
+    private httpService: HttpService,
+    private dataService: SearchDataService
   ) {}
 
   ngOnInit(): void {
@@ -136,7 +138,8 @@ export class SearchFormComponent implements OnInit, OnDestroy {
       this.httpService.searchRoutes(this.searchForm.value).subscribe({
         next: (response) => {
           this.searchResult = response;
-          console.log('Ответ с сервера:', this.searchResult);
+          this.dataService.updateData(response);
+          console.log('Ответ с сервера$:', this.dataService.data$);
         },
         error: (error) => {
           console.error('Произошла ошибка:', error);

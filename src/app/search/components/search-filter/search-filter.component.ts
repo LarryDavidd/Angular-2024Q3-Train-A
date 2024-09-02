@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { SearchDataService } from '../../services/search-data.service';
+import { map, Subscription } from 'rxjs';
+import { Route } from '../../models/search-response.model';
 
 @Component({
   selector: 'app-search-filter',
@@ -9,16 +12,10 @@ import { CommonModule, DatePipe } from '@angular/common';
   templateUrl: './search-filter.component.html',
   styleUrls: ['./search-filter.component.scss']
 })
-export class SearchFilterComponent {
-  dataItems: string[] = [
-    '2024-08-08T22:19:57.708Z',
-    '2024-08-09T22:19:57.708Z',
-    '2024-08-10T22:19:57.708Z',
-    '2024-08-11T22:19:57.708Z',
-    '2024-08-12T22:19:57.708Z',
-    '2024-08-13T22:19:57.708Z',
-    '2024-08-14T22:19:57.708Z'
-  ];
+export class SearchFilterComponent implements OnInit, OnDestroy {
+  dataItems: string[] = [];
+
+  private subscription!: Subscription;
 
   startIndex = 0;
 
@@ -26,7 +23,65 @@ export class SearchFilterComponent {
 
   selectedIndex = 0;
 
-  constructor(private datePipe: DatePipe) {}
+  constructor(
+    private datePipe: DatePipe,
+    private dataService: SearchDataService
+  ) {}
+
+  ngOnInit(): void {
+    // Предположим, routes$ инициализирован снаружи или через сервис
+    this.subscription = this.dataService.data$
+      .pipe(
+        map((response) => {
+          // Проверка на наличие response и response.routes
+          if (response && response.routes) {
+            return this.extractUniqueDays(response.routes, response.from.stationId);
+          } else {
+            return []; // Возвращаем пустой массив, если данные отсутствуют
+          }
+        })
+      )
+      .subscribe((days) => {
+        this.dataItems = days;
+        // Можно также вызывать метод для обновления слайдера здесь
+      });
+  }
+
+  ngOnDestroy(): void {
+    // Отменяем подписку при уничтожении компонента, чтобы избежать утечек памяти
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  private extractUniqueDays(routes: Route[], stationId: number): string[] {
+    const uniqueDays = new Set<string>();
+
+    routes.forEach((route) => {
+      const index = this.getIndexFromStationInRoute(route.path, stationId);
+
+      route.schedule.forEach((schedule) => {
+        if (schedule.segments[index]) {
+          const segment = schedule.segments[index];
+          if (segment && segment.time && segment.time.length > 0) {
+            const startDate = new Date(segment.time[0]);
+
+            const localDate = this.datePipe.transform(startDate, 'yyyy-MM-dd');
+
+            if (localDate) {
+              uniqueDays.add(localDate);
+            }
+          }
+        }
+      });
+    });
+
+    return Array.from(uniqueDays).sort();
+  }
+
+  getIndexFromStationInRoute(stations: number[], idStation: number): number {
+    return stations.indexOf(idStation);
+  }
 
   get visibleDates(): string[] {
     return this.dataItems.slice(this.startIndex, this.startIndex + this.visibleCount);

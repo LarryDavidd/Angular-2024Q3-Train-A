@@ -1,35 +1,37 @@
-<div class="date-slider">
-  <button
-    (click)="previousDates()"
-    (keydown.enter)="previousDates()"
-    class="nav-button"
-    tabindex="0"
-    aria-label="Previous dates"
-    [disabled]="!canNavigateLeft"
-  >
-    &lt;
-  </button>
-  <div class="date-tabs">
-    <div
-      *ngFor="let date of visibleDates; let i = index"
-      (click)="onTabChange(i + startIndex)"
-      (keydown.enter)="onTabChange(i + startIndex)"
+@if (dataItems.length > 0) {
+  <div class="date-slider">
+    <button
+      (click)="previousDates()"
+      (keydown.enter)="previousDates()"
+      class="nav-button"
       tabindex="0"
-      [class.selected]="i + startIndex === selectedIndex"
-      class="tab"
+      aria-label="Previous dates"
+      [disabled]="!canNavigateLeft"
     >
-      <div class="date">{{ formatDate(date) }}</div>
-      <div class="day">{{ formatDay(date) }}</div>
+      &lt;
+    </button>
+    <div class="date-tabs">
+      <div
+        *ngFor="let date of visibleDates; let i = index"
+        (click)="onTabChange(i + startIndex)"
+        (keydown.enter)="onTabChange(i + startIndex)"
+        tabindex="0"
+        [class.selected]="i + startIndex === selectedIndex"
+        class="tab"
+      >
+        <div class="date">{{ formatDate(date) }}</div>
+        <div class="day">{{ formatDay(date) }}</div>
+      </div>
     </div>
+    <button
+      (click)="nextDates()"
+      (keydown.enter)="nextDates()"
+      class="nav-button"
+      tabindex="0"
+      aria-label="Next dates"
+      [disabled]="!canNavigateRight"
+    >
+      &gt;
+    </button>
   </div>
-  <button
-    (click)="nextDates()"
-    (keydown.enter)="nextDates()"
-    class="nav-button"
-    tabindex="0"
-    aria-label="Next dates"
-    [disabled]="!canNavigateRight"
-  >
-    &gt;
-  </button>
-</div>
+}

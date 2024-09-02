@@ -22,7 +22,7 @@ interface Schedule {
   segments: Segment[];
 }
 
-interface Route {
+export interface Route {
   id: number;
   path: number[];
   carriages: string[];
