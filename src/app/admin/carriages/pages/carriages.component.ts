@@ -1,10 +1,18 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatExpansionPanel } from '@angular/material/expansion';
-import { Carriage } from 'admin/models/carriages.model';
-import { CarriagesService } from 'admin/services/carriages.service';
+import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
+import { Carriage } from 'admin/carriages/model/carriages.model';
+import { CarriagesService } from 'admin/carriages/services/carriages.service';
+import { CarriageComponent } from '../components/carriage/carriage.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-carriages',
+  standalone: true,
+  imports: [CommonModule, MatExpansionModule, CarriageComponent, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule],
   templateUrl: './carriages.component.html'
 })
 export class CarriagesComponent implements OnInit {

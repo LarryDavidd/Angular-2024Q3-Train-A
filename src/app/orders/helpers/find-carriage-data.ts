@@ -1,7 +1,7 @@
-import { ICarriage } from 'admin/carriages/model/carriages.model';
+import { Carriage } from 'admin/carriages/model/carriages.model';
 import { CarriageData } from 'orders/models/carriage-data';
 
-export const findCarriageAndSeat = (carriage_codes: string[], carriages: ICarriage[], seatId: number): CarriageData | null => {
+export const findCarriageAndSeat = (carriage_codes: string[], carriages: Carriage[], seatId: number): CarriageData | null => {
   let seatCounter = 0;
 
   for (let i = 0; i < carriage_codes.length; i++) {
