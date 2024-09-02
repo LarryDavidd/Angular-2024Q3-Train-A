@@ -25,6 +25,7 @@
             [schedule]="data.schedule"
             [carriages]="carriages"
             (closeSection)="openCloseCreateSection()"
+            (saveRide)="saveRide($event)"
           ></app-create-section>
         </ng-container>
       </ng-template>

@@ -11,8 +11,8 @@ import { Store } from '@ngrx/store';
 import { ResponceBodySave, Schedule, Segment } from 'admin/ride/model/ride.model';
 import { DateValidator } from 'admin/ride/validators/date.validator';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
-import { Carriage } from 'admin/models/carriages.model';
 import { DateTimeService } from 'admin/ride/services/date-time.service';
+import { Carriage } from 'admin/carriages/model/carriages.model';
 
 interface SegmentForm {
   arrivalDate: FormControl<string | null>;

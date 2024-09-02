@@ -27,6 +27,7 @@ export class RideService {
   }
 
   updateRide(routeId: number, rideId: number, segments: Segment[]): Observable<void> {
+    console.log('here');
     const url = `${this.apiUrl}/${routeId}/ride/${rideId}`;
 
     const body: RideUpdateRequest = {
@@ -48,10 +49,9 @@ export class RideService {
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'error';
-    if (error.status === 401) {
+    if (!error.ok) {
       const errResponse = error.error as CreateRouteErrorResponse;
       errorMessage = `${errResponse.error.message} (${errResponse.error.reason})`;
-      this.router.navigate(['login']);
     }
     this.snackBar.open('error' + ' ' + error.message, 'close', {
       duration: 3000

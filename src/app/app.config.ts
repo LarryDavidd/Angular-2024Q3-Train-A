@@ -15,6 +15,7 @@ import { StationsEffects } from 'admin/stations/station-redux/effects/stations.e
 import { StationsReducer } from 'admin/stations/station-redux/reducers/stations.reducers';
 import { routes } from 'app.routes';
 import { authReducer } from 'auth/store/auth.reducer';
+import { httpInterceptorProviders } from 'shared/http-interceptors';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,6 +31,7 @@ export const appConfig: ApplicationConfig = {
       auth: authReducer
     }),
     provideEffects([RoutesEffects, StationsEffects, CarriagesEffects, RideEffects]),
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptorsFromDi()),
+    httpInterceptorProviders
   ]
 };
