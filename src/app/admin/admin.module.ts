@@ -10,15 +10,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { StationsComponent } from './pages/stations/stations.component';
-import { StationListComponent } from './components/station-list/station-list.component';
-import { StationFormComponent } from './components/station-form/station-form.component';
-import { StationMapComponent } from './components/station-map/station-map.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
-  declarations: [CarriagesComponent, CarriageComponent, StationsComponent, StationListComponent, StationFormComponent, StationMapComponent],
+  declarations: [CarriagesComponent, CarriageComponent],
   imports: [
     CommonModule,
     AdminRoutingModule,

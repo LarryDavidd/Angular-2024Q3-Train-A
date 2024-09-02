@@ -10,7 +10,7 @@ export class MapFormSynchroService {
     longitude: 0
   });
 
-  private connectionsSource = new BehaviorSubject<number[]>([]);
+  private connectionsSource = new BehaviorSubject<Set<number>>(new Set());
 
   coordinates$ = this.coordinatesSource.asObservable();
 
@@ -20,7 +20,7 @@ export class MapFormSynchroService {
     this.coordinatesSource.next({ latitude, longitude });
   }
 
-  updateConnections(connectionIds: number[]) {
+  updateConnections(connectionIds: Set<number>) {
     this.connectionsSource.next(connectionIds);
   }
 }

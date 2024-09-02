@@ -1,7 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core';
-import { Station } from 'admin/models/stations.model';
-import { MapFormSynchroService } from 'admin/services/map-form-synchro.service';
-import { StationService } from 'admin/services/station.service';
+import { Station } from '../../model/station.model';
+import { MapFormSynchroService } from 'admin/stations/services/map-form-synchro.service';
+import { StationsService } from '../../services/stations.service';
 import * as L from 'leaflet';
 
 const iconRetinaUrl = 'assets/marker-icon-2x.png';
@@ -31,6 +31,7 @@ L.Marker.prototype.options.icon = iconDefault;
 
 @Component({
   selector: 'app-station-map',
+  standalone: true,
   templateUrl: './station-map.component.html'
 })
 export class StationMapComponent implements AfterViewInit {
@@ -42,10 +43,10 @@ export class StationMapComponent implements AfterViewInit {
 
   private stations: Station[] | undefined;
 
-  private newStationConnections: number[] = [];
+  private newStationConnections: Set<number> = new Set<number>();
 
   constructor(
-    private stationService: StationService,
+    private stationService: StationsService,
     private synhroService: MapFormSynchroService
   ) {}
 
@@ -81,6 +82,8 @@ export class StationMapComponent implements AfterViewInit {
         this.addNewMarker(L.latLng(coords.latitude, coords.longitude));
       } else {
         this.changeExistingMarker(L.latLng(coords.latitude, coords.longitude));
+        this.newStationConnections.clear();
+        this.synhroService.updateConnections(this.newStationConnections);
       }
     });
 
@@ -92,7 +95,7 @@ export class StationMapComponent implements AfterViewInit {
         city: '',
         latitude: this.marker.getLatLng().lat,
         longitude: this.marker.getLatLng().lng,
-        connectedTo: connections.map((connection) => ({
+        connectedTo: Array.from(connections).map((connection) => ({
           id: connection,
           distance: 0
         }))
@@ -112,7 +115,8 @@ export class StationMapComponent implements AfterViewInit {
         });
         existingMarker.on('click', () => {
           if (!this.marker) return;
-          this.synhroService.updateConnections([...this.newStationConnections, station.id]);
+          this.newStationConnections.add(station.id);
+          this.synhroService.updateConnections(this.newStationConnections);
         });
         this.drawConnectionsOnMap(station);
       });

@@ -1,11 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CreatedStation, Station } from 'admin/models/stations.model';
-import { MapFormSynchroService } from 'admin/services/map-form-synchro.service';
-import { StationService } from 'admin/services/station.service';
+import { CreatedStation, Station } from '../../model/station.model';
+import { MapFormSynchroService } from 'admin/stations/services/map-form-synchro.service';
+import { StationsService } from '../../services/stations.service';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { CommonModule } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-station-form',
+  standalone: true,
+  imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule],
   templateUrl: './station-form.component.html'
 })
 export class StationFormComponent implements OnInit {
@@ -21,7 +29,7 @@ export class StationFormComponent implements OnInit {
   selectFields = [...this.station.relations, undefined];
 
   constructor(
-    private stationService: StationService,
+    private stationService: StationsService,
     private synhroService: MapFormSynchroService,
     private snackBar: MatSnackBar
   ) {}
@@ -37,10 +45,10 @@ export class StationFormComponent implements OnInit {
     });
 
     this.synhroService.connections$.subscribe((connections) => {
-      if (this.station.relations.length < connections.length) {
+      if (this.station.relations.length < connections.size) {
         this.addConnectionField();
       }
-      this.station.relations = connections;
+      this.station.relations = Array.from(connections);
     });
   }
 
@@ -51,7 +59,7 @@ export class StationFormComponent implements OnInit {
 
   onConnectionSelected(ind: number, stationId: number) {
     this.station.relations[ind] = stationId;
-    this.synhroService.updateConnections(this.station.relations);
+    this.synhroService.updateConnections(new Set(this.station.relations));
     if (this.station.relations.length === this.selectFields.length) {
       this.addConnectionField();
     }

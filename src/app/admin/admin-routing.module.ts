@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { CarriagesComponent } from './pages/carriages/carriages.component';
-import { StationsComponent } from './pages/stations/stations.component';
+import { StationsComponent } from './stations/pages/stations.component';
 import { RoutesPageComponent } from './routes/pages/routes-page/routes-page.component';
 
 const routes: Routes = [

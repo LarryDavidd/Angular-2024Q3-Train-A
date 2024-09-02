@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { StationService } from 'admin/services/station.service';
-import { Station } from 'admin/models/stations.model';
+import { StationsService } from '../../services/stations.service';
+import { Station } from '../../model/station.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PageEvent } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-station-list',
+  standalone: true,
+  imports: [CommonModule, MatPaginator, MatIcon, MatProgressSpinner],
   templateUrl: './station-list.component.html'
 })
 export class StationListComponent implements OnInit {
@@ -18,7 +23,7 @@ export class StationListComponent implements OnInit {
   totalPages = 1;
 
   constructor(
-    private stationService: StationService,
+    private stationService: StationsService,
     private snackBar: MatSnackBar
   ) {}
 
