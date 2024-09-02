@@ -16,7 +16,12 @@ export class StationService {
   }
 
   deleteStation(id: number): Observable<Station[]> {
-    return this.http.delete<Station[]>(this.apiUrl + '/' + id).pipe(catchError(this.handleError));
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+      })
+    };
+    return this.http.delete<Station[]>(this.apiUrl + '/' + id, { headers: httpOptions.headers }).pipe(catchError(this.handleError));
   }
 
   addStation(newStation: CreatedStation): Observable<StationCreateResponse> {
@@ -37,6 +42,6 @@ export class StationService {
     if (error.error.message || error.error.reason) {
       errorMessage = `Error: ${error.error.message || 'unknown'}, reason: ${error.error.reason || 'unknown'}`;
     }
-    return throwError(() => errorMessage);
+    return throwError(() => ({ errorMessage, reason: error.error.reason || '' }));
   }
 }

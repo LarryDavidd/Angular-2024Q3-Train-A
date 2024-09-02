@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { StationService } from 'admin/services/station.service';
 import { Station } from 'admin/models/stations.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-station-list',
@@ -11,13 +13,14 @@ export class StationListComponent implements OnInit {
 
   paginatedStations: Station[] = [];
 
-  currentPage = 1;
-
   pageSize = 10;
 
   totalPages = 1;
 
-  constructor(private stationService: StationService) {}
+  constructor(
+    private stationService: StationService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.loadStations();
@@ -27,28 +30,14 @@ export class StationListComponent implements OnInit {
     this.stationService.getStations().subscribe((stations) => {
       this.stations = stations;
       this.totalPages = Math.ceil(this.stations.length / this.pageSize);
-      this.updatePaginatedStations();
+      this.paginatedStations = this.stations.slice(0, this.pageSize);
     });
   }
 
-  updatePaginatedStations() {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
+  updatePaginatedStations(e: PageEvent) {
+    const startIndex = e.pageIndex * e.pageSize;
+    const endIndex = startIndex + e.pageSize;
     this.paginatedStations = this.stations.slice(startIndex, endIndex);
-  }
-
-  nextPage() {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-      this.updatePaginatedStations();
-    }
-  }
-
-  previousPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.updatePaginatedStations();
-    }
   }
 
   getStationName(id: number) {
@@ -61,8 +50,17 @@ export class StationListComponent implements OnInit {
         this.loadStations();
       },
       error: (error) => {
+        this.handleError(error);
         console.error('Error deleting station:', error);
       }
     });
+  }
+
+  handleError(err: { reason?: string; errorMessage?: string }) {
+    if (err.reason && err.reason === 'recordInUse') {
+      this.snackBar.open('Cannot delete station with active rides', 'close', { duration: 3000 });
+    } else {
+      this.snackBar.open(err.errorMessage || 'Error deleting station', 'close', { duration: 3000 });
+    }
   }
 }
