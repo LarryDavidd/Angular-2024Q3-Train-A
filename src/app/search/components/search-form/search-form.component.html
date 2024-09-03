@@ -1,0 +1,98 @@
+<form
+  [formGroup]="searchForm"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="input-box">
+    <div class="label-box">
+      <div class="label from"></div>
+    </div>
+    <input
+      matInput
+      class="input"
+      type="text"
+      placeholder="from"
+      formControlName="cityFrom"
+      [matAutocomplete]="autoFrom"
+    />
+  </div>
+  <mat-autocomplete
+    #autoFrom="matAutocomplete"
+    [displayWith]="displayFn"
+  >
+    @for (city of filteredOptionsFrom | async; let index = $index; track index) {
+      <mat-option [value]="city">{{ city.city }}</mat-option>
+    }
+  </mat-autocomplete>
+
+  <div class="input-box">
+    <div class="label-box">
+      <div class="label to"></div>
+    </div>
+    <input
+      matInput
+      class="input"
+      type="text"
+      placeholder="to"
+      formControlName="cityTo"
+      [matAutocomplete]="autoTo"
+    />
+  </div>
+  <mat-autocomplete
+    #autoTo="matAutocomplete"
+    [displayWith]="displayFn"
+  >
+    @for (city of filteredOptionsTo | async; let index = $index; track index) {
+      <mat-option [value]="city">{{ city.city }}</mat-option>
+    }
+  </mat-autocomplete>
+
+  <mat-form-field
+    appearance="fill"
+    class="date-time-picker"
+    hideRequiredMarker
+  >
+    <mat-label>Select date and time</mat-label>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      [min]="minDate"
+      readonly
+      (dateChange)="onDateChange($event)"
+    />
+    <p class="time size-1">{{ selectedTimeString }}</p>
+    <button
+      mat-icon-button
+      matSuffix
+      type="button"
+      (click)="picker.open()"
+      aria-label="Open calendar"
+    >
+      <mat-icon>calendar_today</mat-icon>
+    </button>
+    <button
+      *ngIf="selectedDate"
+      mat-icon-button
+      matSuffix
+      type="button"
+      (click)="openTimePicker(timePicker)"
+      aria-label="Open time picker"
+    >
+      <mat-icon>access_time</mat-icon>
+    </button>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <ngx-material-timepicker
+    #timePicker
+    (timeSet)="onTimeChange($event)"
+    [format]="24"
+  ></ngx-material-timepicker>
+  <button
+    type="submit"
+    mat-raised-button
+    color="primary"
+    [disabled]="searchForm.invalid"
+  >
+    Search
+  </button>
+</form>
