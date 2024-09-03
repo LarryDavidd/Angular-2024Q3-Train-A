@@ -6,7 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { ResponceBody, Schedule, Segment } from 'admin/ride/model/ride.model';
+import { Schedule, Segment } from 'admin/ride/model/ride.model';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { DateValidator } from 'admin/ride/validators/date.validator';
@@ -47,7 +47,7 @@ export class RideCardComponent implements OnInit {
 
   @Input() path!: number[];
 
-  @Output() updateRide = new EventEmitter<ResponceBody>();
+  @Output() updateCurrentRide = new EventEmitter<{ rideId: number; segment: Segment; index: number }>();
 
   form!: FormGroup<FormGroupInterface>;
 
@@ -200,8 +200,8 @@ export class RideCardComponent implements OnInit {
         .map(([key, value]) => [key, value as number])
     );
 
-    const segment: Segment[] = [{ time: [arrivalDate, departureDate], price: transformedPrice }];
+    const segment: Segment = { time: [arrivalDate, departureDate], price: transformedPrice };
 
-    this.updateRide.emit({ rideId, segment });
+    this.updateCurrentRide.emit({ rideId, segment, index: i });
   }
 }

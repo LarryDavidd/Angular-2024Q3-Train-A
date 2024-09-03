@@ -13,11 +13,12 @@ import { CreateSectionComponent } from 'admin/ride/components/create-section/cre
 import * as CarriagesActions from 'admin/carriages/carriages-redux/actions/carriages.actions';
 import { selectCarriages, selectCarriagesLoadingStatus } from 'admin/carriages/carriages-redux/selectors/carriages.selectors';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-ride-page',
   standalone: true,
-  imports: [CommonModule, MatProgressSpinnerModule, RideListComponent, CreateSectionComponent],
+  imports: [CommonModule, MatProgressSpinnerModule, RideListComponent, CreateSectionComponent, MatButtonModule],
   templateUrl: './ride-page.component.html',
   styleUrl: './ride-page.component.scss'
 })

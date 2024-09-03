@@ -27,7 +27,6 @@ export class RideService {
   }
 
   updateRide(routeId: number, rideId: number, segments: Segment[]): Observable<void> {
-    console.log('here');
     const url = `${this.apiUrl}/${routeId}/ride/${rideId}`;
 
     const body: RideUpdateRequest = {
