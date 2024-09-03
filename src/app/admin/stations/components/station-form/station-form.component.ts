@@ -49,6 +49,9 @@ export class StationFormComponent implements OnInit {
         this.addConnectionField();
       }
       this.station.relations = Array.from(connections);
+      if (this.station.relations.length === 0) {
+        this.selectFields = [undefined];
+      }
     });
   }
 

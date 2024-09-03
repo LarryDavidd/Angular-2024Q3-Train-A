@@ -45,6 +45,10 @@ export class StationMapComponent implements AfterViewInit {
 
   private newStationConnections: Set<number> = new Set<number>();
 
+  private markerPolylineGroup: L.LayerGroup = L.layerGroup();
+
+  private stationsPolylineGroup: L.LayerGroup = L.layerGroup();
+
   constructor(
     private stationService: StationsService,
     private synhroService: MapFormSynchroService
@@ -66,6 +70,9 @@ export class StationMapComponent implements AfterViewInit {
 
     L.Icon.Default.imagePath = 'assets/leaflet/';
 
+    this.markerPolylineGroup.addTo(this.map);
+    this.stationsPolylineGroup.addTo(this.map);
+
     this.addStationsMarkers();
 
     this.map.on('click', (e: L.LeafletMouseEvent) => {
@@ -83,6 +90,7 @@ export class StationMapComponent implements AfterViewInit {
       } else {
         this.changeExistingMarker(L.latLng(coords.latitude, coords.longitude));
         this.newStationConnections.clear();
+        this.markerPolylineGroup.clearLayers();
         this.synhroService.updateConnections(this.newStationConnections);
       }
     });
@@ -100,7 +108,7 @@ export class StationMapComponent implements AfterViewInit {
           distance: 0
         }))
       };
-      this.drawConnectionsOnMap(newStation);
+      this.drawConnectionsOnMap(newStation, true);
     });
   }
 
@@ -123,15 +131,20 @@ export class StationMapComponent implements AfterViewInit {
     });
   }
 
-  drawConnectionsOnMap(station: Station) {
+  drawConnectionsOnMap(station: Station, isMarker = false) {
     station.connectedTo.forEach((connection) => {
-      L.polyline(
+      const polyline = L.polyline(
         [
           [station.latitude, station.longitude],
           [this.getStationById(connection.id)!.latitude, this.getStationById(connection.id)!.longitude]
         ],
         { color: 'blue', opacity: 0.5, weight: 1 }
-      ).addTo(this.map!);
+      );
+      if (isMarker) {
+        this.markerPolylineGroup.addLayer(polyline);
+      } else {
+        this.stationsPolylineGroup.addLayer(polyline);
+      }
     });
   }
 
