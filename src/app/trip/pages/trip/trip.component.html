@@ -1,0 +1,110 @@
+<div class="h-full bg-slate-100">
+  <div class="w-full border-y border-gray-400 bg-white">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="flex items-center gap-3 py-2">
+        <button
+          mat-icon-button
+          class="icon-btn"
+          [routerLink]="['/']"
+        >
+          <mat-icon
+            aria-hidden="false"
+            aria-label="Back icon"
+            fontIcon="arrow_back_ios"
+            class="icon"
+          ></mat-icon>
+        </button>
+        <div class="trip-info">
+          <div class="mb-1 flex gap-2 font-bold">
+            <span>{{ fromStationName }}</span>
+            <mat-spinner
+              *ngIf="!fromStationName"
+              diameter="20"
+            ></mat-spinner>
+            <span *ngIf="rideData">{{ transformDate(rideData.schedule.segments[rideData.path.indexOf(fromStationId!)].time[0]) }}</span>
+            <p>&rarr;</p>
+            <span>{{ toStationName }}</span>
+            <mat-spinner
+              *ngIf="!fromStationName"
+              diameter="20"
+            ></mat-spinner>
+            <span *ngIf="rideData">{{ transformDate(rideData.schedule.segments[rideData.path.indexOf(toStationId!) - 1].time[1]) }}</span>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <p class="font-bold">Ride {{ rideId }}</p>
+            <div>
+              <button
+                mat-button
+                class="route-btn"
+                (click)="openRouteModal()"
+              >
+                <span>Route</span>
+                <mat-icon>expand_more</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="m-auto flex max-w-screen-lg gap-2 p-3">
+    <div class="max-w-[70%] lg:max-w-[90%]">
+      <mat-tab-group>
+        <div *ngFor="let carriage of listOfCarriages">
+          <mat-tab
+            label="{{ getCarriageLabel(carriage) }}"
+            style="background-color: white"
+          >
+            <div
+              class="my-3"
+              *ngFor="let car of rideData?.carriages; let carInd = index"
+            >
+              <div
+                *ngIf="carriage.code === car"
+                class="rounded-xl bg-white p-3"
+              >
+                <div class="mb-3 flex items-center gap-3">
+                  <span class="mr-3">Car {{ carInd + 1 }}</span>
+                  <span class="rounded-2xl border border-gray-300 px-2 py-1">{{ getFreeSeats(carInd) }} seats</span>
+                </div>
+                <app-carriage
+                  [carriageIndex]="carInd"
+                  [carriage]="carriage"
+                  [carriages]="listOfCarriages"
+                  [seatStatuses]="seatStatuses[carInd]"
+                  (seatSelected)="onSeatSelected(carInd, $event)"
+                ></app-carriage>
+              </div>
+            </div>
+          </mat-tab>
+        </div>
+      </mat-tab-group>
+      <div class="p-3">
+        <h5 style="font-size: 16px; font-weight: 700">Legend</h5>
+        <div class="flex items-baseline gap-2">
+          <div class="flex items-center gap-2">
+            <span class="seat relative flex size-6 items-center justify-center rounded-[4px] border-blue-800 bg-blue-800 text-sm text-white">1</span>
+            <span>Available seat</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="seat relative flex size-6 items-center justify-center rounded-[4px] border-gray-400 bg-gray-400 text-sm text-white">1</span>
+            <span>Reserved seat</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="seat relative flex size-6 items-center justify-center rounded-[4px] border-orange-500 bg-orange-500 text-sm text-white">1</span>
+            <span>Selected seat</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="relative h-full w-72">
+      <div *ngIf="isBookModalVisible">
+        <app-book-modal
+          [seatsStatuses]="seatStatuses"
+          (isModalVisible)="isBookModalVisible = $event"
+          (bookingSuccess)="onBookingSuccess($event)"
+        ></app-book-modal>
+      </div>
+    </div>
+  </div>
+</div>

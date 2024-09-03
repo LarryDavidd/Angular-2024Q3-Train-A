@@ -1,0 +1,45 @@
+.schedule-item {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.schedule-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.time-info {
+  flex: 1;
+  text-align: center;
+}
+
+.time {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.date {
+  font-size: 14px;
+  color: #666;
+}
+
+.schedule {
+  display: flex;
+  align-items: center;
+  flex: 2;
+  text-align: center;
+}
+
+.line {
+  flex: 1;
+  height: 2px;
+  background-color: #ddd;
+}
+
+.travel-time {
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+}

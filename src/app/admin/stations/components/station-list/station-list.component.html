@@ -1,0 +1,45 @@
+<div class="flex flex-col gap-2 pr-2">
+  <mat-spinner
+    *ngIf="stations.length === 0"
+    diameter="60"
+    style="margin: auto; margin-top: 30px"
+  ></mat-spinner>
+  <div *ngIf="stations.length > 0">
+    <div
+      *ngFor="let station of paginatedStations"
+      class="relative mb-1 rounded-md border border-gray-400 p-3 max-md:ml-2"
+    >
+      <h3
+        class="capitalize"
+        style="font-weight: 700"
+      >
+        {{ station.city }}
+      </h3>
+      <p>{{ station.latitude.toPrecision(6) }}, {{ station.longitude.toPrecision(6) }}</p>
+      <p>
+        <span class="block">Connected to:</span>
+        <span *ngFor="let connection of station.connectedTo"> {{ getStationName(connection.id) }}, </span>
+      </p>
+      <button
+        (click)="deleteStation(station.id)"
+        class="absolute right-2 top-2"
+      >
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Delete icon"
+          fontIcon="delete"
+        ></mat-icon>
+      </button>
+    </div>
+    <div class="flex justify-center">
+      <mat-paginator
+        (page)="updatePaginatedStations($event)"
+        pageSize="{{ pageSize }}"
+        length="{{ stations.length }}"
+        showFirstLastButtons="true"
+        hidePageSize="true"
+        aria-label="Select page"
+      ></mat-paginator>
+    </div>
+  </div>
+</div>
