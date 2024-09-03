@@ -28,11 +28,25 @@
     <div class="flex flex-col gap-5">
       <div class="flex flex-col gap-2">
         <mat-card-subtitle> Cities </mat-card-subtitle>
-        {{ route.path.join(' - ') }}
+        <ng-container *ngIf="isLoadingStations$ | async; else stationsTemplate">
+          <mat-spinner [diameter]="70"></mat-spinner>
+        </ng-container>
+        <ng-template #stationsTemplate>
+          <ng-container *ngIf="stations$ | async as data">
+            {{ getStations(data).join(' - ') }}
+          </ng-container>
+        </ng-template>
       </div>
       <div class="flex flex-col gap-2">
         <mat-card-subtitle> Carrage Type </mat-card-subtitle>
-        {{ route.carriages.join(' - ') }}
+        <ng-container *ngIf="isLoadingCarriages$ | async; else carriagesTemplate">
+          <mat-spinner [diameter]="70"></mat-spinner>
+        </ng-container>
+        <ng-template #carriagesTemplate>
+          <ng-container *ngIf="carriages$ | async as data">
+            {{ getCarriages(data).join(' - ') }}
+          </ng-container>
+        </ng-template>
       </div>
     </div>
   </mat-card-content>

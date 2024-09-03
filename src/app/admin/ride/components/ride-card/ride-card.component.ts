@@ -13,6 +13,9 @@ import { DateValidator } from 'admin/ride/validators/date.validator';
 import { DateTimeService } from 'admin/ride/services/date-time.service';
 import { DeleteDialogComponent } from 'admin/components/delete-dialog/delete-dialog.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
+import { selectStations } from 'admin/stations/station-redux/selectiors/stations.selectors';
+import { GetStationsResponse } from 'admin/stations/model/station.model';
 
 interface SegmentForm {
   arrivalDate: FormControl<string | null>;
@@ -53,6 +56,10 @@ export class RideCardComponent implements OnInit {
   @Output() updateCurrentRide = new EventEmitter<{ rideId: number; segment: Segment; index: number }>();
 
   @Output() deleteRide = new EventEmitter<{ rideId: number }>();
+
+  store = inject(Store);
+
+  stations$ = this.store.select(selectStations);
 
   form!: FormGroup<FormGroupInterface>;
 
@@ -224,5 +231,10 @@ export class RideCardComponent implements OnInit {
           this.deleteRide.emit({ rideId });
         }
       });
+  }
+
+  getStationId(stations: GetStationsResponse, id: number) {
+    const currentStation = stations.find((station) => station.id === id);
+    return currentStation?.city ?? id;
   }
 }
