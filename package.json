@@ -41,7 +41,7 @@
     "@angular-eslint/template-parser": "18.1.0",
     "@angular/cli": "^18.0.7",
     "@angular/compiler-cli": "^18.0.0",
-    "@planess/train-a-backend": "^0.0.5",
+    "@planess/train-a-backend": "^0.0.11",
     "@types/jasmine": "~5.1.0",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^7.11.0",
