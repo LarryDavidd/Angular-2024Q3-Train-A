@@ -39,7 +39,7 @@
         <mat-label
           for="rows"
           class="mr-1"
-          >Rows:</mat-label
+          >Rows (max 40):</mat-label
         >
         <input
           matInput
@@ -48,6 +48,7 @@
           placeholder="Rows"
           type="number"
           min="0"
+          max="40"
           required
           class="mr-2 w-9 rounded-sm bg-gray-100"
         />
@@ -57,7 +58,7 @@
         <mat-label
           for="leftSeats"
           class="mr-1"
-          >Left Seats:</mat-label
+          >Left Seats (max 5):</mat-label
         >
         <input
           matInput
@@ -66,6 +67,7 @@
           placeholder="Left Seats"
           type="number"
           min="0"
+          max="5"
           required
           class="mr-2 w-9 rounded-sm bg-gray-100"
         />
@@ -75,7 +77,7 @@
         <mat-label
           for="rightSeats"
           class="mr-1"
-          >Right Seats:</mat-label
+          >Right Seats (max 5):</mat-label
         >
         <input
           matInput
@@ -84,6 +86,7 @@
           placeholder="Right Seats"
           type="number"
           min="0"
+          max="5"
           required
           class="mr-2 w-9 rounded-sm bg-gray-100"
         />
@@ -101,9 +104,9 @@
 
       <app-carriage
         *ngIf="carriageForm.leftSeats || carriageForm.rightSeats"
-        [rows]="carriageForm.rows"
-        [leftSeats]="carriageForm.leftSeats"
-        [rightSeats]="carriageForm.rightSeats"
+        [rows]="carriageForm.rows < 41 ? carriageForm.rows : 40"
+        [leftSeats]="carriageForm.leftSeats < 6 ? carriageForm.leftSeats : 5"
+        [rightSeats]="carriageForm.rightSeats < 6 ? carriageForm.rightSeats : 5"
         class="w-full flex-auto"
       ></app-carriage>
     </form>
