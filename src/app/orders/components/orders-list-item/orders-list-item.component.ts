@@ -2,11 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Order, OrderStatus } from 'orders/models/order';
 import { OrderCancelDialogComponent } from '../order-cancel-dialog/order-cancel-dialog.component';
-import { StationService } from 'admin/services/station.service';
-import { Station } from 'admin/models/stations.model';
+import { StationsService } from 'admin/stations/services/stations.service';
+import { Station } from 'admin/stations/model/station.model';
 import { CarriageData } from 'orders/models/carriage-data';
-import { CarriagesService } from 'admin/services/carriages.service';
-import { Carriage } from 'admin/models/carriages.model';
+import { CarriagesService } from 'admin/carriages/services/carriages.service';
+import { Carriage } from 'admin/carriages/model/carriages.model';
 import { findCarriageAndSeat } from 'orders/helpers/find-carriage-data';
 import { formatDate } from 'orders/helpers/format-date';
 import { calculateTimeDifference } from 'orders/helpers/calculate-time-difference';
@@ -46,7 +46,7 @@ export class OrdersListItemComponent implements OnInit {
 
   constructor(
     public dialog: MatDialog,
-    private readonly stationService: StationService,
+    private readonly stationService: StationsService,
     private readonly carriagesService: CarriagesService,
     private readonly userProfileService: UserProfileService
   ) {}
