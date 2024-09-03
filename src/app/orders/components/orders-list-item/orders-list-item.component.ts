@@ -5,8 +5,8 @@ import { OrderCancelDialogComponent } from '../order-cancel-dialog/order-cancel-
 import { StationsService } from 'admin/stations/services/stations.service';
 import { Station } from 'admin/stations/model/station.model';
 import { CarriageData } from 'orders/models/carriage-data';
-import { CarriagesService } from 'admin/services/carriages.service';
-import { Carriage } from 'admin/models/carriages.model';
+import { CarriagesService } from 'admin/carriages/services/carriages.service';
+import { Carriage } from 'admin/carriages/model/carriages.model';
 import { findCarriageAndSeat } from 'orders/helpers/find-carriage-data';
 import { formatDate } from 'orders/helpers/format-date';
 import { calculateTimeDifference } from 'orders/helpers/calculate-time-difference';

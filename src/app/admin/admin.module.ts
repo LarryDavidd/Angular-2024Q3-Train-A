@@ -1,32 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { AdminRoutingModule } from './admin-routing.module';
-import { CarriagesComponent } from './pages/carriages/carriages.component';
-import { CarriageComponent } from './components/carriage/carriage.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSelectModule } from '@angular/material/select';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
-  declarations: [CarriagesComponent, CarriageComponent],
-  imports: [
-    CommonModule,
-    AdminRoutingModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatExpansionModule,
-    MatIconModule,
-    MatSelectModule,
-    MatProgressSpinnerModule,
-    MatPaginatorModule
-  ]
+  declarations: [],
+  imports: [CommonModule, AdminRoutingModule]
 })
 export class AdminModule {}

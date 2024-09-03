@@ -29,7 +29,7 @@ export class CarriagesEffects {
     this.actions$.pipe(
       ofType(CarriagesActions.fetchCarriages),
       switchMap(() =>
-        this.carriagesService.getStations().pipe(
+        this.carriagesService.getCarriages().pipe(
           map((response) => CarriagesActions.fetchCarriagesSucces({ response })),
           catchError(() => of(CarriagesActions.fetchCarriagesFailes()))
         )
