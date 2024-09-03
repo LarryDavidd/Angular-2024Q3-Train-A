@@ -56,7 +56,7 @@ export class OrdersService {
 
   public cancelOrder(orderId: Order['id']): Observable<{ success: boolean; error?: { message: string } }> {
     return new Observable((observer) => {
-      this.http.delete(`${this.apiUrl}/${orderId}`).subscribe(
+      this.http.delete(`${this.apiUrl}/${orderId}`, this.httpOptions).subscribe(
         () => {
           this.isUpdateOrdersSubject.next(true);
 
