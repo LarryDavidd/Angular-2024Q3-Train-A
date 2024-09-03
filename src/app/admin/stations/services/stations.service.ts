@@ -12,7 +12,7 @@ export class StationsService {
   constructor(private http: HttpClient) {}
 
   getStations(): Observable<GetStationsResponse> {
-    return this.http.get<GetStationsResponse>('/api/station').pipe(
+    return this.http.get<GetStationsResponse>(this.apiUrl).pipe(
       map((response) => {
         return response;
       })

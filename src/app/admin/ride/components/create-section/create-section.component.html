@@ -1,0 +1,117 @@
+<mat-card class="m-auto">
+  <mat-card-header>
+    <mat-card-title>Create</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="form">
+      <ng-container formArrayName="segment">
+        <ng-container
+          *ngFor="let segmentFC of getSegmentFormControls; let i = index"
+          [formGroupName]="i"
+        >
+          <div>{{ 'Station' + ' - ' + path[i] }}</div>
+          <div class="block justify-between md:flex">
+            <div class="flex flex-col">
+              <mat-form-field>
+                <mat-label matLabel>Arrival Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  placeholder="Arrival Date"
+                  formControlName="arrivalDate"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error>{{ getArrivalDateError(i) }}</mat-error>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label matLabel>Arrival Time</mat-label>
+
+                <input
+                  matInput
+                  [format]="24"
+                  [ngxTimepicker]="dataTimePicker"
+                  formControlName="arrivalTime"
+                />
+                <ngx-material-timepicker
+                  matSuffix
+                  #dataTimePicker
+                ></ngx-material-timepicker>
+                <mat-error>{{ getArrivalTimeError(i) }}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="flex flex-col">
+              <mat-form-field>
+                <mat-label matLabel>Departure Date</mat-label>
+                <input
+                  type="datetime"
+                  matInput
+                  [matDatepicker]="picker1"
+                  placeholder="Departure Date"
+                  formControlName="departureDate"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker1"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <mat-error>{{ getArrivalDateError(i) }}</mat-error>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label matLabel>Departure Time</mat-label>
+
+                <input
+                  matInput
+                  [format]="24"
+                  [ngxTimepicker]="dataTimePicker2"
+                  formControlName="departureTime"
+                />
+                <ngx-material-timepicker
+                  matSuffix
+                  #dataTimePicker2
+                ></ngx-material-timepicker>
+                <mat-error>{{ getDepartureTimeError(i) }}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div
+              formGroupName="prices"
+              class="flex flex-col"
+            >
+              <ng-container *ngFor="let price of getPrices(segmentFC.get('prices')); let j = index">
+                <mat-form-field>
+                  <mat-label matLabel>{{ price.key }}</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    min="0"
+                    [placeholder]="price.key"
+                    [formControlName]="price.key"
+                  />
+                </mat-form-field>
+              </ng-container>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+
+      <button
+        mat-flat-button
+        effect="raised"
+        color="primary"
+        type="button"
+        [disabled]="!form.valid"
+        (click)="submit()"
+      >
+        Save
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>
