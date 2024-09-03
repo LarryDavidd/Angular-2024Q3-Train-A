@@ -29,7 +29,6 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Предположим, routes$ инициализирован снаружи или через сервис
     this.subscription = this.dataService.data$
       .pipe(
         map((response) => {
@@ -37,18 +36,16 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
           if (response && response.routes) {
             return this.extractUniqueDays(response.routes, response.from.stationId);
           } else {
-            return []; // Возвращаем пустой массив, если данные отсутствуют
+            return [];
           }
         })
       )
       .subscribe((days) => {
         this.dataItems = days;
-        // Можно также вызывать метод для обновления слайдера здесь
       });
   }
 
   ngOnDestroy(): void {
-    // Отменяем подписку при уничтожении компонента, чтобы избежать утечек памяти
     if (this.subscription) {
       this.subscription.unsubscribe();
     }

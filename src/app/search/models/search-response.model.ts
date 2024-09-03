@@ -3,7 +3,7 @@ interface Geolocation {
   longitude: number;
 }
 
-interface StationData {
+export interface StationData {
   stationId: number;
   city: string;
   geolocation: Geolocation;
