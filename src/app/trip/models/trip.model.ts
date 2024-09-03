@@ -34,4 +34,9 @@ export interface ModalData {
   errorSource?: string;
 }
 
+export interface RouteModalData {
+  rideId: number;
+  routeId: number;
+}
+
 export type SeatStatusType = 'free' | 'occupied' | 'selected';

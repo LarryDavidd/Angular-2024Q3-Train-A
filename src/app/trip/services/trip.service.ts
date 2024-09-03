@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Trip } from 'trip/models/trip.model';
@@ -22,6 +22,22 @@ export interface Carriage {
   leftSeats: number;
   rightSeats: number;
 }
+export interface Ride {
+  id: number;
+  path: number[];
+  carriages: string[];
+  schedule: Schedule[];
+}
+export interface Schedule {
+  rideId: number;
+  segments: Segment[];
+}
+export interface Segment {
+  time: [string, string];
+  price: {
+    [key: string]: number;
+  };
+}
 
 @Injectable({
   providedIn: 'root'
@@ -43,12 +59,17 @@ export class TripService {
     return throwError(() => errorMessage);
   }
 
-  // TODO: get from redux or station service
-  getStations(): Observable<Station[]> {
-    return this.http.get<Station[]>('/api/station');
-  }
-
-  getCarriages(): Observable<Carriage[]> {
-    return this.http.get<Carriage[]>('/api/carriage');
+  // TODO: get from redux or ride service
+  getRideById(id: number): Observable<Ride> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+      })
+    };
+    return this.http
+      .get<Ride>(`/api/route/${id}`, {
+        headers: httpOptions.headers
+      })
+      .pipe(catchError(this.handleError));
   }
 }

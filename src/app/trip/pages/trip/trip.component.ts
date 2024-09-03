@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
+import { CarriagesService } from 'admin/services/carriages.service';
+import { StationsService } from 'admin/stations/services/stations.service';
 import { Subject, takeUntil } from 'rxjs';
 import { InfoModalComponent } from 'trip/components/info-modal/info-modal.component';
 import { RouteModalComponent } from 'trip/components/route-modal/route-modal.component';
@@ -43,6 +45,8 @@ export class TripComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private tripService: TripService,
     private bookingService: BookingService,
+    private stationsService: StationsService,
+    private carriagesService: CarriagesService,
     private modal: MatDialog,
     private snackBar: MatSnackBar
   ) {}
@@ -160,13 +164,14 @@ export class TripComponent implements OnInit, OnDestroy {
   openRouteModal() {
     this.modal.open(RouteModalComponent, {
       data: {
+        rideId: this.rideData!.rideId,
         routeId: this.rideData!.routeId
       }
     });
   }
 
   getStations() {
-    this.tripService
+    this.stationsService
       .getStations()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -183,7 +188,7 @@ export class TripComponent implements OnInit, OnDestroy {
   }
 
   getCarriages() {
-    this.tripService
+    this.carriagesService
       .getCarriages()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
