@@ -1,10 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { CreatedStation, Station } from 'admin/models/stations.model';
-import { MapFormSynchroService } from 'admin/services/map-form-synchro.service';
-import { StationService } from 'admin/services/station.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CreatedStation, Station } from '../../model/station.model';
+import { MapFormSynchroService } from 'admin/stations/services/map-form-synchro.service';
+import { StationsService } from '../../services/stations.service';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { CommonModule } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-station-form',
+  standalone: true,
+  imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule],
   templateUrl: './station-form.component.html'
 })
 export class StationFormComponent implements OnInit {
@@ -20,8 +29,9 @@ export class StationFormComponent implements OnInit {
   selectFields = [...this.station.relations, undefined];
 
   constructor(
-    private stationService: StationService,
-    private synhroService: MapFormSynchroService
+    private stationService: StationsService,
+    private synhroService: MapFormSynchroService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -33,6 +43,16 @@ export class StationFormComponent implements OnInit {
       this.station.latitude = coords.latitude;
       this.station.longitude = coords.longitude;
     });
+
+    this.synhroService.connections$.subscribe((connections) => {
+      if (this.station.relations.length < connections.size) {
+        this.addConnectionField();
+      }
+      this.station.relations = Array.from(connections);
+      if (this.station.relations.length === 0) {
+        this.selectFields = [undefined];
+      }
+    });
   }
 
   onCoordinateSelected(coordinates: { latitude: number; longitude: number }) {
@@ -42,6 +62,7 @@ export class StationFormComponent implements OnInit {
 
   onConnectionSelected(ind: number, stationId: number) {
     this.station.relations[ind] = stationId;
+    this.synhroService.updateConnections(new Set(this.station.relations));
     if (this.station.relations.length === this.selectFields.length) {
       this.addConnectionField();
     }
@@ -68,11 +89,16 @@ export class StationFormComponent implements OnInit {
   onSubmit() {
     this.stationService.addStation(this.station).subscribe({
       next: (res) => {
-        console.log(res);
+        this.snackBar.open(`Station with id ${res.id} created successfully`, 'close', { duration: 3000 });
       },
-      error: (err) => {
+      error: (err: string) => {
+        this.handleError(err);
         console.error(err);
       }
     });
+  }
+
+  handleError(err: string) {
+    this.snackBar.open(err, 'close', { duration: 3000 });
   }
 }

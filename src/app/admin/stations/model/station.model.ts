@@ -4,7 +4,7 @@ export interface IConnectedStation {
   distance: number;
 }
 
-export interface IStation {
+export interface Station {
   id: number;
   city: string;
   latitude: number;
@@ -12,4 +12,15 @@ export interface IStation {
   connectedTo: IConnectedStation[];
 }
 
-export type GetStationsResponse = IStation[];
+export interface CreatedStation {
+  city: string;
+  latitude: number;
+  longitude: number;
+  relations: number[];
+}
+
+export type GetStationsResponse = Station[];
+
+export interface StationCreateResponse {
+  id: number;
+}
