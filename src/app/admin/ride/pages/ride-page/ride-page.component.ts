@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import * as RideActions from 'admin/ride/redux/actions/ride.actions';
 import { selectRide, selectRidesLoadingStatus } from 'admin/ride/redux/selectors/ride.selectors';
 import { Observable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ResponceBody, ResponceBodySave, Ride } from 'admin/ride/model/ride.model';
@@ -25,9 +25,17 @@ import { MatButtonModule } from '@angular/material/button';
 export class RidePageComponent implements OnInit {
   store = inject(Store);
 
+  private router = inject(Router);
+
+  private activatedRoute = inject(ActivatedRoute);
+
   private snackBar = inject(MatSnackBar);
 
   isCreateSectionOpen = false;
+
+  redirectToRoutes() {
+    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+  }
 
   openCloseCreateSection() {
     this.store.dispatch(CarriagesActions.fetchCarriages());

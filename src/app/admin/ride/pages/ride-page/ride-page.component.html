@@ -1,8 +1,16 @@
 <ng-container *ngIf="isLoading$ | async; else dataTemplate">
   <mat-spinner [diameter]="70"></mat-spinner>
 </ng-container>
-
 <ng-template #dataTemplate>
+  <h1>{{ 'Route' + ' - ' + routeId }}</h1>
+  <button
+    mat-flat-button
+    color="primary"
+    type="button"
+    (click)="redirectToRoutes()"
+  >
+    Go Back
+  </button>
   <ng-container *ngIf="rides$ | async as data; else notFound">
     <ng-container *ngIf="!isCreateSectionOpen; else createSection">
       <button
