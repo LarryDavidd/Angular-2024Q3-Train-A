@@ -22,4 +22,6 @@ export interface Order {
   schedule: {
     segments: ScheduleSegment[];
   };
+  stationEnd: number;
+  stationStart: number;
 }
