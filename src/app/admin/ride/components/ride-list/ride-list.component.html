@@ -4,6 +4,7 @@
       [schedule]="schedule"
       [path]="path"
       (updateCurrentRide)="updateCurrentRide($event)"
+      (deleteRide)="deleteRide.emit($event)"
     ></app-ride-card>
   </li>
 </ul>

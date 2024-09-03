@@ -68,12 +68,31 @@ export class RidePageComponent implements OnInit {
     if (this.routeId)
       this.rideService.saveRide(Number(this.routeId), segment).subscribe({
         next: () => {
+          this.isCreateSectionOpen = false;
+          if (this.routeId) this.store.dispatch(RideActions.retrieveRide({ id: this.routeId }));
           this.snackBar.open('Ride saved successfully', 'close', {
             duration: 3000
           });
         },
         error: (error) => {
           this.snackBar.open('Error saving ride' + ' ' + error.message, 'close', {
+            duration: 3000
+          });
+        }
+      });
+  }
+
+  deleteRide({ rideId }: { rideId: number }) {
+    if (this.routeId)
+      this.rideService.deleteRide(rideId, this.routeId).subscribe({
+        next: () => {
+          if (this.routeId) this.store.dispatch(RideActions.retrieveRide({ id: this.routeId }));
+          this.snackBar.open('Ride deleted successfully', 'close', {
+            duration: 3000
+          });
+        },
+        error: (error) => {
+          this.snackBar.open('Error deleted ride' + ' ' + error.message, 'close', {
             duration: 3000
           });
         }

@@ -1,6 +1,14 @@
 <mat-card class="m-auto">
-  <mat-card-header>
+  <mat-card-header class="flex justify-between">
     <mat-card-title>{{ 'Ride' + ' ' + schedule.rideId }}</mat-card-title>
+    <div class="route__action-buttons">
+      <button
+        mat-icon-button
+        (click)="onDelete()"
+      >
+        <mat-icon fontIcon="delete"></mat-icon>
+      </button>
+    </div>
   </mat-card-header>
 
   <mat-card-content>

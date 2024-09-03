@@ -11,6 +11,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { DateValidator } from 'admin/ride/validators/date.validator';
 import { DateTimeService } from 'admin/ride/services/date-time.service';
+import { DeleteDialogComponent } from 'admin/components/delete-dialog/delete-dialog.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 interface SegmentForm {
   arrivalDate: FormControl<string | null>;
@@ -37,7 +39,8 @@ interface FormGroupInterface {
     NgxMaterialTimepickerModule,
     FormsModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatDialogModule
   ],
   templateUrl: './ride-card.component.html',
   styleUrl: './ride-card.component.scss'
@@ -49,9 +52,13 @@ export class RideCardComponent implements OnInit {
 
   @Output() updateCurrentRide = new EventEmitter<{ rideId: number; segment: Segment; index: number }>();
 
+  @Output() deleteRide = new EventEmitter<{ rideId: number }>();
+
   form!: FormGroup<FormGroupInterface>;
 
-  dateService = inject(DateTimeService);
+  private dateService = inject(DateTimeService);
+
+  private dialog = inject(MatDialog);
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -203,5 +210,19 @@ export class RideCardComponent implements OnInit {
     const segment: Segment = { time: [arrivalDate, departureDate], price: transformedPrice };
 
     this.updateCurrentRide.emit({ rideId, segment, index: i });
+  }
+
+  onDelete() {
+    this.dialog
+      .open(DeleteDialogComponent, {
+        width: '250px'
+      })
+      .afterClosed()
+      .subscribe((data: boolean) => {
+        if (data) {
+          const rideId = this.schedule.rideId;
+          this.deleteRide.emit({ rideId });
+        }
+      });
   }
 }

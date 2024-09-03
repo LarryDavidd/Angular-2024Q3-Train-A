@@ -46,6 +46,11 @@ export class RideService {
     return this.http.post<void>(url, body, { headers: this.getHttpOptions.headers }).pipe(catchError(this.handleError));
   }
 
+  deleteRide(rideId: number, routeId: string) {
+    const url = `${this.apiUrl}/${routeId}/ride/${rideId}`;
+    return this.http.delete<void>(url, { headers: this.getHttpOptions.headers }).pipe(catchError(this.handleError));
+  }
+
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'error';
     if (!error.ok) {

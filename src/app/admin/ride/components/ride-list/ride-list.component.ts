@@ -15,6 +15,8 @@ import { MatListModule } from '@angular/material/list';
 export class RideListComponent {
   @Output() updateRide = new EventEmitter<ResponceBody>();
 
+  @Output() deleteRide = new EventEmitter<{ rideId: number }>();
+
   @Input() schedule!: Schedule[];
 
   @Input() path!: number[];
