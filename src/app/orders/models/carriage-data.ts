@@ -1,5 +1,5 @@
 export interface CarriageData {
   carriageNumber: number;
   seatNumber: number;
-  type: string;
+  carriageCode: string;
 }
