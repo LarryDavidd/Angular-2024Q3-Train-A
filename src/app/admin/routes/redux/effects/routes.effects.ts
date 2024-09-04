@@ -4,12 +4,14 @@ import { inject, Injectable } from '@angular/core';
 import * as RoutesActions from '../actions/routes.actions';
 import { RoutesService } from 'admin/routes/services/routes.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class RoutesEffects {
   constructor(
     private actions$: Actions,
-    private routesService: RoutesService
+    private routesService: RoutesService,
+    private store: Store
   ) {}
 
   setLoadingStatusTrue$ = createEffect(() => {
@@ -57,6 +59,7 @@ export class RoutesEffects {
       this.actions$.pipe(
         ofType(RoutesActions.deleteRouteSuccess),
         tap(() => {
+          this.store.dispatch(RoutesActions.fetchRoutes());
           this.snackBar.open('Route delete successfully', 'close', {
             duration: 3000
           });
