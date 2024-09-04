@@ -39,6 +39,8 @@ export interface ModalData {
 export interface RouteModalData {
   rideId: number;
   routeId: number;
+  fromStationId: number;
+  toStationId: number;
   path: number[];
   segments: ScheduleSegment[];
 }

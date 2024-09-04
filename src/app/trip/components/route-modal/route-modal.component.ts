@@ -47,8 +47,8 @@ export class RouteModalComponent implements OnInit {
             departureTime: this.events[i].departureTime,
             arrivalTime: this.events[i].arrivalTime,
             stop: this.events[i].stop,
-            icon: 'pi pi-map-marker',
-            color: '#ff0000'
+            icon: station.id === this.data.fromStationId || station.id === this.data.toStationId ? 'pi pi-map-marker' : 'pi pi-circle',
+            color: station.id === this.data.fromStationId || station.id === this.data.toStationId ? '#f87171' : '#1e40af'
           };
         });
       })

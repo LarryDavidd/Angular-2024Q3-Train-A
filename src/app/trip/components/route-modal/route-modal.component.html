@@ -20,7 +20,8 @@
         let-event
       >
         <i
-          class="{{ event.icon }}"
+          [class]="event.icon"
+          [style.fontSize]="event.icon === 'pi pi-circle' ? '10px' : '20px'"
           [style.color]="event.color"
         ></i>
       </ng-template>

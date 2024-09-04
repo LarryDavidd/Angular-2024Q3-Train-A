@@ -160,7 +160,9 @@ export class TripComponent implements OnInit, OnDestroy {
         rideId: this.rideData!.rideId,
         routeId: this.rideData!.routeId,
         path: this.rideData?.path,
-        segments: this.rideData?.schedule.segments
+        segments: this.rideData?.schedule.segments,
+        fromStationId: this.fromStationId,
+        toStationId: this.toStationId
       }
     });
   }
