@@ -1,8 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectStations, selectStationsLoadingStatus } from 'admin/stations/station-redux/selectiors/stations.selectors';
-import * as StationsActions from 'admin/stations/station-redux/actions/stations.actions';
-import * as CarriagesActions from 'admin/carriages/carriages-redux/actions/carriages.actions';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { selectCarriages, selectCarriagesLoadingStatus } from 'admin/carriages/carriages-redux/selectors/carriages.selectors';
@@ -57,6 +55,11 @@ export class CreateSectionComponent implements OnInit {
   }
 
   // Shared
+  onCloseSection() {
+    this.closeSection.emit();
+    this.deleteRouteForUpdate.emit();
+  }
+
   onSave() {
     if (this.selectedCarriagesCodes.length >= 3 && this.selectedStationsIds.length >= 3) {
       if (this.routeForUpdate) {
@@ -96,9 +99,6 @@ export class CreateSectionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(StationsActions.fetchStations());
-    this.store.dispatch(CarriagesActions.fetchCarriages());
-
     if (this.routeForUpdate) {
       this.selectedCarriagesCodes = this.routeForUpdate.carriages;
       this.selectedStationsIds = this.routeForUpdate.path.map((id) => String(id));
