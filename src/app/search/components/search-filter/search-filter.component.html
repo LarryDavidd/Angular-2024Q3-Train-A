@@ -1,4 +1,4 @@
-@if (dataItems.length > 0) {
+@if (dataItems && dataItems.length > 0) {
   <div class="date-slider">
     <button
       (click)="previousDates()"
@@ -19,8 +19,8 @@
         [class.selected]="i + startIndex === selectedIndex"
         class="tab"
       >
-        <div class="date">{{ formatDate(date) }}</div>
-        <div class="day">{{ formatDay(date) }}</div>
+        <div class="date">{{ date | date: 'MMMM dd' }}</div>
+        <div class="day">{{ date | date: 'EEEE' }}</div>
       </div>
     </div>
     <button
@@ -33,5 +33,14 @@
     >
       &gt;
     </button>
+  </div>
+} @else if (notFoundVisibility && dataItems.length === 0) {
+  <div class="no-routes">
+    <img
+      src="assets/images/search.svg"
+      alt="search"
+      class="no-routes-image"
+    />
+    <p class="no-routes-text">Sorry, we couldn't find any routes matching your search.</p>
   </div>
 }

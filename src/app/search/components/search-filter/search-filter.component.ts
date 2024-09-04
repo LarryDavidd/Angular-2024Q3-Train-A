@@ -3,6 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { SearchDataService } from '../../services/search-data.service';
 import { map, Subscription } from 'rxjs';
 import { Route } from '../../models/search-response.model';
+import { FilterService } from '../../services/filter.service';
 
 @Component({
   selector: 'app-search-filter',
@@ -13,9 +14,11 @@ import { Route } from '../../models/search-response.model';
   styleUrls: ['./search-filter.component.scss']
 })
 export class SearchFilterComponent implements OnInit, OnDestroy {
-  dataItems: string[] = [];
+  dataItems: Date[] = [];
 
-  private subscription!: Subscription;
+  notFoundVisibility: boolean = false;
+
+  private subscriptions: Subscription = new Subscription();
 
   startIndex = 0;
 
@@ -25,34 +28,38 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
 
   constructor(
     private datePipe: DatePipe,
-    private dataService: SearchDataService
+    private dataService: SearchDataService,
+    private filterService: FilterService
   ) {}
 
   ngOnInit(): void {
-    this.subscription = this.dataService.data$
-      .pipe(
-        map((response) => {
-          // Проверка на наличие response и response.routes
-          if (response && response.routes) {
-            return this.extractUniqueDays(response.routes, response.from.stationId);
-          } else {
-            return [];
-          }
+    this.subscriptions.add(
+      this.dataService.data$
+        .pipe(
+          map((response) => {
+            if (response && response.routes) {
+              this.notFoundVisibility = true;
+              return this.extractUniqueDays(response.routes, response.from.stationId);
+            } else {
+              return [];
+            }
+          })
+        )
+        .subscribe((days) => {
+          this.dataItems = days;
+          this.onTabChange(0);
         })
-      )
-      .subscribe((days) => {
-        this.dataItems = days;
-      });
+    );
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+    if (this.subscriptions) {
+      this.subscriptions.unsubscribe();
     }
   }
 
-  private extractUniqueDays(routes: Route[], stationId: number): string[] {
-    const uniqueDays = new Set<string>();
+  private extractUniqueDays(routes: Route[], stationId: number): Date[] {
+    const uniqueDays = new Set<number>();
 
     routes.forEach((route) => {
       const index = this.getIndexFromStationInRoute(route.path, stationId);
@@ -63,24 +70,24 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
           if (segment && segment.time && segment.time.length > 0) {
             const startDate = new Date(segment.time[0]);
 
-            const localDate = this.datePipe.transform(startDate, 'yyyy-MM-dd');
+            const localDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
 
-            if (localDate) {
-              uniqueDays.add(localDate);
-            }
+            uniqueDays.add(localDate.getTime());
           }
         }
       });
     });
 
-    return Array.from(uniqueDays).sort();
+    return Array.from(uniqueDays)
+      .map((timestamp) => new Date(timestamp))
+      .sort((a, b) => a.getTime() - b.getTime());
   }
 
   getIndexFromStationInRoute(stations: number[], idStation: number): number {
     return stations.indexOf(idStation);
   }
 
-  get visibleDates(): string[] {
+  get visibleDates(): Date[] {
     return this.dataItems.slice(this.startIndex, this.startIndex + this.visibleCount);
   }
 
@@ -106,14 +113,8 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
 
   onTabChange(index: number): void {
     this.selectedIndex = index;
-    console.log('Фильтр применен, выбранная дата:', this.dataItems[this.selectedIndex]);
-  }
 
-  formatDate(date: string): string {
-    return this.datePipe.transform(date, 'MMMM dd') || '';
-  }
-
-  formatDay(date: string): string {
-    return this.datePipe.transform(date, 'EEEE') || '';
+    const selectedDate = this.dataItems[index];
+    this.filterService.setSelectedDate(selectedDate);
   }
 }
