@@ -1,9 +1,37 @@
-<div class="p-2">
+<div class="w-[500px] max-w-[80%] p-2">
   <h3
     mat-dialog-title
     style="font-size: 16px; font-weight: 700; border-bottom: 1px solid"
   >
     Route {{ data.routeId }}
   </h3>
-  <mat-dialog-content> </mat-dialog-content>
+  <mat-dialog-content
+    *ngIf="events.length"
+    class="route-dialog-content"
+  >
+    <p-timeline [value]="events">
+      <ng-template
+        pTemplate="marker"
+        let-event
+      >
+        <i
+          class="{{ event.icon }}"
+          [style.color]="event.color"
+        ></i>
+      </ng-template>
+      <ng-template
+        pTemplate="opposite"
+        let-event
+      >
+        <small class="p-text-secondary">{{ event.departureTime || '' }}</small>
+        <br />
+        <small class="p-text-secondary">{{ event.arrivalTime || '' }}</small>
+      </ng-template>
+      <ng-template
+        pTemplate="content"
+        let-event
+        >{{ event.stationCity }}</ng-template
+      >
+    </p-timeline>
+  </mat-dialog-content>
 </div>

@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Trip } from 'trip/models/trip.model';
@@ -57,19 +57,5 @@ export class TripService {
       errorMessage = `Error: ${error.error.message || 'unknown'}, reason: ${error.error.reason || 'unknown'}`;
     }
     return throwError(() => errorMessage);
-  }
-
-  // TODO: get from redux or ride service
-  getRideById(id: number): Observable<Ride> {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${localStorage.getItem('authToken')}`
-      })
-    };
-    return this.http
-      .get<Ride>(`/api/route/${id}`, {
-        headers: httpOptions.headers
-      })
-      .pipe(catchError(this.handleError));
   }
 }

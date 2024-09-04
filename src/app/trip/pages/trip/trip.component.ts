@@ -2,11 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { CarriagesService } from 'admin/services/carriages.service';
+import { CarriagesService } from 'admin/carriages/services/carriages.service';
 import { StationsService } from 'admin/stations/services/stations.service';
 import { Subject, takeUntil } from 'rxjs';
 import { InfoModalComponent } from 'trip/components/info-modal/info-modal.component';
 import { RouteModalComponent } from 'trip/components/route-modal/route-modal.component';
+import transformDate from 'trip/helpers/transformDate';
 import { SeatStatusType, Trip } from 'trip/models/trip.model';
 import { BookingService } from 'trip/services/booking.service';
 import { Carriage, Station, TripService } from 'trip/services/trip.service';
@@ -150,22 +151,16 @@ export class TripComponent implements OnInit, OnDestroy {
   }
 
   transformDate(dateStr: string): string {
-    const date = new Date(dateStr);
-    const options: Intl.DateTimeFormatOptions = {
-      month: 'long',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
-    };
-    return date.toLocaleDateString('en-US', options);
+    return transformDate(dateStr);
   }
 
   openRouteModal() {
     this.modal.open(RouteModalComponent, {
       data: {
         rideId: this.rideData!.rideId,
-        routeId: this.rideData!.routeId
+        routeId: this.rideData!.routeId,
+        path: this.rideData?.path,
+        segments: this.rideData?.schedule.segments
       }
     });
   }
