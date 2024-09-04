@@ -72,12 +72,30 @@
 
   <div class="info-container">
     <div class="info-item">
-      <span class="label">Carriage type</span>
-      <div class="info-item-value">{{ data.carriages[0] }}</div>
+      <span class="label">Car number</span>
+      <div
+        *ngIf="carriageData"
+        class="info-item-value"
+      >
+        {{ carriageData.carriageNumber }}
+      </div>
+      <mat-spinner
+        *ngIf="!carriageData"
+        diameter="20"
+      ></mat-spinner>
     </div>
     <div class="info-item seat">
       <span class="label">Seat</span>
-      <div class="info-item-value">{{ data.seatId }}</div>
+      <mat-spinner
+        *ngIf="!carriageData"
+        diameter="20"
+      ></mat-spinner>
+      <div
+        *ngIf="carriageData"
+        class="info-item-value"
+      >
+        {{ carriageData.seatNumber }}
+      </div>
     </div>
   </div>
 

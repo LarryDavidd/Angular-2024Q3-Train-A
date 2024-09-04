@@ -128,7 +128,7 @@ export class TripComponent implements OnInit, OnDestroy {
       this.rideData.schedule.segments.forEach((s, ind) => {
         if (ind >= this.rideData!.path.indexOf(this.fromStationId!) || ind < this.rideData!.path.indexOf(this.toStationId!)) {
           s.occupiedSeats.forEach((seat) => {
-            if (seat > 0) occupiedSeats.add(seat - 1);
+            if (seat > 0) occupiedSeats.add(seat);
           });
         }
       });
@@ -204,7 +204,7 @@ export class TripComponent implements OnInit, OnDestroy {
 
   getPriceForSegments(carriageName: string) {
     return this.rideData!.schedule.segments.reduce((acc, segment, ind) => {
-      if (ind >= this.rideData!.path.indexOf(this.fromStationId!) || ind < this.rideData!.path.indexOf(this.toStationId!)) {
+      if (ind >= this.rideData!.path.indexOf(this.fromStationId!) && ind < this.rideData!.path.indexOf(this.toStationId!)) {
         return acc + segment.price[carriageName];
       } else {
         return acc;

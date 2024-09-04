@@ -52,8 +52,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
       (data) => {
         const sortedData = this.sortOrders(data);
 
-        // TODO: delete mock orders
-        this.orders.push(...sortedData /* ...this.sortOrders(MOCK_ORDERS), ...this.sortOrders(MOCK_ORDERS) */);
+        this.orders.push(...sortedData);
       },
       (error) => {
         // eslint-disable-next-line no-console
