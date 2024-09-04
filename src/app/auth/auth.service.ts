@@ -42,7 +42,7 @@ export class AuthService {
     this.store.dispatch(AuthActions.setAuthenticated(false));
     this.store.dispatch(AuthActions.setIsAdmin(false));
 
-    this.router.navigate(['/']);
+    this.router.navigate(['signin']);
   }
 
   public signUp(email: string, password: string): Observable<SignUpResponseData> {
@@ -78,8 +78,6 @@ export class AuthService {
       message: '',
       reason: ''
     };
-
-    console.log('data', data);
 
     return new Observable((observer) => {
       this.http.post(`${this.apiUrl}/signin`, data).subscribe(

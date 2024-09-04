@@ -57,10 +57,10 @@ export class BookingService {
     this.priceSubject.next(price);
   }
 
-  makeOrder(): Observable<OrderResponse> {
+  makeOrder(seatNumberInTrain: number): Observable<OrderResponse> {
     const body: Order = {
       rideId: this.rideIdSubject.value,
-      seat: this.seatNumberSubject.value,
+      seat: seatNumberInTrain,
       stationStart: this.stationStartSubject.value,
       stationEnd: this.stationEndSubject.value
     };

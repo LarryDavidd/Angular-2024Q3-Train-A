@@ -20,7 +20,7 @@ export const findCarriageAndSeat = (carriage_codes: string[], carriages: Carriag
         return {
           carriageNumber: i + 1,
           seatNumber: seatInCarriage,
-          type: carriage.name
+          carriageCode: carriage.code
         };
       }
 

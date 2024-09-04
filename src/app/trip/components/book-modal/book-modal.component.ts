@@ -1,7 +1,8 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BookingService } from 'trip/services/booking.service';
 import { InfoModalComponent } from '../info-modal/info-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { SeatStatusType } from 'trip/models/trip.model';
 
 @Component({
   selector: 'app-book-modal',
@@ -9,6 +10,8 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrl: './book-modal.component.scss'
 })
 export class BookModalComponent implements OnInit {
+  @Input() seatsStatuses: SeatStatusType[][] = [];
+
   carNumber: number = 0;
 
   seatNumber: number = 0;
@@ -32,9 +35,22 @@ export class BookModalComponent implements OnInit {
     this.bookingService.price$.subscribe((price) => (this.price = price));
   }
 
+  getSeatNumberInTrain() {
+    let count = 0;
+    this.seatsStatuses.forEach((car, ind) => {
+      if (ind < this.carNumber) {
+        count += car.length;
+      } else if (ind === this.carNumber) {
+        count += this.seatNumber;
+      }
+    });
+    return count + 1;
+  }
+
   bookTrip() {
     this.isBookingInProgress = true;
-    this.bookingService.makeOrder().subscribe({
+    const seat = this.getSeatNumberInTrain();
+    this.bookingService.makeOrder(seat).subscribe({
       next: () => {
         this.isBookingInProgress = false;
         this.bookingSuccess.emit({ carNumber: this.carNumber, seatNumber: this.seatNumber });

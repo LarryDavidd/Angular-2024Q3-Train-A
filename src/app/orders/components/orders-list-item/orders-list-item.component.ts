@@ -13,6 +13,7 @@ import { calculateTimeDifference } from 'orders/helpers/calculate-time-differenc
 import { formatPrice } from 'orders/helpers/format-price';
 import { UserProfileService } from 'user-profile/user-profile.service';
 import { User } from 'user-profile/models/users';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-orders-list-item',
@@ -38,11 +39,15 @@ export class OrdersListItemComponent implements OnInit {
 
   public to!: string | '';
 
-  public carriageData!: CarriageData;
+  public carriageData: CarriageData | undefined;
 
   public carriages!: Carriage[];
 
   public users!: User[];
+
+  public segmentStartIndex!: number;
+
+  public segmentEndIndex!: number;
 
   constructor(
     public dialog: MatDialog,
@@ -52,13 +57,33 @@ export class OrdersListItemComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
+    this.segmentStartIndex = this.data.path.indexOf(this.data.stationStart);
+    this.segmentEndIndex = this.data.path.indexOf(this.data.stationEnd) - 1;
+
     this.isActive = this.data.status === OrderStatus.Active;
-    this.priceLabel = formatPrice(this.calculateTotalPrice());
 
     this.initTime();
     this.getStations();
     this.getCarriages();
     this.getIsAdmin();
+
+    forkJoin({
+      stations: this.getStations()
+    }).subscribe({
+      next: (res) => {
+        this.handleStationsData(res);
+        this.priceLabel = formatPrice(this.calculateTotalPrice());
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+
+  private handleStationsData(results: { stations: Station[] }): void {
+    this.stations = results.stations;
+    this.from = this.stations.find((s) => s.id === this.data.stationStart)!.city || '';
+    this.to = this.stations.find((s) => s.id === this.data.stationEnd)!.city || '';
   }
 
   public getIsAdmin() {
@@ -78,12 +103,7 @@ export class OrdersListItemComponent implements OnInit {
   }
 
   public getStations() {
-    this.stationService.getStations().subscribe((stations) => {
-      this.stations = stations;
-
-      this.from = this.getStationName(this.data.path[0]) || '';
-      this.to = this.getStationName(this.data.path[this.data.path.length - 1]) || '';
-    });
+    return this.stationService.getStations();
   }
 
   public getCarriages() {
@@ -94,28 +114,23 @@ export class OrdersListItemComponent implements OnInit {
       this.carriageData = findCarriageAndSeat(this.data.carriages, this.carriages, this.data.seatId) || {
         carriageNumber: 1,
         seatNumber: this.data.seatId,
-        type: this.data.carriages[0]
+        carriageCode: this.data.carriages[0]
       };
     });
   }
 
-  // TODO: check price
   public calculateTotalPrice(): number {
     let totalPrice = 0;
 
     if (this.data.schedule && this.data.schedule.segments) {
-      this.data.schedule.segments.forEach((segment) => {
-        Object.keys(segment.price).forEach((key) => {
-          totalPrice += segment.price[key] || 0;
-        });
+      this.data.schedule.segments.forEach((segment, ind) => {
+        if (ind >= this.segmentStartIndex && ind <= this.segmentEndIndex) {
+          totalPrice += segment.price[this.carriageData!.carriageCode] || 0;
+        }
       });
     }
 
     return totalPrice;
-  }
-
-  public getStationName(id: number): string | undefined {
-    return this.stations.find((el) => el.id === id)?.city;
   }
 
   public onPromptCancel(): void {
@@ -133,8 +148,8 @@ export class OrdersListItemComponent implements OnInit {
   private initTime(): void {
     const NO_DATA_PLACEHOLDER = 'N/A';
 
-    const firstSegment = this.data.schedule.segments[0];
-    const lastSegment = this.data.schedule.segments.at(-1);
+    const firstSegment = this.data.schedule.segments[this.segmentStartIndex];
+    const lastSegment = this.data.schedule.segments[this.segmentEndIndex];
 
     const startTime = firstSegment?.time[0];
     const endTime = lastSegment?.time[1];

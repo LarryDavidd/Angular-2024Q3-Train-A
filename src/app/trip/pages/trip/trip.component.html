@@ -106,6 +106,7 @@
     <div class="relative h-full w-72">
       <div *ngIf="isBookModalVisible">
         <app-book-modal
+          [seatsStatuses]="seatStatuses"
           (isModalVisible)="isBookModalVisible = $event"
           (bookingSuccess)="onBookingSuccess($event)"
         ></app-book-modal>
