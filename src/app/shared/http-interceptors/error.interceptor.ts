@@ -28,7 +28,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         // If you want to return the error on the upper level:
         // return next.handle(request);
         // throw error;
-        console.error(error);
 
         return throwError(() => error);
         // or just return nothing:

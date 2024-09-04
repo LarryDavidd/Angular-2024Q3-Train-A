@@ -7,6 +7,8 @@ import { IRoute } from 'admin/routes/model/routes.model';
 import * as StationsActions from 'admin/stations/station-redux/actions/stations.actions';
 import * as CarriagesActions from 'admin/carriages/carriages-redux/actions/carriages.actions';
 import { Store } from '@ngrx/store';
+import { selectCarriages } from 'admin/carriages/carriages-redux/selectors/carriages.selectors';
+import { selectStations } from 'admin/stations/station-redux/selectiors/stations.selectors';
 
 @Component({
   selector: 'app-routes-page',
@@ -22,6 +24,10 @@ export class RoutesPageComponent implements OnInit {
 
   private store = inject(Store);
 
+  carriages$ = this.store.select(selectCarriages);
+
+  stations$ = this.store.select(selectStations);
+
   deleteRouteForUpdate() {
     this.routeForUpdate = null;
   }
@@ -36,7 +42,15 @@ export class RoutesPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(StationsActions.fetchStations());
-    this.store.dispatch(CarriagesActions.fetchCarriages());
+    this.carriages$.subscribe((value) => {
+      if (value === null) {
+        this.store.dispatch(CarriagesActions.fetchCarriages());
+      }
+    });
+    this.stations$.subscribe((value) => {
+      if (value === null) {
+        this.store.dispatch(StationsActions.fetchStations());
+      }
+    });
   }
 }
