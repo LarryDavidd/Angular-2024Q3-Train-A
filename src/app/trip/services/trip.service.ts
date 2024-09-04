@@ -22,6 +22,22 @@ export interface Carriage {
   leftSeats: number;
   rightSeats: number;
 }
+export interface Ride {
+  id: number;
+  path: number[];
+  carriages: string[];
+  schedule: Schedule[];
+}
+export interface Schedule {
+  rideId: number;
+  segments: Segment[];
+}
+export interface Segment {
+  time: [string, string];
+  price: {
+    [key: string]: number;
+  };
+}
 
 @Injectable({
   providedIn: 'root'
@@ -41,14 +57,5 @@ export class TripService {
       errorMessage = `Error: ${error.error.message || 'unknown'}, reason: ${error.error.reason || 'unknown'}`;
     }
     return throwError(() => errorMessage);
-  }
-
-  // TODO: get from redux or station service
-  getStations(): Observable<Station[]> {
-    return this.http.get<Station[]>('/api/station');
-  }
-
-  getCarriages(): Observable<Carriage[]> {
-    return this.http.get<Carriage[]>('/api/carriage');
   }
 }

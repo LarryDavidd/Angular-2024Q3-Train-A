@@ -82,6 +82,9 @@ export class BookingService {
     if (error.error.reason === 'alreadyBooked') {
       return throwError(() => error.error.reason);
     }
+    if (error.error.reason === 'invalidAccessToken') {
+      return throwError(() => error.error.reason);
+    }
     if (error.error.message || error.error.reason) {
       errorMessage = `Error: ${error.error.message || 'unknown'}, reason: ${error.error.reason || 'unknown'}`;
     }

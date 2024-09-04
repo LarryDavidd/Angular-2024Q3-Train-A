@@ -1,4 +1,4 @@
-<div class="h-full bg-slate-100">
+<div class="h-max min-h-full bg-slate-100">
   <div class="w-full border-y border-gray-400 bg-white">
     <div class="mx-auto max-w-6xl px-6">
       <div class="flex items-center gap-3 py-2">
@@ -15,20 +15,26 @@
           ></mat-icon>
         </button>
         <div class="trip-info">
-          <div class="mb-1 flex gap-2 font-bold">
-            <span>{{ fromStationName }}</span>
-            <mat-spinner
-              *ngIf="!fromStationName"
-              diameter="20"
-            ></mat-spinner>
-            <span *ngIf="rideData">{{ transformDate(rideData.schedule.segments[rideData.path.indexOf(fromStationId!)].time[0]) }}</span>
+          <div class="mb-1 flex flex-wrap gap-2 font-bold">
+            <div>
+              <span class="mr-2">{{ fromStationName }}</span>
+              <mat-spinner
+                *ngIf="!fromStationName"
+                diameter="20"
+                style="display: inline-block; margin-right: 8px"
+              ></mat-spinner>
+              <span *ngIf="rideData">{{ transformDate(rideData.schedule.segments[rideData.path.indexOf(fromStationId!)].time[0]) }}</span>
+            </div>
             <p>&rarr;</p>
-            <span>{{ toStationName }}</span>
-            <mat-spinner
-              *ngIf="!fromStationName"
-              diameter="20"
-            ></mat-spinner>
-            <span *ngIf="rideData">{{ transformDate(rideData.schedule.segments[rideData.path.indexOf(toStationId!) - 1].time[1]) }}</span>
+            <div>
+              <span class="mr-2">{{ toStationName }}</span>
+              <mat-spinner
+                *ngIf="!fromStationName"
+                diameter="20"
+                style="display: inline-block; margin-right: 8px"
+              ></mat-spinner>
+              <span *ngIf="rideData">{{ transformDate(rideData.schedule.segments[rideData.path.indexOf(toStationId!) - 1].time[1]) }}</span>
+            </div>
           </div>
           <div class="flex items-baseline gap-2">
             <p class="font-bold">Ride {{ rideId }}</p>
@@ -47,8 +53,8 @@
       </div>
     </div>
   </div>
-  <div class="m-auto flex max-w-screen-lg gap-2 p-3">
-    <div class="max-w-[70%] lg:max-w-[90%]">
+  <div class="m-auto flex h-full max-w-screen-lg gap-2 p-3">
+    <div class="max-w-full sm:max-w-[90%]">
       <mat-tab-group>
         <div *ngFor="let carriage of listOfCarriages">
           <mat-tab
@@ -61,7 +67,7 @@
             >
               <div
                 *ngIf="carriage.code === car"
-                class="rounded-xl bg-white p-3"
+                class="carriage-container rounded-xl bg-white p-3"
               >
                 <div class="mb-3 flex items-center gap-3">
                   <span class="mr-3">Car {{ carInd + 1 }}</span>
