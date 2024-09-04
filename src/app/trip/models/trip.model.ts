@@ -49,6 +49,7 @@ export interface RouteEventItem {
   arrivalTime?: string;
   icon?: string;
   color?: string;
+  stop: string;
 }
 
 export type SeatStatusType = 'free' | 'occupied' | 'selected';

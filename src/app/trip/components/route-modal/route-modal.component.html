@@ -1,4 +1,4 @@
-<div class="w-[500px] max-w-[80%] p-2">
+<div class="w-[500px] p-2">
   <h3
     mat-dialog-title
     style="font-size: 16px; font-weight: 700; border-bottom: 1px solid"
@@ -9,6 +9,11 @@
     *ngIf="events.length"
     class="route-dialog-content"
   >
+    <div class="mb-3 mr-3.5 flex justify-end gap-24 text-gray-500">
+      <span class="border-b border-gray-400">Time</span>
+      <span class="border-b border-gray-400">Station</span>
+      <span class="border-b border-gray-400">Stop</span>
+    </div>
     <p-timeline [value]="events">
       <ng-template
         pTemplate="marker"
@@ -30,8 +35,16 @@
       <ng-template
         pTemplate="content"
         let-event
-        >{{ event.stationCity }}</ng-template
       >
+        <div class="flex justify-between">
+          <div>{{ event.stationCity }}</div>
+          <mat-spinner
+            *ngIf="!event.stationCity"
+            diameter="15"
+          ></mat-spinner>
+          <small class="p-text-secondary">{{ event.stop }}</small>
+        </div>
+      </ng-template>
     </p-timeline>
   </mat-dialog-content>
 </div>

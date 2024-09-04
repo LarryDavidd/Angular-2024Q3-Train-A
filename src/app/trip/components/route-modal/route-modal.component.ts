@@ -1,18 +1,19 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogContent } from '@angular/material/dialog';
 import { RouteEventItem, RouteModalData } from 'trip/models/trip.model';
-import { TripService } from 'trip/services/trip.service';
 import { TimelineModule } from 'primeng/timeline';
 import { StationsService } from 'admin/stations/services/stations.service';
 import { Station } from 'admin/stations/model/station.model';
 import transformDate from 'trip/helpers/transformDate';
 import { CommonModule } from '@angular/common';
 import { map, Observable } from 'rxjs';
+import { calculateTimeDifference } from 'orders/helpers/calculate-time-difference';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-route-modal',
   standalone: true,
-  imports: [CommonModule, MatDialogContent, TimelineModule],
+  imports: [CommonModule, MatDialogContent, TimelineModule, MatProgressSpinnerModule],
   templateUrl: './route-modal.component.html',
   styleUrl: './route-modal.component.scss'
 })
@@ -23,7 +24,6 @@ export class RouteModalComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: RouteModalData,
-    private rideService: TripService, // TODO: get from ride service
     private stationsService: StationsService
   ) {}
 
@@ -46,6 +46,7 @@ export class RouteModalComponent implements OnInit {
             stationCity: station.city,
             departureTime: this.events[i].departureTime,
             arrivalTime: this.events[i].arrivalTime,
+            stop: this.events[i].stop,
             icon: 'pi pi-map-marker',
             color: '#ff0000'
           };
@@ -60,19 +61,22 @@ export class RouteModalComponent implements OnInit {
         this.events[i] = {
           ...this.events[i],
           departureTime: transformDate(this.data.segments[i].time[0], true),
-          arrivalTime: ''
+          arrivalTime: '',
+          stop: 'first station'
         };
       } else if (i === this.data.path.length - 1) {
         this.events[i] = {
           ...this.events[i],
           arrivalTime: transformDate(this.data.segments[i - 1].time[1], true),
-          departureTime: ''
+          departureTime: '',
+          stop: 'last station'
         };
       } else {
         this.events[i] = {
           ...this.events[i],
           arrivalTime: transformDate(this.data.segments[i].time[0], true),
-          departureTime: transformDate(this.data.segments[i - 1].time[1], true)
+          departureTime: transformDate(this.data.segments[i - 1].time[1], true),
+          stop: calculateTimeDifference(this.data.segments[i - 1].time[1], this.data.segments[i].time[0])
         };
       }
     });
