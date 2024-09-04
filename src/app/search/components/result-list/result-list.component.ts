@@ -4,11 +4,14 @@ import { SearchDataService } from '../../services/search-data.service';
 import { Subscription } from 'rxjs';
 import { Route } from '../../models/search-response.model';
 import { StationData } from '../../models/search-response.model';
+import { FilterService } from '../../services/filter.service';
+import { Routes } from '../../models/routes.model';
+import { FilterByDatePipe } from '../../pipes/filter-by-date.pipe';
 
 @Component({
   selector: 'app-result-list',
   standalone: true,
-  imports: [NgForOf, DatePipe],
+  imports: [NgForOf, DatePipe, FilterByDatePipe],
   providers: [DatePipe],
   templateUrl: './result-list.component.html',
   styleUrl: './result-list.component.scss'
@@ -22,22 +25,34 @@ export class ResultListComponent implements OnInit, OnDestroy {
 
   private subscription!: Subscription;
 
+  selectedDate: Date | null = null;
+
+  private subscriptions: Subscription = new Subscription();
+
   constructor(
-    // private datePipe: DatePipe,
+    private filterService: FilterService,
     private dataService: SearchDataService
   ) {}
 
   ngOnInit(): void {
-    this.subscription = this.dataService.data$.subscribe((response) => {
-      if (response && response.from) {
-        this.cityFrom = response.from;
-        this.cityTo = response.to;
-      }
+    this.subscriptions.add(
+      this.dataService.data$.subscribe((response) => {
+        if (response && response.from) {
+          this.cityFrom = response.from;
+          this.cityTo = response.to;
+        }
 
-      if (response && response.routes) {
-        this.routesData = this.getDataItems(response.routes, this.cityFrom.stationId, this.cityTo.stationId);
-      }
-    });
+        if (response && response.routes) {
+          this.routesData = this.getDataItems(response.routes, this.cityFrom.stationId, this.cityTo.stationId);
+        }
+      })
+    );
+
+    this.subscriptions.add(
+      this.filterService.selectedDate$.subscribe((date) => {
+        this.selectedDate = date;
+      })
+    );
   }
 
   ngOnDestroy(): void {
@@ -54,16 +69,16 @@ export class ResultListComponent implements OnInit, OnDestroy {
       const indexTo = this.getIndexFromStationInRoute(route.path, stationIdTo);
 
       route.schedule.forEach((schedule) => {
-        if (schedule.segments[indexFrom] && schedule.segments[indexTo]) {
+        if (schedule.segments[indexFrom] && schedule.segments[indexTo - 1]) {
           const segmentFrom = schedule.segments[indexFrom];
           const segmentTo = schedule.segments[indexTo - 1];
 
-          if (segmentFrom && segmentTo.time && segmentFrom.time.length > 0 && segmentTo.time.length > 0) {
+          if (segmentFrom && segmentTo) {
             const startDate = new Date(segmentFrom.time[0]);
             const endDate = new Date(segmentTo.time[1]);
 
-            const localStartDate = new Date(startDate.getTime() - startDate.getTimezoneOffset() * 60000);
-            const localEndDate = new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000);
+            const localStartDate = new Date(startDate.getTime());
+            const localEndDate = new Date(endDate.getTime());
             const duration = new Date(localEndDate.getTime() - localStartDate.getTime());
 
             if (localStartDate && localEndDate) {
@@ -87,24 +102,6 @@ export class ResultListComponent implements OnInit, OnDestroy {
     return stations.indexOf(idStation);
   }
 
-  calculateDuration(startDate: Date, endDate: Date): string {
-    const diffInMs = endDate.getTime() - startDate.getTime();
-
-    const minutes = Math.floor(diffInMs / (1000 * 60)) % 60;
-    const hours = Math.floor(diffInMs / (1000 * 60 * 60)) % 24;
-    const days = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-
-    if (days > 0) {
-      return `${this.padWithZero(days)}:${this.padWithZero(hours)}:${this.padWithZero(minutes)}`;
-    } else {
-      return `${this.padWithZero(hours)}:${this.padWithZero(minutes)}`;
-    }
-  }
-
-  padWithZero(value: number): string {
-    return value < 10 ? `0${value}` : value.toString();
-  }
-
   getTravelTime(start: Date, end: Date): string {
     const duration = end.getTime() - start.getTime();
     const minutes = Math.floor(duration / (1000 * 60));
@@ -124,9 +121,3 @@ export class ResultListComponent implements OnInit, OnDestroy {
     return travelTime.trim();
   }
 }
-
-type Routes = {
-  startDate: Date;
-  endDate: Date;
-  duration: Date;
-}; // соберем тип данных для поездки

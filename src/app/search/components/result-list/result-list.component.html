@@ -1,12 +1,13 @@
 @if (routesData) {
   <div
-    *ngFor="let date of routesData; let i = index"
+    *ngFor="let date of routesData | filterByDate: selectedDate; let i = index"
     class="schedule-item"
   >
     <div class="schedule-content">
       <div class="time-info">
         <p class="time">{{ date.startDate | date: 'HH:mm' }}</p>
         <p class="date">{{ date.startDate | date: 'MMMM dd' }}</p>
+        <p class="city">{{ cityFrom.city }}</p>
       </div>
       <div class="schedule">
         <div class="line"></div>
@@ -16,6 +17,7 @@
       <div class="time-info">
         <p class="time">{{ date.endDate | date: 'HH:mm' }}</p>
         <p class="date">{{ date.endDate | date: 'MMMM dd' }}</p>
+        <p class="city">{{ cityTo.city }}</p>
       </div>
     </div>
   </div>
