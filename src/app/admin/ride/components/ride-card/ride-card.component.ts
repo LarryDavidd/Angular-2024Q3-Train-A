@@ -16,6 +16,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { selectStations } from 'admin/stations/station-redux/selectiors/stations.selectors';
 import { GetStationsResponse } from 'admin/stations/model/station.model';
+import { Carriage } from 'trip/services/trip.service';
 
 interface SegmentForm {
   arrivalDate: FormControl<string | null>;
@@ -53,6 +54,8 @@ export class RideCardComponent implements OnInit {
 
   @Input() path!: number[];
 
+  @Input() carriages!: Carriage[];
+
   @Output() updateCurrentRide = new EventEmitter<{ rideId: number; segment: Segment; index: number }>();
 
   @Output() deleteRide = new EventEmitter<{ rideId: number }>();
@@ -87,15 +90,25 @@ export class RideCardComponent implements OnInit {
   }
 
   getPricesFormArray(prices: { [key: string]: number }) {
-    const res = Object.entries(prices).reduce(
-      (controls, [key, value]) => {
-        controls[key] = new FormControl({ value, disabled: true }, [Validators.required]);
+    return this.carriages?.reduce(
+      (controls, carriage) => {
+        controls[carriage.name] = new FormControl({ value: prices[carriage.code], disabled: true }, [Validators.required]);
         return controls;
       },
       {} as { [key: string]: FormControl<number | null> }
     );
-    return res;
   }
+
+  // getPricesFormArray(prices: { [key: string]: number }) {
+  //   const res = Object.entries(prices).reduce(
+  //     (controls, [key, value]) => {
+  //       controls[key] = new FormControl({ value, disabled: true }, [Validators.required]);
+  //       return controls;
+  //     },
+  //     {} as { [key: string]: FormControl<number | null> }
+  //   );
+  //   return res;
+  // }
 
   getArrivalTimeError(i: number) {
     const field = this.form.controls.segment.controls[i].controls.arrivalDate;

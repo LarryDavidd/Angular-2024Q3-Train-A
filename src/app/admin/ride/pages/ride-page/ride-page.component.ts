@@ -10,10 +10,12 @@ import { ResponceBody, ResponceBodySave, Ride } from 'admin/ride/model/ride.mode
 import { RideListComponent } from '../../components/ride-list/ride-list.component';
 import { RideService } from 'admin/ride/services/ride.service';
 import { CreateSectionComponent } from 'admin/ride/components/create-section/create-section.component';
+import * as StationsActions from 'admin/stations/station-redux/actions/stations.actions';
 import * as CarriagesActions from 'admin/carriages/carriages-redux/actions/carriages.actions';
 import { selectCarriages, selectCarriagesLoadingStatus } from 'admin/carriages/carriages-redux/selectors/carriages.selectors';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
+import { selectStations } from 'admin/stations/station-redux/selectiors/stations.selectors';
 
 @Component({
   selector: 'app-ride-page',
@@ -38,11 +40,12 @@ export class RidePageComponent implements OnInit {
   }
 
   openCloseCreateSection() {
-    this.store.dispatch(CarriagesActions.fetchCarriages());
     this.isCreateSectionOpen = !this.isCreateSectionOpen;
   }
 
   carriages$ = this.store.select(selectCarriages);
+
+  stations$ = this.store.select(selectStations);
 
   isLoadingCarriages$ = this.store.select(selectCarriagesLoadingStatus);
 
@@ -113,6 +116,16 @@ export class RidePageComponent implements OnInit {
       if (id) {
         this.routeId = id;
         this.store.dispatch(RideActions.retrieveRide({ id }));
+        this.carriages$.subscribe((value) => {
+          if (value === null) {
+            this.store.dispatch(CarriagesActions.fetchCarriages());
+          }
+        });
+        this.stations$.subscribe((value) => {
+          if (value === null) {
+            this.store.dispatch(StationsActions.fetchStations());
+          }
+        });
       }
     });
   }
