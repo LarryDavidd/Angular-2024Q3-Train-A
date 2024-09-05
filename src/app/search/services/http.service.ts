@@ -19,15 +19,16 @@ export class HttpService {
       .set('toLatitude', value.cityTo.latitude.toString())
       .set('toLongitude', value.cityTo.longitude.toString());
 
-    // if (value.startDate) {
-    //   const unixTimestamp = Math.floor(value.startDate.getTime() / 1000);
-    //   params = params.set('time', unixTimestamp.toString());
-    // }
-
     if (value.startDate) {
       const unixTimestamp = value.startDate.getTime();
       params = params.set('time', unixTimestamp);
     }
+
+    return this.http.get<SearchResponse>(this.apiUrl, { params });
+  }
+
+  getRout(id: number): Observable<SearchResponse> {
+    const params = new HttpParams().set('stationId', id);
 
     return this.http.get<SearchResponse>(this.apiUrl, { params });
   }
