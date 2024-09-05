@@ -1,8 +1,12 @@
+import { Segment } from './search-response.model';
+
 export interface Routes {
   startDate: Date;
   endDate: Date;
   duration: Date;
-  firstRouteStation: number;
-  lastRouteStation: number;
+  path: number[];
+  rideId: number;
+  routeId: number;
+  segments: Segment[];
 }
 // соберем тип данных для поездки

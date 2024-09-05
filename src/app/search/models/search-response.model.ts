@@ -9,7 +9,7 @@ export interface StationData {
   geolocation: Geolocation;
 }
 
-interface Segment {
+export interface Segment {
   time: [string, string];
   price: {
     [carriageType: string]: number;

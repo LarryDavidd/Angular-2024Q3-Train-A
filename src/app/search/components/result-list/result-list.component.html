@@ -21,16 +21,22 @@
       </div>
     </div>
 
-    <!-- Блок с информацией о маршруте -->
     <div class="route-container">
       <div class="route-info">
         <mat-icon class="train-icon">train</mat-icon>
         <p class="station-info">
-          {{ getCityById(citiesList, date.firstRouteStation) }}
+          {{ getCityById(citiesList, date.path[0]) }}
           <span class="arrow">→</span>
-          {{ getCityById(citiesList, date.lastRouteStation) }}
+          {{ getCityById(citiesList, date.path[date.path.length - 1]) }}
         </p>
       </div>
+
+      <button
+        class="route-button"
+        (click)="openRouteModal(date)"
+      >
+        Route <mat-icon class="dropdown-icon">expand_more</mat-icon>
+      </button>
     </div>
   </div>
 }
