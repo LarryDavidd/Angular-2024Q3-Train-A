@@ -7,11 +7,15 @@ import { StationData } from '../../models/search-response.model';
 import { FilterService } from '../../services/filter.service';
 import { Routes } from '../../models/routes.model';
 import { FilterByDatePipe } from '../../pipes/filter-by-date.pipe';
+import { Station } from '../../models/get-stations-response.model';
+import { HttpClient } from '@angular/common/http';
+import { City } from '../../models/stations.model';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-result-list',
   standalone: true,
-  imports: [NgForOf, DatePipe, FilterByDatePipe],
+  imports: [NgForOf, DatePipe, FilterByDatePipe, MatIcon],
   providers: [DatePipe],
   templateUrl: './result-list.component.html',
   styleUrl: './result-list.component.scss'
@@ -29,9 +33,12 @@ export class ResultListComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription = new Subscription();
 
+  protected citiesList!: City[];
+
   constructor(
     private filterService: FilterService,
-    private dataService: SearchDataService
+    private dataService: SearchDataService,
+    protected http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +60,15 @@ export class ResultListComponent implements OnInit, OnDestroy {
         this.selectedDate = date;
       })
     );
+
+    this.http.get<Station[]>('/api/station').subscribe({
+      next: (processedData) => {
+        this.citiesList = processedData;
+      },
+      error: (error) => {
+        console.error('Ошибка при получении данных:', error);
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -67,6 +83,9 @@ export class ResultListComponent implements OnInit, OnDestroy {
     routes.forEach((route) => {
       const indexFrom = this.getIndexFromStationInRoute(route.path, stationIdFrom);
       const indexTo = this.getIndexFromStationInRoute(route.path, stationIdTo);
+
+      const firstRoutestation: number = route.path[0];
+      const lastRoutestation: number = route.path[route.path.length - 1];
 
       route.schedule.forEach((schedule) => {
         if (schedule.segments[indexFrom] && schedule.segments[indexTo - 1]) {
@@ -85,7 +104,9 @@ export class ResultListComponent implements OnInit, OnDestroy {
               const routeElem: Routes = {
                 startDate: localStartDate,
                 endDate: localEndDate,
-                duration: duration
+                duration: duration,
+                firstRouteStation: firstRoutestation,
+                lastRouteStation: lastRoutestation
               };
 
               routesData.push(routeElem);
@@ -119,5 +140,11 @@ export class ResultListComponent implements OnInit, OnDestroy {
     travelTime += `${remainingMinutes}m`;
 
     return travelTime.trim();
+  }
+
+  getCityById(cities: City[], id: number): string | null {
+    const cityObj = cities.find((city) => city.id === id);
+
+    return cityObj ? cityObj.city : null;
   }
 }

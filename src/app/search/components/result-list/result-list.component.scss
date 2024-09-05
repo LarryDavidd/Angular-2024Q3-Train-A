@@ -1,5 +1,6 @@
 .schedule-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
   margin: 20px 0;
   padding: 10px;
@@ -57,4 +58,37 @@
   color: #333;
   white-space: nowrap;
   padding: 0 10px;
+}
+
+.route-container {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.route-info {
+  display: flex;
+  align-items: center;
+  padding: 4px 6px;
+  box-shadow: none;
+  font-size: 12px;
+}
+
+.train-icon {
+  font-size: 18px;
+  margin-right: 4px;
+  color: #666;
+}
+
+.station-info {
+  font-size: 14px;
+  color: #666;
+}
+
+.arrow {
+  margin: 0 4px;
+  font-weight: normal;
+  font-size: 14px;
+  color: #666;
 }

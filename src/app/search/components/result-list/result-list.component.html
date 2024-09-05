@@ -20,5 +20,17 @@
         <p class="city">{{ cityTo.city }}</p>
       </div>
     </div>
+
+    <!-- Блок с информацией о маршруте -->
+    <div class="route-container">
+      <div class="route-info">
+        <mat-icon class="train-icon">train</mat-icon>
+        <p class="station-info">
+          {{ getCityById(citiesList, date.firstRouteStation) }}
+          <span class="arrow">→</span>
+          {{ getCityById(citiesList, date.lastRouteStation) }}
+        </p>
+      </div>
+    </div>
   </div>
 }
