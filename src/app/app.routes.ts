@@ -6,6 +6,7 @@ import { SignUpComponent } from 'auth/components/sign-up/sign-up.component';
 import { HomePageComponent } from 'search/pages/home-page/home-page.component';
 import { OrdersComponent } from 'orders/orders.component';
 import { UserProfileComponent } from 'user-profile/user-profile.component';
+import { NotfoundComponent } from 'core/pages/notfound/notfound.component';
 
 export const routes: Routes = [
   {
@@ -18,5 +19,6 @@ export const routes: Routes = [
   { path: 'signin', component: LoginComponent, canActivate: [AuthGuard] },
   { path: 'trip/:rideId', loadChildren: () => import('./trip/trip.module').then((m) => m.TripModule) },
   { path: 'profile', component: UserProfileComponent, canActivate: [AuthGuard] },
-  { path: 'orders', component: OrdersComponent, canActivate: [AuthGuard] }
+  { path: 'orders', component: OrdersComponent, canActivate: [AuthGuard] },
+  { path: '**', component: NotfoundComponent }
 ];
