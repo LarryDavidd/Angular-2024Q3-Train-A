@@ -2,6 +2,8 @@
   <div
     *ngFor="let date of routesData | filterByDate: selectedDate; let i = index"
     class="schedule-item"
+    [routerLink]="['/trip', date.rideId]"
+    [queryParams]="{ from: cityFrom.stationId, to: cityTo.stationId }"
   >
     <div class="schedule-content">
       <div class="time-info">

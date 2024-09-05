@@ -13,11 +13,12 @@ import { City } from '../../models/stations.model';
 import { MatIcon } from '@angular/material/icon';
 import { RouteModalComponent } from '../../../trip/components/route-modal/route-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-result-list',
   standalone: true,
-  imports: [NgForOf, DatePipe, FilterByDatePipe, MatIcon],
+  imports: [NgForOf, DatePipe, FilterByDatePipe, MatIcon, RouterLink],
   providers: [DatePipe],
   templateUrl: './result-list.component.html',
   styleUrl: './result-list.component.scss'
