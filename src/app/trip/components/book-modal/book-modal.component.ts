@@ -68,6 +68,17 @@ export class BookModalComponent implements OnInit {
           });
           return;
         }
+        if (err === 'invalidAccessToken') {
+          this.modal.open(InfoModalComponent, {
+            data: {
+              errorMessage: `You have to sign in to book a seat`,
+              suggestionMessage: 'Please sign in page and try again.',
+              linkForRedirect: 'Signin',
+              errorSource: 'Booking'
+            }
+          });
+          return;
+        }
         this.modal.open(InfoModalComponent, { data: { errorMessage: `Error: ${err}` } });
         console.error(err);
       }

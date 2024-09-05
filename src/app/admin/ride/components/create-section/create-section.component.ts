@@ -13,6 +13,8 @@ import { DateValidator } from 'admin/ride/validators/date.validator';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { DateTimeService } from 'admin/ride/services/date-time.service';
 import { Carriage } from 'admin/carriages/model/carriages.model';
+import { selectStations } from 'admin/stations/station-redux/selectiors/stations.selectors';
+import { GetStationsResponse } from 'admin/stations/model/station.model';
 
 interface SegmentForm {
   arrivalDate: FormControl<string | null>;
@@ -47,7 +49,7 @@ interface FormGroupInterface {
 export class CreateSectionComponent implements OnInit {
   private readonly store = inject(Store);
 
-  @Output() openCloseCreateSection = new EventEmitter();
+  @Output() closeSection = new EventEmitter();
 
   @Output() saveRide = new EventEmitter<ResponceBodySave>();
 
@@ -56,6 +58,8 @@ export class CreateSectionComponent implements OnInit {
   @Input() path!: number[];
 
   @Input() carriages!: Carriage[];
+
+  stations$ = this.store.select(selectStations);
 
   form!: FormGroup<FormGroupInterface>;
 
@@ -160,6 +164,11 @@ export class CreateSectionComponent implements OnInit {
     });
 
     this.saveRide.emit({ segment });
+  }
+
+  getStationId(stations: GetStationsResponse, id: number) {
+    const currentStation = stations.find((station) => station.id === id);
+    return currentStation?.city ?? id;
   }
 
   ngOnInit(): void {

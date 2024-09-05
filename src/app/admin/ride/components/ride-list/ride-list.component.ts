@@ -4,6 +4,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RideCardComponent } from '../ride-card/ride-card.component';
 import { ResponceBody, Schedule, Segment } from 'admin/ride/model/ride.model';
 import { MatListModule } from '@angular/material/list';
+import { Carriage } from 'trip/services/trip.service';
 
 @Component({
   selector: 'app-ride-list',
@@ -18,6 +19,8 @@ export class RideListComponent {
   @Output() deleteRide = new EventEmitter<{ rideId: number }>();
 
   @Input() schedule!: Schedule[];
+
+  @Input() carriages!: Carriage[];
 
   @Input() path!: number[];
 

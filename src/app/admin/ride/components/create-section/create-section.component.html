@@ -10,7 +10,12 @@
           *ngFor="let segmentFC of getSegmentFormControls; let i = index"
           [formGroupName]="i"
         >
-          <div>{{ 'Station' + ' - ' + path[i] }}</div>
+          <ng-container *ngIf="stations$ | async as data; else defoultStationsId">
+            <div>{{ 'Station' + ' - ' + getStationId(data, path[i]) }}</div>
+          </ng-container>
+          <ng-template #defoultStationsId>
+            <div>{{ 'Station' + ' - ' + path[i] }}</div>
+          </ng-template>
           <div class="block justify-between md:flex">
             <div class="flex flex-col">
               <mat-form-field>
@@ -111,6 +116,15 @@
         (click)="submit()"
       >
         Save
+      </button>
+      <button
+        mat-flat-button
+        effect="raised"
+        color="primary"
+        type="button"
+        (click)="closeSection.emit()"
+      >
+        Close Create Section
       </button>
     </form>
   </mat-card-content>

@@ -1,3 +1,5 @@
+import { ScheduleSegment } from 'orders/models/order';
+
 export interface Trip {
   rideId: number;
   routeId: number;
@@ -32,6 +34,24 @@ export interface ModalData {
   suggestionMessage?: string;
   linkForRedirect?: string;
   errorSource?: string;
+}
+
+export interface RouteModalData {
+  rideId: number;
+  routeId: number;
+  fromStationId: number;
+  toStationId: number;
+  path: number[];
+  segments: ScheduleSegment[];
+}
+
+export interface RouteEventItem {
+  stationCity: string;
+  departureTime?: string;
+  arrivalTime?: string;
+  icon?: string;
+  color?: string;
+  stop: string;
 }
 
 export type SeatStatusType = 'free' | 'occupied' | 'selected';
