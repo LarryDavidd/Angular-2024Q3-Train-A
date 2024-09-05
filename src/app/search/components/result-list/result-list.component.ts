@@ -153,7 +153,10 @@ export class ResultListComponent implements OnInit, OnDestroy {
   }
 
   getCityById(cities: City[], id: number): string | null {
-    const cityObj = cities.find((city) => city.id === id);
+    let cityObj;
+    if (cities) {
+      cityObj = cities.find((city) => city.id === id);
+    }
 
     return cityObj ? cityObj.city : null;
   }
