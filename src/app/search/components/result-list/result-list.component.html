@@ -35,7 +35,7 @@
 
       <button
         class="route-button"
-        (click)="openRouteModal(date)"
+        (click)="openRouteModal(date); $event.stopPropagation()"
       >
         Route <mat-icon class="dropdown-icon">expand_more</mat-icon>
       </button>
