@@ -2,16 +2,23 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatePipe, NgForOf } from '@angular/common';
 import { SearchDataService } from '../../services/search-data.service';
 import { Subscription } from 'rxjs';
-import { Route } from '../../models/search-response.model';
+import { Route, Segment } from '../../models/search-response.model';
 import { StationData } from '../../models/search-response.model';
 import { FilterService } from '../../services/filter.service';
 import { Routes } from '../../models/routes.model';
 import { FilterByDatePipe } from '../../pipes/filter-by-date.pipe';
+import { Station } from '../../models/get-stations-response.model';
+import { HttpClient } from '@angular/common/http';
+import { City } from '../../models/stations.model';
+import { MatIcon } from '@angular/material/icon';
+import { RouteModalComponent } from '../../../trip/components/route-modal/route-modal.component';
+import { MatDialog } from '@angular/material/dialog';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-result-list',
   standalone: true,
-  imports: [NgForOf, DatePipe, FilterByDatePipe],
+  imports: [NgForOf, DatePipe, FilterByDatePipe, MatIcon, RouterLink],
   providers: [DatePipe],
   templateUrl: './result-list.component.html',
   styleUrl: './result-list.component.scss'
@@ -29,9 +36,13 @@ export class ResultListComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription = new Subscription();
 
+  protected citiesList!: City[];
+
   constructor(
     private filterService: FilterService,
-    private dataService: SearchDataService
+    private dataService: SearchDataService,
+    protected http: HttpClient,
+    private modal: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +64,15 @@ export class ResultListComponent implements OnInit, OnDestroy {
         this.selectedDate = date;
       })
     );
+
+    this.http.get<Station[]>('/api/station').subscribe({
+      next: (processedData) => {
+        this.citiesList = processedData;
+      },
+      error: (error) => {
+        console.error('Ошибка при получении данных:', error);
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -68,10 +88,17 @@ export class ResultListComponent implements OnInit, OnDestroy {
       const indexFrom = this.getIndexFromStationInRoute(route.path, stationIdFrom);
       const indexTo = this.getIndexFromStationInRoute(route.path, stationIdTo);
 
+      const path: number[] = route.path;
+
+      const routeId: number = route.id;
+
       route.schedule.forEach((schedule) => {
         if (schedule.segments[indexFrom] && schedule.segments[indexTo - 1]) {
+          const rideId = schedule.rideId;
           const segmentFrom = schedule.segments[indexFrom];
           const segmentTo = schedule.segments[indexTo - 1];
+
+          const segments: Segment[] = schedule.segments;
 
           if (segmentFrom && segmentTo) {
             const startDate = new Date(segmentFrom.time[0]);
@@ -85,7 +112,11 @@ export class ResultListComponent implements OnInit, OnDestroy {
               const routeElem: Routes = {
                 startDate: localStartDate,
                 endDate: localEndDate,
-                duration: duration
+                duration: duration,
+                path: path,
+                routeId: routeId,
+                rideId: rideId,
+                segments: segments
               };
 
               routesData.push(routeElem);
@@ -119,5 +150,27 @@ export class ResultListComponent implements OnInit, OnDestroy {
     travelTime += `${remainingMinutes}m`;
 
     return travelTime.trim();
+  }
+
+  getCityById(cities: City[], id: number): string | null {
+    let cityObj;
+    if (cities) {
+      cityObj = cities.find((city) => city.id === id);
+    }
+
+    return cityObj ? cityObj.city : null;
+  }
+
+  openRouteModal(route: Routes): void {
+    this.modal.open(RouteModalComponent, {
+      data: {
+        rideId: route.rideId,
+        routeId: route.routeId,
+        path: route.path,
+        segments: route.segments,
+        fromStationId: this.cityFrom.stationId,
+        toStationId: this.cityTo.stationId
+      }
+    });
   }
 }
