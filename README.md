@@ -1,5 +1,7 @@
 # Train-A
 
+## Deployment: https://deploy-preview-14--angular-2024q3-train-a.netlify.app
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.7.
 
 ## Development server
