@@ -81,7 +81,7 @@ export class CreateSectionComponent implements OnInit {
   getPricesFormArray() {
     return this.carriages?.reduce(
       (controls, carriage) => {
-        controls[carriage.name] = new FormControl(0, [Validators.required]);
+        controls[carriage.code] = new FormControl(1, [Validators.required]);
         return controls;
       },
       {} as { [key: string]: FormControl<number | null> }
@@ -143,24 +143,26 @@ export class CreateSectionComponent implements OnInit {
     const segment: Segment[] = [];
 
     this.path.forEach((val, i) => {
-      const arrivalDate = this.dateService.updateDateTimeWithTimeString(
-        this.form.controls.segment.controls[i].controls.arrivalDate.value!,
-        this.form.controls.segment.controls[i].controls.arrivalTime.value!
-      );
-      const departureDate = this.dateService.updateDateTimeWithTimeString(
-        this.form.controls.segment.controls[i].controls.departureDate.value!,
-        this.form.controls.segment.controls[i].controls.departureTime.value!
-      );
+      if (i < this.path.length - 1) {
+        const arrivalDate = this.dateService.updateDateTimeWithTimeString(
+          this.form.controls.segment.controls[i].controls.departureDate.value!,
+          this.form.controls.segment.controls[i].controls.departureTime.value!
+        );
+        const departureDate = this.dateService.updateDateTimeWithTimeString(
+          this.form.controls.segment.controls[i + 1].controls.arrivalDate.value!,
+          this.form.controls.segment.controls[i + 1].controls.arrivalTime.value!
+        );
 
-      const price = this.form.controls.segment.controls[i].controls.prices.value;
+        const price = this.form.controls.segment.controls[i].controls.prices.value;
 
-      const transformedPrice: { [key: string]: number } = Object.fromEntries(
-        Object.entries(price)
-          .filter(([, value]) => value !== null)
-          .map(([key, value]) => [key, value as number])
-      );
+        const transformedPrice: { [key: string]: number } = Object.fromEntries(
+          Object.entries(price)
+            .filter(([, value]) => value !== null)
+            .map(([key, value]) => [key, value as number])
+        );
 
-      segment.push({ time: [arrivalDate, departureDate], price: transformedPrice });
+        segment.push({ time: [arrivalDate, departureDate], price: transformedPrice });
+      }
     });
 
     this.saveRide.emit({ segment });
