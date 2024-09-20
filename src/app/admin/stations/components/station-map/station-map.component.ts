@@ -60,7 +60,7 @@ export class StationMapComponent implements AfterViewInit {
   }
 
   private initializeMap(): void {
-    this.map = L.map('map', { center: [51.505, -0.09], zoom: 6 });
+    this.map = L.map('map', { center: [51.505, -0.09], zoom: 3 });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
@@ -133,17 +133,24 @@ export class StationMapComponent implements AfterViewInit {
 
   drawConnectionsOnMap(station: Station, isMarker = false) {
     station.connectedTo.forEach((connection) => {
-      const polyline = L.polyline(
+      const greyPolyline = L.polyline(
         [
           [station.latitude, station.longitude],
           [this.getStationById(connection.id)!.latitude, this.getStationById(connection.id)!.longitude]
         ],
-        { color: 'blue', opacity: 0.5, weight: 1 }
+        { color: 'gray', opacity: 0.2, weight: 1 }
+      );
+      const bluePolyline = L.polyline(
+        [
+          [station.latitude, station.longitude],
+          [this.getStationById(connection.id)!.latitude, this.getStationById(connection.id)!.longitude]
+        ],
+        { color: 'blue', opacity: 0.5, weight: 2 }
       );
       if (isMarker) {
-        this.markerPolylineGroup.addLayer(polyline);
+        this.markerPolylineGroup.addLayer(bluePolyline);
       } else {
-        this.stationsPolylineGroup.addLayer(polyline);
+        this.stationsPolylineGroup.addLayer(greyPolyline);
       }
     });
   }
