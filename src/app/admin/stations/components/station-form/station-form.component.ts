@@ -90,12 +90,23 @@ export class StationFormComponent implements OnInit {
     this.stationService.addStation(this.station).subscribe({
       next: (res) => {
         this.snackBar.open(`Station with id ${res.id} created successfully`, 'close', { duration: 3000 });
+        this.clearForm();
       },
       error: (err: string) => {
         this.handleError(err);
         console.error(err);
       }
     });
+  }
+
+  clearForm() {
+    this.station = {
+      city: '',
+      latitude: 0,
+      longitude: 0,
+      relations: []
+    };
+    this.selectFields = [...this.station.relations, undefined];
   }
 
   handleError(err: string) {
