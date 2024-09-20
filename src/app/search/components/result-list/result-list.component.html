@@ -1,0 +1,44 @@
+@if (routesData) {
+  <div
+    *ngFor="let date of routesData | filterByDate: selectedDate; let i = index"
+    class="schedule-item"
+    [routerLink]="['/trip', date.rideId]"
+    [queryParams]="{ from: cityFrom.stationId, to: cityTo.stationId }"
+  >
+    <div class="schedule-content">
+      <div class="time-info">
+        <p class="time">{{ date.startDate | date: 'HH:mm' }}</p>
+        <p class="date">{{ date.startDate | date: 'MMMM dd' }}</p>
+        <p class="city">{{ cityFrom.city }}</p>
+      </div>
+      <div class="schedule">
+        <div class="line"></div>
+        <p class="travel-time">{{ getTravelTime(date.startDate, date.endDate) }}</p>
+        <div class="line"></div>
+      </div>
+      <div class="time-info">
+        <p class="time">{{ date.endDate | date: 'HH:mm' }}</p>
+        <p class="date">{{ date.endDate | date: 'MMMM dd' }}</p>
+        <p class="city">{{ cityTo.city }}</p>
+      </div>
+    </div>
+
+    <div class="route-container">
+      <div class="route-info">
+        <mat-icon class="train-icon">train</mat-icon>
+        <p class="station-info">
+          {{ getCityById(citiesList, date.path[0]) }}
+          <span class="arrow">→</span>
+          {{ getCityById(citiesList, date.path[date.path.length - 1]) }}
+        </p>
+      </div>
+
+      <button
+        class="route-button"
+        (click)="openRouteModal(date); $event.stopPropagation()"
+      >
+        Route <mat-icon class="dropdown-icon">expand_more</mat-icon>
+      </button>
+    </div>
+  </div>
+}

@@ -1,0 +1,179 @@
+<mat-card class="m-auto">
+  <mat-card-header class="flex justify-between">
+    <mat-card-title>{{ 'Ride' + ' ' + schedule.rideId }}</mat-card-title>
+    <div class="route__action-buttons">
+      <button
+        mat-icon-button
+        (click)="onDelete()"
+      >
+        <mat-icon fontIcon="delete"></mat-icon>
+      </button>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="form">
+      <ng-container formArrayName="segment">
+        <ng-container
+          *ngFor="let segmentFC of getSegmentFormControls; let i = index"
+          [formGroupName]="i"
+        >
+          <ng-container *ngIf="stations$ | async as data; else defoultStationsId">
+            <div>{{ 'Station' + ' - ' + getStationId(data, path[i]) }}</div>
+          </ng-container>
+          <ng-template #defoultStationsId>
+            <div>{{ 'Station' + ' - ' + path[i] }}</div>
+          </ng-template>
+          <div class="block justify-between md:flex">
+            <ng-container *ngIf="i > 0">
+              <div class="flex flex-col">
+                <mat-form-field>
+                  <mat-label matLabel>Arrival Date</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="picker"
+                    placeholder="Arrival Date"
+                    formControlName="arrivalDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                  <mat-error>{{ getArrivalDateError(i) }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-label matLabel>Arrival Time</mat-label>
+
+                  <input
+                    matInput
+                    [format]="24"
+                    [ngxTimepicker]="dataTimePicker"
+                    formControlName="arrivalTime"
+                  />
+                  <ngx-material-timepicker
+                    matSuffix
+                    #dataTimePicker
+                  ></ngx-material-timepicker>
+                  <mat-error>{{ getArrivalTimeError(i) }}</mat-error>
+                </mat-form-field>
+
+                <ng-container *ngIf="form.controls.segment.controls[i].controls.arrivalDate.disabled; else ArrivalDateUpdateButton">
+                  <button
+                    mat-button
+                    (click)="onArrivalDateChange(i)"
+                  >
+                    <mat-icon fontIcon="update"></mat-icon>
+                    Update Arrival Date
+                  </button>
+                </ng-container>
+                <ng-template #ArrivalDateUpdateButton>
+                  <button
+                    mat-button
+                    (click)="onArrivalDateUpdate(i)"
+                  >
+                    <mat-icon fontIcon="save"></mat-icon>
+                    Save Arrival Date
+                  </button>
+                </ng-template>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="i < path.length - 2">
+              <div class="flex flex-col">
+                <mat-form-field>
+                  <mat-label matLabel>Departure Date</mat-label>
+                  <input
+                    type="datetime"
+                    matInput
+                    [matDatepicker]="picker1"
+                    placeholder="Departure Date"
+                    formControlName="departureDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker1"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                  <mat-error>{{ getArrivalDateError(i) }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-label matLabel>Departure Time</mat-label>
+
+                  <input
+                    matInput
+                    [format]="24"
+                    [ngxTimepicker]="dataTimePicker2"
+                    formControlName="departureTime"
+                  />
+                  <ngx-material-timepicker
+                    matSuffix
+                    #dataTimePicker2
+                  ></ngx-material-timepicker>
+                  <mat-error>{{ getDepartureTimeError(i) }}</mat-error>
+                </mat-form-field>
+
+                <ng-container *ngIf="form.controls.segment.controls[i].controls.departureDate.disabled; else DepartureDateUpdateButton">
+                  <button
+                    mat-button
+                    (click)="onDepartureDateChange(i)"
+                  >
+                    <mat-icon fontIcon="update"></mat-icon>
+                    Update Departure Date
+                  </button>
+                </ng-container>
+                <ng-template #DepartureDateUpdateButton>
+                  <button
+                    mat-button
+                    (click)="onDepartureDateUpdate(i)"
+                  >
+                    <mat-icon fontIcon="save"></mat-icon>
+                    Save Departure Date
+                  </button>
+                </ng-template>
+              </div>
+            </ng-container>
+
+            <div
+              formGroupName="prices"
+              class="flex flex-col"
+            >
+              <ng-container *ngFor="let price of getPrices(segmentFC.get('prices')); let j = index">
+                <mat-form-field>
+                  <mat-label matLabel>{{ price.key }}</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    min="1"
+                    [placeholder]="price.key"
+                    [formControlName]="price.key"
+                  />
+                </mat-form-field>
+              </ng-container>
+              <ng-container *ngIf="form.controls.segment.controls[i].controls.prices.disabled; else PriceUpdateButton">
+                <button
+                  mat-button
+                  (click)="onPriceChange(i)"
+                >
+                  <mat-icon fontIcon="update"></mat-icon>
+                  Update Price
+                </button>
+              </ng-container>
+              <ng-template #PriceUpdateButton>
+                <button
+                  mat-button
+                  (click)="onPriceUpdate(i)"
+                >
+                  <mat-icon fontIcon="save"></mat-icon>
+                  Save Price
+                </button>
+              </ng-template>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </form>
+  </mat-card-content>
+</mat-card>

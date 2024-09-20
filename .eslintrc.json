@@ -1,0 +1,79 @@
+{
+  "root": true,
+  "ignorePatterns": ["projects/**/*"],
+  "overrides": [
+    {
+      "files": ["*.spec.ts"],
+      "plugins": ["jasmine"],
+      "env": {
+        "jasmine": true
+      },
+      "extends": ["plugin:jasmine/recommended"]
+    },
+    {
+      "files": ["*.ts"],
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "airbnb-typescript/base",
+        "plugin:tailwindcss/recommended",
+        "plugin:prettier/recommended",
+        "prettier"
+      ],
+      "plugins": ["prettier"],
+      "rules": {
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "type": "attribute",
+            "prefix": "app",
+            "style": "camelCase"
+          }
+        ],
+        "@angular-eslint/component-selector": [
+          "error",
+          {
+            "type": "element",
+            "prefix": "app",
+            "style": "kebab-case"
+          }
+        ],
+        "@typescript-eslint/no-explicit-any": "error",
+        "prettier/prettier": "error",
+        "tailwindcss/classnames-order": "error",
+        "tailwindcss/no-custom-classname": "off",
+        "linebreak-style": "off",
+        "no-console": "warn",
+        "no-debugger": "warn",
+        "import/extensions": "off",
+        "import/no-extraneous-dependencies": "off",
+        "@typescript-eslint/comma-dangle": "off",
+        "@typescript-eslint/no-unused-vars": [
+          2,
+          { "argsIgnorePattern": "^_|^req|^next", "ignoreRestSiblings": true }
+        ]
+      },
+      "parserOptions": {
+        "project": ["tsconfig.json"],
+        "createDefaultProgram": true
+      }
+    },
+    {
+      "files": ["*.html"],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended",
+        "plugin:@angular-eslint/template/accessibility"
+      ],
+      "rules": {
+        "prettier/prettier": "error",
+        "tailwindcss/classnames-order": "error",
+        "tailwindcss/no-custom-classname": "off",
+        "linebreak-style": "off",
+        "no-console": "warn",
+        "no-debugger": "warn"
+      }
+    }
+  ]
+}

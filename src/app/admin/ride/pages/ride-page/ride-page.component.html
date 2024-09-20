@@ -1,0 +1,53 @@
+<ng-container *ngIf="isLoading$ | async; else dataTemplate">
+  <mat-spinner [diameter]="70"></mat-spinner>
+</ng-container>
+<ng-template #dataTemplate>
+  <h1>{{ 'Route' + ' - ' + routeId }}</h1>
+  <button
+    mat-flat-button
+    color="primary"
+    type="button"
+    (click)="redirectToRoutes()"
+  >
+    Go Back
+  </button>
+  <ng-container *ngIf="rides$ | async as data; else notFound">
+    <ng-container *ngIf="isLoadingCarriages$ | async; else mainTemplate">
+      <mat-spinner [diameter]="70"></mat-spinner>
+    </ng-container>
+    <ng-template #mainTemplate>
+      <ng-container *ngIf="carriages$ | async as carriages; else notFound">
+        <ng-container *ngIf="!isCreateSectionOpen; else createSection">
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            (click)="openCloseCreateSection()"
+          >
+            Create
+          </button>
+        </ng-container>
+        <ng-template #createSection>
+          <app-create-section
+            [path]="data.path"
+            [schedule]="data.schedule"
+            [carriages]="carriages"
+            (closeSection)="openCloseCreateSection()"
+            (saveRide)="saveRide($event)"
+          ></app-create-section>
+        </ng-template>
+        <app-ride-list
+          [path]="data.path"
+          [schedule]="data.schedule"
+          [carriages]="carriages"
+          (updateRide)="updateRide($event)"
+          (deleteRide)="deleteRide($event)"
+        ></app-ride-list>
+      </ng-container>
+    </ng-template>
+  </ng-container>
+</ng-template>
+
+<ng-template #notFound>
+  <div>nothing found</div>
+</ng-template>

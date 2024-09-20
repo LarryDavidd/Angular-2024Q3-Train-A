@@ -1,0 +1,13 @@
+<main class="flex flex-col gap-10">
+  <ul *ngFor="let schedule of schedule">
+    <li>
+      <app-ride-card
+        [schedule]="schedule"
+        [path]="path"
+        [carriages]="carriages"
+        (updateCurrentRide)="updateCurrentRide($event)"
+        (deleteRide)="deleteRide.emit($event)"
+      ></app-ride-card>
+    </li>
+  </ul>
+</main>

@@ -1,0 +1,71 @@
+<nav class="header">
+  <ng-container *ngIf="isAuthenticated$ | async; else notAuthenticated">
+    <ng-container *ngIf="isAdmin$ | async; else notAdmin">
+      <ul class="list">
+        <li class="item-block">
+          <a routerLink="/">Home</a>
+          <a
+            routerLinkActive="active"
+            routerLink="/profile"
+            *ngIf="isAuthenticated$ | async"
+            >Profile</a
+          >
+          <a
+            routerLink="/orders"
+            routerLinkActive="active"
+            *ngIf="(isAuthenticated$ | async) && (isAdmin$ | async)"
+            >Orders</a
+          >
+        </li>
+
+        <li>
+          <a
+            routerLinkActive="active"
+            routerLink="/admin"
+            *ngIf="(isAuthenticated$ | async) && (isAdmin$ | async)"
+            >Admin</a
+          >
+        </li>
+      </ul>
+    </ng-container>
+
+    <ng-template #notAdmin>
+      <ul class="list">
+        <li class="item-block">
+          <a routerLink="/">Home</a>
+          <a
+            routerLinkActive="active"
+            routerLink="/profile"
+            *ngIf="isAuthenticated$ | async"
+            >Profile</a
+          >
+          <a
+            routerLink="/orders"
+            routerLinkActive="active"
+            >My Orders</a
+          >
+        </li>
+      </ul>
+    </ng-template>
+  </ng-container>
+
+  <ng-template #notAuthenticated>
+    <ul class="list">
+      <li>
+        <a routerLink="/">Home</a>
+      </li>
+      <li class="item-block">
+        <a
+          routerLinkActive="active"
+          routerLink="/signin"
+          >Sign In</a
+        >
+        <a
+          routerLinkActive="active"
+          routerLink="/signup"
+          >Sign Up</a
+        >
+      </li>
+    </ul>
+  </ng-template>
+</nav>

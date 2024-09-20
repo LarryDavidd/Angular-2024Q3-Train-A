@@ -1,0 +1,20 @@
+<ng-container *ngIf="!isCreateSectionOpen; else createSection">
+  <button
+    mat-flat-button
+    color="primary"
+    type="button"
+    (click)="openCloseCreateSection()"
+  >
+    Create
+  </button>
+</ng-container>
+
+<ng-template #createSection>
+  <app-create-section
+    (closeSection)="openCloseCreateSection()"
+    (deleteRouteForUpdate)="deleteRouteForUpdate()"
+    [routeForUpdate]="routeForUpdate"
+  ></app-create-section>
+</ng-template>
+
+<app-routes-list (handleUpdate)="onUpdate($event)"></app-routes-list>

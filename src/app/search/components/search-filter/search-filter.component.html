@@ -1,0 +1,46 @@
+@if (dataItems && dataItems.length > 0) {
+  <div class="date-slider">
+    <button
+      (click)="previousDates()"
+      (keydown.enter)="previousDates()"
+      class="nav-button"
+      tabindex="0"
+      aria-label="Previous dates"
+      [disabled]="!canNavigateLeft"
+    >
+      &lt;
+    </button>
+    <div class="date-tabs">
+      <div
+        *ngFor="let date of visibleDates; let i = index"
+        (click)="onTabChange(i + startIndex)"
+        (keydown.enter)="onTabChange(i + startIndex)"
+        tabindex="0"
+        [class.selected]="i + startIndex === selectedIndex"
+        class="tab"
+      >
+        <div class="date">{{ date | date: 'MMMM dd' }}</div>
+        <div class="day">{{ date | date: 'EEEE' }}</div>
+      </div>
+    </div>
+    <button
+      (click)="nextDates()"
+      (keydown.enter)="nextDates()"
+      class="nav-button"
+      tabindex="0"
+      aria-label="Next dates"
+      [disabled]="!canNavigateRight"
+    >
+      &gt;
+    </button>
+  </div>
+} @else if (notFoundVisibility && dataItems.length === 0) {
+  <div class="no-routes">
+    <img
+      src="assets/images/search.svg"
+      alt="search"
+      class="no-routes-image"
+    />
+    <p class="no-routes-text">Sorry, we couldn't find any routes matching your search.</p>
+  </div>
+}
