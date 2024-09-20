@@ -134,12 +134,10 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     if (this.searchForm.valid) {
-      console.log('Форма отправлена:', this.searchForm.value);
       this.httpService.searchRoutes(this.searchForm.value).subscribe({
         next: (response) => {
           this.searchResult = response;
           this.dataService.updateData(response);
-          console.log('Ответ с сервера$:', this.dataService.data$);
         },
         error: (error) => {
           console.error('Произошла ошибка:', error);
