@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, Subject, tap, throwError } from 'rxjs';
 import { CreatedStation, GetStationsResponse, StationCreateResponse } from '../model/station.model';
 
 @Injectable({
@@ -12,6 +12,10 @@ export class StationsService {
   private stationsSubject = new BehaviorSubject<GetStationsResponse>([]);
 
   private stations$ = this.stationsSubject.asObservable();
+
+  private removeMarkerSubject = new Subject<number>();
+
+  removeMarker$ = this.removeMarkerSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -59,8 +63,9 @@ export class StationsService {
         headers: httpOptions.headers
       })
       .pipe(
-        tap(() => {
+        tap((res) => {
           this.loadStations();
+          this.removeMarkerSubject.next(res.id);
         }),
         catchError(this.handleError)
       );

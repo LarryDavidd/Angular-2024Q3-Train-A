@@ -49,6 +49,8 @@ export class StationMapComponent implements AfterViewInit {
 
   private stationsPolylineGroup: L.LayerGroup = L.layerGroup();
 
+  private existingStationsLayer: L.LayerGroup = L.layerGroup();
+
   constructor(
     private stationService: StationsService,
     private synhroService: MapFormSynchroService
@@ -72,12 +74,17 @@ export class StationMapComponent implements AfterViewInit {
 
     this.markerPolylineGroup.addTo(this.map);
     this.stationsPolylineGroup.addTo(this.map);
+    this.existingStationsLayer.addTo(this.map);
 
     this.addStationsMarkers();
 
     this.map.on('click', (e: L.LeafletMouseEvent) => {
       this.addNewMarker(e.latlng);
       this.synhroService.updateCoordinates(e.latlng.lat, e.latlng.lng);
+    });
+
+    this.stationService.removeMarker$.subscribe(() => {
+      this.removeMarker();
     });
   }
 
@@ -115,8 +122,10 @@ export class StationMapComponent implements AfterViewInit {
   addStationsMarkers() {
     this.stationService.getStations().subscribe((stations) => {
       this.stations = stations;
+      this.stationsPolylineGroup.clearLayers();
+      this.existingStationsLayer.clearLayers();
       stations.forEach((station) => {
-        const existingMarker = L.marker([station.latitude, station.longitude]).addTo(this.map!).bindTooltip(station.city, {
+        const existingMarker = L.marker([station.latitude, station.longitude]).addTo(this.existingStationsLayer).bindTooltip(station.city, {
           permanent: false,
           direction: 'top',
           opacity: 0.9
@@ -171,5 +180,10 @@ export class StationMapComponent implements AfterViewInit {
       this.marker.setLatLng(latlng);
       this.map?.setView(latlng, this.map.getZoom());
     }
+  }
+
+  removeMarker() {
+    this.marker?.remove();
+    this.markerPolylineGroup.clearLayers();
   }
 }
