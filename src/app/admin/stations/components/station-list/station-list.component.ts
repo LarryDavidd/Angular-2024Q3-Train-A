@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { StationsService } from '../../services/stations.service';
 import { Station } from '../../model/station.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -14,6 +14,8 @@ import { CommonModule } from '@angular/common';
   templateUrl: './station-list.component.html'
 })
 export class StationListComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   stations: Station[] = [];
 
   paginatedStations: Station[] = [];
@@ -22,21 +24,28 @@ export class StationListComponent implements OnInit {
 
   totalPages = 1;
 
+  currentPage = 0;
+
   constructor(
     private stationService: StationsService,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
-    this.loadStations();
-  }
-
-  loadStations() {
     this.stationService.getStations().subscribe((stations) => {
       this.stations = stations;
-      this.totalPages = Math.ceil(this.stations.length / this.pageSize);
-      this.paginatedStations = this.stations.slice(0, this.pageSize);
+      this.updatePagination();
     });
+  }
+
+  updatePagination() {
+    const newTotalPages = Math.ceil(this.stations.length / this.pageSize);
+    if (newTotalPages !== this.totalPages) {
+      this.totalPages = newTotalPages;
+      this.paginatedStations = this.stations.slice(0, this.pageSize);
+    }
+    this.updatePaginatedStations({ pageIndex: 0, pageSize: this.pageSize, length: this.stations.length });
+    if (this.paginator) this.paginator.firstPage();
   }
 
   updatePaginatedStations(e: PageEvent) {
@@ -51,9 +60,6 @@ export class StationListComponent implements OnInit {
 
   deleteStation(id: number) {
     this.stationService.deleteStation(id).subscribe({
-      next: () => {
-        this.loadStations();
-      },
       error: (error) => {
         this.handleError(error);
         console.error('Error deleting station:', error);

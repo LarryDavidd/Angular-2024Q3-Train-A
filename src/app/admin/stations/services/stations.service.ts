@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, Subject, tap, throwError } from 'rxjs';
 import { CreatedStation, GetStationsResponse, StationCreateResponse } from '../model/station.model';
 
 @Injectable({
@@ -9,14 +9,33 @@ import { CreatedStation, GetStationsResponse, StationCreateResponse } from '../m
 export class StationsService {
   private apiUrl = '/api/station';
 
+  private stationsSubject = new BehaviorSubject<GetStationsResponse>([]);
+
+  private stations$ = this.stationsSubject.asObservable();
+
+  private removeMarkerSubject = new Subject<number>();
+
+  removeMarker$ = this.removeMarkerSubject.asObservable();
+
   constructor(private http: HttpClient) {}
 
   getStations(): Observable<GetStationsResponse> {
-    return this.http.get<GetStationsResponse>(this.apiUrl).pipe(
-      map((response) => {
-        return response;
-      })
-    );
+    if (this.stationsSubject.getValue().length === 0) {
+      this.loadStations();
+    }
+    return this.stations$;
+  }
+
+  loadStations() {
+    return this.http
+      .get<GetStationsResponse>(this.apiUrl)
+      .pipe(
+        tap((res) => {
+          this.stationsSubject.next(res);
+        }),
+        catchError(this.handleError)
+      )
+      .subscribe();
   }
 
   deleteStation(id: number): Observable<GetStationsResponse> {
@@ -25,7 +44,12 @@ export class StationsService {
         Authorization: `Bearer ${localStorage.getItem('authToken')}`
       })
     };
-    return this.http.delete<GetStationsResponse>(this.apiUrl + '/' + id, { headers: httpOptions.headers }).pipe(catchError(this.handleError));
+    return this.http.delete<GetStationsResponse>(this.apiUrl + '/' + id, { headers: httpOptions.headers }).pipe(
+      tap(() => {
+        this.loadStations();
+      }),
+      catchError(this.handleError)
+    );
   }
 
   addStation(newStation: CreatedStation): Observable<StationCreateResponse> {
@@ -38,7 +62,13 @@ export class StationsService {
       .post<StationCreateResponse>(this.apiUrl, newStation, {
         headers: httpOptions.headers
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        tap((res) => {
+          this.loadStations();
+          this.removeMarkerSubject.next(res.id);
+        }),
+        catchError(this.handleError)
+      );
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

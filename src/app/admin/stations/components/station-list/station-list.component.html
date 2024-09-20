@@ -35,6 +35,7 @@
       <mat-paginator
         (page)="updatePaginatedStations($event)"
         pageSize="{{ pageSize }}"
+        pageIndex="{{ currentPage }}"
         length="{{ stations.length }}"
         showFirstLastButtons="true"
         hidePageSize="true"

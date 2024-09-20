@@ -49,6 +49,8 @@ export class StationMapComponent implements AfterViewInit {
 
   private stationsPolylineGroup: L.LayerGroup = L.layerGroup();
 
+  private existingStationsLayer: L.LayerGroup = L.layerGroup();
+
   constructor(
     private stationService: StationsService,
     private synhroService: MapFormSynchroService
@@ -60,7 +62,7 @@ export class StationMapComponent implements AfterViewInit {
   }
 
   private initializeMap(): void {
-    this.map = L.map('map', { center: [51.505, -0.09], zoom: 6 });
+    this.map = L.map('map', { center: [51.505, -0.09], zoom: 3 });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
@@ -72,12 +74,17 @@ export class StationMapComponent implements AfterViewInit {
 
     this.markerPolylineGroup.addTo(this.map);
     this.stationsPolylineGroup.addTo(this.map);
+    this.existingStationsLayer.addTo(this.map);
 
     this.addStationsMarkers();
 
     this.map.on('click', (e: L.LeafletMouseEvent) => {
       this.addNewMarker(e.latlng);
       this.synhroService.updateCoordinates(e.latlng.lat, e.latlng.lng);
+    });
+
+    this.stationService.removeMarker$.subscribe(() => {
+      this.removeMarker();
     });
   }
 
@@ -115,8 +122,10 @@ export class StationMapComponent implements AfterViewInit {
   addStationsMarkers() {
     this.stationService.getStations().subscribe((stations) => {
       this.stations = stations;
+      this.stationsPolylineGroup.clearLayers();
+      this.existingStationsLayer.clearLayers();
       stations.forEach((station) => {
-        const existingMarker = L.marker([station.latitude, station.longitude]).addTo(this.map!).bindTooltip(station.city, {
+        const existingMarker = L.marker([station.latitude, station.longitude]).addTo(this.existingStationsLayer).bindTooltip(station.city, {
           permanent: false,
           direction: 'top',
           opacity: 0.9
@@ -133,17 +142,24 @@ export class StationMapComponent implements AfterViewInit {
 
   drawConnectionsOnMap(station: Station, isMarker = false) {
     station.connectedTo.forEach((connection) => {
-      const polyline = L.polyline(
+      const greyPolyline = L.polyline(
         [
           [station.latitude, station.longitude],
           [this.getStationById(connection.id)!.latitude, this.getStationById(connection.id)!.longitude]
         ],
-        { color: 'blue', opacity: 0.5, weight: 1 }
+        { color: 'gray', opacity: 0.2, weight: 1 }
+      );
+      const bluePolyline = L.polyline(
+        [
+          [station.latitude, station.longitude],
+          [this.getStationById(connection.id)!.latitude, this.getStationById(connection.id)!.longitude]
+        ],
+        { color: 'blue', opacity: 0.5, weight: 2 }
       );
       if (isMarker) {
-        this.markerPolylineGroup.addLayer(polyline);
+        this.markerPolylineGroup.addLayer(bluePolyline);
       } else {
-        this.stationsPolylineGroup.addLayer(polyline);
+        this.stationsPolylineGroup.addLayer(greyPolyline);
       }
     });
   }
@@ -164,5 +180,10 @@ export class StationMapComponent implements AfterViewInit {
       this.marker.setLatLng(latlng);
       this.map?.setView(latlng, this.map.getZoom());
     }
+  }
+
+  removeMarker() {
+    this.marker?.remove();
+    this.markerPolylineGroup.clearLayers();
   }
 }

@@ -1,4 +1,5 @@
 <form
+  #stationForm="ngForm"
   (ngSubmit)="onSubmit()"
   class="flex max-w-80 flex-col gap-2"
 >
@@ -69,7 +70,7 @@
     mat-stroked-button
     type="submit"
     class="block w-full"
-    disabled="{{ !station.city || !station.latitude || !station.longitude || !station.relations.length }}"
+    [disabled]="stationForm.invalid"
   >
     Save
   </button>
